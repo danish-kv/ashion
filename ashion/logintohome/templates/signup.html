@@ -1,0 +1,76 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "/main/css/login/signup.css" %}">
+    <link rel="stylesheet" href="{% static "/main/css/style.css" %}" type="text/css">
+
+</head>
+
+<body>
+
+    {% include "inc/navbar.html" %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <form class="signup-form" action="{% url 'signup'  %}" method="post">
+                    {% csrf_token %}    
+                    <h2 class="text-center mb-4">Sign Up</h2>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" placeholder="Username" class="form-control" name="username" id="username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" placeholder="Email" class="form-control" name="email" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone</label>
+		                <input name="number"  type="number" class="form-control" placeholder="Number" id="number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password1">Password</label>
+                        <input type="password" placeholder="Password" class="form-control" id="password1" name="password1" required >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password2">Confirm Password</label>
+                        <input type="password" placeholder="Confirm Password" class="form-control" id="password2" name="password2" required >
+                    </div>
+
+                    <button type="submit" class="btn btn-signup btn-block">Sign Up</button>
+                    {% if messages %}
+                    <ul class="messages  " style="list-style: none; color:red">
+                        {% for message in messages %}
+                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <a href="{% url 'login' %}" >i have already account</a>
+            </form>
+            </div>
+        </div>
+    </div>
+
+    {% include "inc/footer.html" %}
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

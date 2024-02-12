@@ -1,0 +1,153 @@
+
+
+{% extends 'admin_base.html' %}
+{% load static %}
+{% comment %} {% block title %} Add Product{% endblock title %}
+{% block products %}{% endblock products %} {% endcomment %}
+
+
+{% block content %}
+{% comment %} <style>
+    .table td,{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style> {% endcomment %}
+<div>
+    <div class="pagetitle">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1>Products</h1>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="addproductbutton">
+                    <a href="{% url "addproduct" %}" class="btn btn-dark mt-2">Add Products</a>
+                </div>
+            </div>
+        </div>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Admin</li>
+                <li class="breadcrumb-item active">Products</li>
+            </ol>
+        </nav>
+        {% if messages %}
+                    {% for message in messages %}
+                        <div class="text-danger">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+    </div>
+    <!-- End Page Title -->
+
+    <!-- Recent Sales -->
+    <div class="col-12">
+        <div class="card recent-sales overflow-auto">
+            <div class="card-body">
+                <table class="table table-borderless datatable mt-3">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product Image</th>
+                            <th>Product Name</th>
+                            {% comment %} <th>Stock</th> {% endcomment %}
+                            {% comment %} <th>Variand Details</th> {% endcomment %}
+                            <th>Gender</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Unlist</th>
+                            <th>Actions</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in product %}
+                        <tr class="align-middle">
+                            <td>{{i.id}}</td>
+                            <td class="align-middle">
+                                {% if i.img1 %}
+                                <img src="{{ i.img1.url }}" alt="{{ i.name }}" width="100" height="100">
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {{i.name}}
+                            </td>
+                            <td class="align-middle" >
+                                {{i.gender}}
+                            </td>
+                            <td class="align-middle">
+                                {{i.category.name}}
+                            </td>
+                            <td class="align-middle">
+                                {{i.selling_price}}
+                            </td>
+                            {% comment %} <td class="align-middle">
+                                <a href='product_varient/{{prod.id}}' type="button" class="btn btn-sm btn-secondary">View Details</a>
+                            </td>  {% endcomment %}
+                             <td class="align-middle">
+                                {% if i.is_listed %}
+                                <a class="badge btn btn-sm bg-danger" href="/unlist_product/{{ i.id }}">Unlist</a>
+                                {% else %}
+                                <a class="badge btn btn-sm bg-danger" href="/list_product/{{ i.id }}">List</a>
+                                {% endif %}
+                            </td>
+                            <td class="align-middle">
+                                <a class="badge btn btn-warning" href="/editproduct/{{i.id}}">
+                                    Edit
+                                </a>
+                            </td> 
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div><!-- End Recent Sales -->
+<div>
+
+
+{% comment %} <script>
+    function handleImageUpload(files) {
+        let imagesError = document.getElementById("images-error");
+        imagesError.textContent = "";
+
+        if (files.length === 0) {
+            imagesError.textContent = "Please select at least one image";
+        }
+    }
+
+    document.getElementById("add-product-form").addEventListener("submit", function (event) {
+        let name = document.getElementById("id_name").value;
+        let description = document.getElementById("id_description").value;
+        let images = document.getElementById("id_images").files;
+
+        let nameError = document.getElementById("name-error");
+        let descriptionError = document.getElementById("description-error");
+        let imagesError = document.getElementById("images-error");
+
+        nameError.textContent = "";
+        descriptionError.textContent = "";
+        imagesError.textContent = "";
+
+        if (name.trim() === "") {
+            nameError.textContent = "Product name is required";
+            event.preventDefault();
+        }
+
+        if (description.trim() === "") {
+            descriptionError.textContent = "Description is required";
+            event.preventDefault();
+        }
+
+        if (images.length === 0) {
+            imagesError.textContent = "Please select at least one image";
+            event.preventDefault();
+        }
+    });
+</script> {% endcomment %}
+<!-- Add these lines in the <head> section of your HTML template -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+{% endblock content %}

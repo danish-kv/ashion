@@ -1,0 +1,122 @@
+
+
+{% extends 'admin_base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+
+<style>
+	.search-form-container {
+		display: flex;
+		justify-content: flex-end;
+		
+	}
+
+	.search-form {
+		display: flex;
+		align-items: center;
+	}
+
+	.search-form .form-control {
+		margin-right: 5px; 
+	
+	}
+  .unblock{
+		color:white !important;
+    background-color: rgb(0, 118, 0);
+	}
+	.block{
+		color:white !important;
+    background-color: rgb(124, 0, 0)
+    
+	}
+</style>
+<div>
+    <div class="pagetitle">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1>Category</h1>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="addproductbutton">
+                    <a href="{% url "addcategory" %}" class="btn btn-dark mt-2">Add Category</a>
+                </div>
+            </div>
+        </div>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Admin</li>
+                <li class="breadcrumb-item active">Category</li>
+            </ol>
+        </nav>
+    </div>
+    {% if messages %}
+                    {% for message in messages %}
+                        <div class="text-primary">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+    <!-- End Page Title -->
+
+    <!-- Recent Sales -->
+    <div class="col-12">
+        <div class="card recent-sales overflow-auto">
+            <div class="card-body">
+                <table class="table table-borderless datatable mt-3">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Category Name</th>
+                            <th>Unlist</th> 
+                            <th>Edit</th>                         
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in category %}
+                        <tr class="align-middle">
+                            <td>{{i.id}}</td>
+                            <td class="align-middle">
+                                {{i.name}}
+                            </td>
+                            <td>
+                                {% if i.is_listed %}
+                                <a href="/unlistcategory/{{i.id}}" class="btn block " data-toggle="modal">Un list</a>
+                                {% else %}
+                                <a href="/listcategory/{{i.id}}" class="btn unblock " data-toggle="modal">List</a>
+                                {% endif %}
+          
+                              </td>
+                              
+                        
+                            {% comment %} <td class="align-middle">
+                                <a href='product_varient/{{prod.id}}' type="button" class="btn btn-sm btn-secondary">View Details</a>
+                            </td> {% endcomment %}
+                            {% comment %} <td class="align-middle">
+                                <a class="badge btn btn-sm bg-danger" href="soft_delete_product/{{ i.id }}">
+                                    Unlist
+                                </a>
+                            </td>{% endcomment %}
+                            <td class="align-middle">
+                                <a  class="btn unblock " href="/edit_category/{{i.id}}">Edit</a>
+                            </td> 
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div><!-- End Recent Sales -->
+<div>
+
+
+
+
+
+<!-- Add these lines in the <head> section of your HTML template -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+{% endblock content %}
+

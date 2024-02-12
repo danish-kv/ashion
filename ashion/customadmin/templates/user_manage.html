@@ -1,0 +1,204 @@
+{% extends "admin_base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static "admin/usermanage.css" %}">
+
+<div class="container">
+	<div class="table-wrapper">
+		<div class="table-title">
+			<div class="row">
+				<div class="col-sm-6">
+					<h2>Manage <b>Users</b></h2>
+				</div>				
+				<div class="col-sm-6 col-md-6">
+					<div class="search-form-container " style="padding-bottom: 10px;">
+						<form method="get" action="/search/" class="form-inline search-form my-2 my-lg-0">
+							<input class="form-control" type="search" placeholder="Search" aria-label="Search" name="query1" required>
+							{% csrf_token %}
+							<button class="btn btn-primary my-sm-0" type="submit">Search</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			{% if messages %}
+				<ul class="messages text-center" style="list-style: none; color:red">
+				{% for message in messages %}
+					<li {% if message.tags %} class="{{message.tags}}" {% endif %}>{{message}}</li>
+				{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr>
+				  <th>id</th>
+					<th>Username</th>
+					<th>Phone</th>
+					<th>Email</th>
+					<th>date of joined</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for i in data %}
+				<tr>
+					<td>{{i.id}}</td>
+					<td>{{i.username}}</td>
+					<td>{{i.number}}</td>
+					<td>{{i.email}}</td>
+					<td>{{i.date_joined}}</td>
+					<td>
+					  {% if i.is_blocked %}
+					  <a href="/unblockuser/{{i.id}}" class="btn unblock " data-toggle="modal">Un BLock</a>
+					  {% else %}
+					  <a href="/blockuser/{{i.id}}" class="btn block " data-toggle="modal">Block</a>
+					  {% endif %}
+
+					</td>
+				</tr>
+				{% endfor %}
+				 
+			</tbody>
+		</table>
+	</div>
+</div>
+<style>
+	.search-form-container {
+		display: flex;
+		justify-content: flex-end;
+		
+	}
+
+	.search-form {
+		display: flex;
+		align-items: center;
+	}
+
+	.search-form .form-control {
+		margin-right: 5px; 
+	
+	}
+  .unblock{
+		color:white !important;
+    background-color: rgb(0, 118, 0);
+	}
+	.block{
+		color:white !important;
+    background-color: rgb(124, 0, 0)
+    
+	}
+</style>
+{% endblock content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Home</title>
+<link rel="stylesheet" href="{% static "admin/usermanage.css" %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+	.search-form-container {
+		display: flex;
+		justify-content: flex-end;
+		
+	}
+
+	.search-form {
+		display: flex;
+		align-items: center;
+	}
+
+	.search-form .form-control {
+		margin-right: 5px; 
+	
+	}
+  .unblock{
+		color:white !important;
+    background-color: rgb(0, 118, 0);
+	}
+	.block{
+		color:white !important;
+    background-color: rgb(124, 0, 0)
+    
+	}
+</style>
+  <body>
+    <div class="container">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6">
+						<h2>Manage <b>Users</b></h2>
+					</div>				
+					<div class="col-sm-6 col-md-6">
+						<div class="search-form-container " style="padding-bottom: 10px;">
+							<form method="get" action="/search/" class="form-inline search-form my-2 my-lg-0">
+								<input class="form-control" type="search" placeholder="Search" aria-label="Search" name="query1" required>
+								{% csrf_token %}
+								<button class="btn btn-primary my-sm-0" type="submit">Search</button>
+							</form>
+						</div>
+						<a href="{% url 'adminlogout' %}" class="btn btn-danger logout-btn">Logout</a>
+					</div>
+					<!-- <div class="col-sm-6 col-md-6 ">
+                        <form method="get" action="/search/" class="form-inline my-2 my-lg-0">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query1" required>
+                            {% csrf_token %}
+                            <button class="btn btn-primary  my-2 my-sm-0" type="submit">Search</button>
+                        </form>
+					</div> -->
+                </div>
+				{% if messages %}
+					<ul class="messages text-center" style="list-style: none; color:red">
+					{% for message in messages %}
+						<li {% if message.tags %} class="{{message.tags}}" {% endif %}>{{message}}</li>
+					{% endfor %}
+					</ul>
+				{% endif %}
+            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                      <th>id</th>
+                        <th>Username</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>date of joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr>
+                        <td>{{i.id}}</td>
+                        <td>{{i.username}}</td>
+                        <td>{{i.number}}</td>
+                        <td>{{i.email}}</td>
+                        <td>{{i.date_joined}}</td>
+                        <td>
+                          {% if i.is_blocked %}
+                          <a href="/unblockuser/{{i.id}}" class="btn unblock " data-toggle="modal">Un BLock</a>
+                          {% else %}
+                          <a href="/blockuser/{{i.id}}" class="btn block " data-toggle="modal">Block</a>
+                          {% endif %}
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                     
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

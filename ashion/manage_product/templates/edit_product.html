@@ -1,0 +1,157 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+{% comment %} {% block title %} Add Product{% endblock title %}
+{% block products %}{% endblock products %} {% endcomment %}
+
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Edit Products</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Admin</li>
+                <li class="breadcrumb-item">Products</li>
+                <li class="breadcrumb-item active">Edit Product</li>
+            </ol>
+        </nav>
+        {% if messages %}
+                    {% for message in messages %}
+                        <div class="text-danger">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+    </div><!-- End Page Title -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Edit Product</h5>
+            <form method="post" action="/editproduct/{{product.id}}" >
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <label for="id_name" class="col-sm-2 col-form-label">Product Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="name" id="id_name" class="form-control" value="{{product.name}}" >
+                        <div class="text-danger error-message" id="name-error"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="id_description" class="col-sm-2 col-form-label">Description</label>
+                    <div class="col-sm-10">
+                        <textarea name="description" id="id_description" class="form-control" >{{ product.description }}</textarea>
+                        <div class="text-danger error-message" id="description-error"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="id_gender" class="col-sm-2 col-form-label">Gender</label>
+                    <div class="col-sm-10">
+                        <select name="gender" id="id_gender" class="form-select" required>
+                            <option value="Men">Men</option>
+                             <option value="Women">WoMen</option>
+                            <option value="Kids" >Kids</option> 
+                        </select>
+                    </div>
+                </div>
+                {% comment %} <div class="row mb-3">
+                    <label for="id_category" class="col-sm-2 col-form-label">Category</label>
+                    <div class="col-sm-10">
+                        <select name="category" id="id_category" class="form-select" required>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div> {% endcomment %}
+                
+                <div class="row mb-3">
+                    <label for="id_category" class="col-sm-2 col-form-label">Category</label>
+                    <div class="col-sm-10">
+                        <select name="category" id="id_category" class="form-select" >
+                            {% for category in all_categories %}
+                                <option value="{{ category.name }}" {% if category.name == product.category.name %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>                    
+                </div>
+                <div class="row mb-3">
+                    <label for="id_original_price" class="col-sm-2 col-form-label">Original Price:</label>
+                    <div class="col-sm-10">
+                        <input type="number" name="original_price" id="id_original_price" class="form-control" value="{{product.original_price}}">
+                        <div class="text-danger error-message" id="name-error"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="id_selling_price" class="col-sm-2 col-form-label">Selling Price:</label>
+                    <div class="col-sm-10">
+                        <input type="number" name="selling_price" id="id_selling_price" class="form-control" value="{{product.selling_price}}">
+                        <div class="text-danger error-message" id="name-error"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="id_priority" class="col-sm-2 col-form-label">Priority</label>
+                    <div class="col-sm-10">
+                        <input type="number" name="priority" id="id_priority" class="form-control" value="{{product.priority}}">
+                        <div class="text-danger error-message" id="name-error"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="id_img1" class="col-sm-2 col-form-label">Img1</label>
+                    <div class="col-sm-10">
+                        <input type="file" name="img1" id="id_img1" class="form-control" multiple  onchange="handleImageUpload(this.files)">
+                        <div class="error-message" id="images-error"></div>
+                        {% if product.img1 %}
+                            <img src="{{ product.img1.url }}" alt="Img1 Preview" style="max-width: 200px; max-height: 200px;">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="id_img2" class="col-sm-2 col-form-label">Img1</label>
+                    <div class="col-sm-10">
+                        <input type="file" name="img2" id="id_img2" class="form-control" multiple  onchange="handleImageUpload(this.files)">
+                        <div class="error-message" id="images-error"></div>
+                        {% if product.img2 %}
+                            <img src="{{ product.img2.url }}" alt="Img2 Preview" style="max-width: 200px; max-height: 200px;">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="id_img3" class="col-sm-2 col-form-label">Img3</label>
+                    <div class="col-sm-10">
+                        <input type="file" name="img3" id="id_img3" class="form-control" multiple  onchange="handleImageUpload(this.files)">
+                        <div class="error-message" id="images-error"></div>
+                        {% if product.img3 %}
+                            <img src="{{ product.img3.url }}" alt="Img3 Preview" style="max-width: 200px; max-height: 200px;">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="id_img3" class="col-sm-2 col-form-label">Img4</label>
+                    <div class="col-sm-10">
+                        <input type="file" name="img4" id="id_img4" class="form-control" multiple  onchange="handleImageUpload(this.files)">
+                        <div class="error-message" id="images-error"></div>
+                        {% if product.img4 %}
+                            <img src="{{ product.img4.url }}" alt="Img4 Preview" style="max-width: 200px; max-height: 200px;">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-dark">Edit Product</button>
+                    </div>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</main>
+    
+<!-- Add these lines in the <head> section of your HTML template -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+
+{% endblock content %}
