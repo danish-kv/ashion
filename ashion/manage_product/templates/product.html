@@ -22,7 +22,7 @@
             </div>
             <div class="col-md-6 text-end">
                 <div class="addproductbutton">
-                    <a href="{% url "addproduct" %}" class="btn btn-dark mt-2">Add Products</a>
+                    <a href="/addproduct/" class="btn btn-dark mt-2">Add Products</a>
                 </div>
             </div>
         </div>
@@ -32,11 +32,8 @@
                 <li class="breadcrumb-item active">Products</li>
             </ol>
         </nav>
-        {% if messages %}
-                    {% for message in messages %}
-                        <div class="text-danger">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
+
+
     </div>
     <!-- End Page Title -->
 
@@ -51,8 +48,7 @@
                             <th>Product Image</th>
                             <th>Product Name</th>
                             {% comment %} <th>Stock</th> {% endcomment %}
-                            {% comment %} <th>Variand Details</th> {% endcomment %}
-                            <th>Gender</th>
+                            <th>Variant Details</th>
                             <th>Category</th>
                             <th>Price</th>
                             <th>Unlist</th>
@@ -72,18 +68,25 @@
                             <td class="align-middle">
                                 {{i.name}}
                             </td>
-                            <td class="align-middle" >
-                                {{i.gender}}
+                            {% comment %} <td class="align-middle">
+                                {{i.category.}}
                             </td>
+                             {% endcomment %}
+                             
                             <td class="align-middle">
-                                {{i.category.name}}
+                                {% if i.variant_set.all %}
+                                <a href='/variant/{{i.id}}' type="button" class="btn btn-sm btn-primary ">Show Variant</a>
+                                {% else %}
+                                <a href='/add_variant/{{i.id}}' type="button" class="btn btn-sm btn-danger ">Add Variant</a>
+                                {% endif %}
+                            </td> 
+                            
+                            <td class="align-middle">
+                                {{i.category}}
                             </td>
                             <td class="align-middle">
                                 {{i.selling_price}}
                             </td>
-                            {% comment %} <td class="align-middle">
-                                <a href='product_varient/{{prod.id}}' type="button" class="btn btn-sm btn-secondary">View Details</a>
-                            </td>  {% endcomment %}
                              <td class="align-middle">
                                 {% if i.is_listed %}
                                 <a class="badge btn btn-sm bg-danger" href="/unlist_product/{{ i.id }}">Unlist</a>
@@ -150,4 +153,5 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+
 {% endblock content %}

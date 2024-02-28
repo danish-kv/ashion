@@ -20,7 +20,7 @@
                         <h1>Women’s fashion</h1>
                         <p>Sitamet, consectetur adipiscing elit, sed do eiusmod tempor incidid-unt labore
                         edolore magna aliquapendisse ultrices gravida.</p>
-                        <a href="/product_list/?data=Women ">Shop now</a>
+                        <a href="product_list/?data=Women ">Shop now</a>
                     </div>
                 </div>
             </div>
@@ -81,12 +81,10 @@
             <div class="col-lg-8 col-md-8">
                 <ul class="filter__controls">
                     <li><a href="/?data=all">All</a></li>
-                    <li><a href="?data=women">Women’s</a></li>
-                    <li><a href="?data=men">Men’s</a></li>
-                    <li><a href="?data=kids">Kid’s</a></li>
+                        {% for i in cat %}
+                          <li><a href="?data={{ i.name }}">{{ i.name }}</a></li>
+                        {% endfor %} 
                     
-                    {% comment %} <li data-filter=".accessories">Accessories</li>
-                    <li data-filter=".cosmetic">Cosmetics</li> {% endcomment %}
                 </ul>
             </div>
         </div>
@@ -100,7 +98,7 @@
                         {% comment %} <div class="label new">New</div> {% endcomment %}
                         <ul class="product__hover">
                             <li><a href="{{ p.img1.url }}" class="image-popup"><span class="arrow_expand"></span></a></li>
-                            <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                            <li><a href="{% url 'add_to_wishlist' id=p.id from_page='home' %}"><span class="icon_heart_alt"></span></a></li>
                             <li><a href="#"><span class="icon_bag_alt"></span></a></li>
                         </ul>
                     </div>
@@ -119,66 +117,7 @@
                     </div>
                 </div>
             </div>
-            {% endfor %}
-            
-
-
-            
-
-
-
-            {% comment %} <div class="col-lg-3 col-md-4 col-sm-6 mix men">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="{% static "main/img/product/product-2.jpg" %}">
-                        <ul class="product__hover">
-                            <li><a href="{% static "mai/main/img/product/product-2.jpg" %}" class="image-popup"><span class="arrow_expand"></span></a></li>
-                            <li><a href="#"><span class="icon_heart_alt"></span></a></li>
-                            <li><a href="#"><span class="icon_bag_alt"></span></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">d</a></h6>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product__price">{{ p.orginal_price }}</div>
-                        <div class="product__price">{{ p.selling_price }}</div>
-                    </div>
-                </div>
-            </div> {% endcomment %}
-            
-
-{% comment %} 
-
-
-            
-            <div class="col-lg-3 col-md-4 col-sm-6 mix kid">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="{% static "/main/img/product/product-5.jpg" %}">
-                        <ul class="product__hover">
-                            <li><a href="{% static "/main/img/product/product-5.jpg" %}" class="image-popup"><span class="arrow_expand"></span></a></li>
-                            <li><a href="#"><span class="icon_heart_alt"></span></a></li>
-                            <li><a href="#"><span class="icon_bag_alt"></span></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Fit micro corduroy shirt</a></h6>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product__price">$ 59.0</div>
-                    </div>
-                </div>
-            </div> {% endcomment %}
-            
+            {% endfor %}            
         </div>
     </div>
 </section>

@@ -19,8 +19,3 @@ class Category(models.Model):
         return self.name
 
 
-
-    # CATEGORY_CHOICE = [('Shirt', 'shirt'), ('Pant', 'pant'), ('T-Shirt', 't-shirt'),
-    #             ('Churidar', 'churidar'), ('Salwar', 'salwar'), ('Sarees', 'sarees'),('Skirts', 'skirts'),
-    #             ('Frock',' frock'), ('Kids-Tshirt', 'kids-tshirt'), ('Kids-Pant', 'kids-pant'),
-    #             ]

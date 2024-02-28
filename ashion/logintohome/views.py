@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from manage_product.models import products
 from manage_category.models import Category
-
 from datetime import datetime
 from django.utils import timezone
 from . import models
@@ -17,7 +16,6 @@ from django.core.paginator import Paginator
 # Create your views here.
 
 
-
 def home(request):
     data = request.GET.get('data', '')
 
@@ -25,16 +23,23 @@ def home(request):
 
     if data == 'all':
         obj = products.objects.filter(is_listed=True)[:8]
-    elif data == 'women':
-        obj = products.objects.filter(gender='Women', is_listed=True)[:8]
-    elif data == 'men':
-        obj = products.objects.filter(gender='Men', is_listed=True)[:8]
-    elif data == 'kids':
-        obj = products.objects.filter(gender='Kids', is_listed=True)[:8]
+    elif data == 'Women':
+        obj = products.objects.filter(category__name='Women', is_listed=True)[:8]
+    elif data == 'Men':
+        obj = products.objects.filter(category__name='Men', is_listed=True)[:8]
+    elif data == 'Kids':
+        obj = products.objects.filter(category__name='Kids', is_listed=True)[:8]
 
     new_products = products.objects.order_by('id')[:8]
-    context = {"new_products": new_products, 'data': obj}
+
+    context = {"new_products": new_products,
+               'data': obj,
+               'user' :request.user}
+    
     return render(request, 'home.html', context)
+
+
+
 
 
 
@@ -60,20 +65,16 @@ def login(request):
 
             if user.is_verified:
                 request.session['email'] = email
+                messages.success(request,'welcome to ashion')
                 return redirect('home')
-            
             else:
                 otp = models.generate_otp(user)
                 models.send_otp_email(user,otp)
                 return redirect('otpverify',user.id)
-
         else:
             messages.error(request, 'Invalid email or password')
             
-
-
     return render(request, 'login.html')
-
 
 
 def signup(request):
@@ -161,6 +162,8 @@ def otp_verification(request,id):
 def logout(request):
     if 'email' in request.session:
         request.session.flush()
+        
+        messages.success(request,'You have been successfully logged out. Thank you for using our services!')
         return  redirect('home')
     
 
@@ -172,57 +175,6 @@ def cart(request):
 
 
 
-
-
-def product_list(request):
-    context ={}
-    product_list = products.objects.all() 
-
-    data = request.GET.get('data')
-    print(data)
-
-    if data == 'Women':
-        product_list = product_list.filter(gender = data, is_listed=True)
-        context['data'] = 'Women'
-    elif data == 'Men':
-        product_list = product_list.filter(gender = data, is_listed=True)
-        context['data'] = 'Men'
-    elif data == 'Kids':
-        product_list = product_list.filter(gender = data, is_listed=True)
-        context['data'] = 'Kids'
-
-
-    if request.GET:
-        page = request.GET.get('page',1)
-
-   
-    paginator = Paginator(product_list, 9)
-    product_list = paginator.get_page(page)
-    cat = Category.objects.all
-    context['product'] = product_list  
-    context['cat'] = cat
-
-    return render(request, 'product_list.html', context)
-
-
-
-
-
-
-
-def product_details(request,id):
-    product = products.objects.get(id = id)
-    context = {'product' : product}
-    return render(request,'product_details.html',context)
-
-
-def search(request):
-    if request.method == "GET":
-        search = request.GET.get('search')
-
-        search_result = products.objects.filter(name__icontains = search)
-        context = {'product' : search_result} 
-        return render(request,'product_list.html',context)
 
 def contact(request):
     return render(request,'contact.html')

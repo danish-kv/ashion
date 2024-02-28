@@ -1,22 +1,17 @@
 from django.db import models
-from manage_category.models import Brand, Category
+from manage_category.models import Category
 
 # Create your models here.
 
-# ('Casual', 'casual'), ('Formal', 'formal'), ('Street-Style', 'street-style'),
+
 
 
 class products(models.Model):
-
-    GENDER = [('Men', 'men'), ('Women', 'women'), ('Kids', 'kids')]
-
 
     name = models.CharField(max_length=200)
     description = models.TextField()
     original_price = models.DecimalField(max_digits=10, decimal_places=2)
     selling_price = models.DecimalField(max_digits=10, decimal_places=2)
-    gender = models.CharField( max_length=10 , choices = GENDER, default='all')
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, null = True)
     category = models.ForeignKey(Category,on_delete = models.CASCADE)
     priority = models.IntegerField(default= 1)
     img1 = models.ImageField(upload_to="media/")
@@ -27,3 +22,18 @@ class products(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Variant(models.Model):
+    SIZE_CHOICES = [('S', 'Small'), ('M', 'Medium'), ('L', 'Large')]
+
+    product_id = models.ForeignKey(products, on_delete=models.CASCADE)
+    size = models.CharField(max_length=5, choices=SIZE_CHOICES, null = True, blank=True)
+    stock = models.PositiveIntegerField(default=0, null=True, blank=True)
+
+    # color = models.CharField(max_length=20, null=True, blank=True, default = 'white')
+
+    def __str__(self):
+        return f"{self.product_id.name} - {self.size}"
+    
+    

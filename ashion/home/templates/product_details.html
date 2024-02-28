@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+    <!-- Header Section Begin -->
+{% block header %}
+{% include "inc/navbar.html" %}
+{% endblock header %}
+    <!-- Header Section End -->
+
+
+
+{% include "inc/message.html" %}
+
+
+
+{% block content %}
+
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="/"><i class="fa fa-home"></i> Home</a>
+                        {% comment %} <a href="#">{{ product.gender }} </a> {% endcomment %}
+                        <a href="">{{ product.category }} </a>
+                        <span>{{ product.name }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Product Details Section Begin -->
+    <section class="product-details spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product__details__pic">
+                        <div class="product__details__pic__left product__thumb nice-scroll">
+                            <a class="pt active" href="#product-1">
+                                <img src="{{ product.img1.url }}" alt="">
+                            </a>
+                            <a class="pt" href="#product-2">
+                                <img src="{{ product.img2.url }}" alt="">
+                            </a>
+                            <a class="pt" href="#product-3">
+                                <img src="{{ product.img3.url }}" alt="">
+                            </a>
+                            <a class="pt" href="#product-4">
+                                <img src="{{ product.img4.url }}" alt="">
+                            </a>
+                        </div>
+                        <div class="product__details__slider__content">
+                            <div class="product__details__pic__slider owl-carousel">
+                                <img data-hash="product-1" class="product__big__img" src="{{ product.img1.url }}" alt="">
+                                <img data-hash="product-2" class="product__big__img" src="{{ product.img2.url }}" alt="">
+                                <img data-hash="product-3" class="product__big__img" src="{{ product.img3.url }}" alt="">
+                                <img data-hash="product-4" class="product__big__img" src="{{ product.img4.url }}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="product__details__text">
+                        <h3>{{ product.name }} <span>Brand: SKMEIMore Men Watches from SKMEI</span></h3>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <span>( 138 reviews )</span>
+                        </div>
+                        <div class="product__details__price">{{ product.selling_price }} <span> {{ product.original_price }}</span></div>
+                        <p>{{ product.description }}</p>
+                        <div class="product__details__button">
+
+                            <form action="/addtocart/{{ product.id }}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="quantity">
+                                    <span>Quantity:</span>
+                                    <div class="pro-qty"><input type="text" name="quantity" value="1" readonly></div>
+                                    
+                                </div>
+                                
+
+                                <div class="product__details__widget">
+                                    <ul>
+                                        <li>
+                                            <span>Availability:</span>
+                                            {% if var %}
+                                                {% if var > 0 %}
+                                                    <p>In Stock</p>
+                                                {% else %}
+                                                    <p>Out Of Stock</p>
+                                                {% endif %}
+                                            {% endif %}
+                                        </li>
+                                        
+                                        {% comment %} <li>
+                                            <span>Available color:</span>
+                                            <div class="color__checkbox" id="color-options">
+                                                {% for variant in variants %}
+                                                    <label for="{{ variant.color }}">
+                                                        <input type="radio" name="color__radio" id="{{ variant.color }}" >
+                                                        <span class="checkmark {{ variant.color }}-bg"></span>
+                                                    </label>
+                                                {% endfor %}
+                                            </div>
+                                        </li> {% endcomment %}
+                                        <li>
+                                            <span>Available size:</span>
+                                            <div class="size__btn">
+                                                <select name="size" id="size-dropdown" class="js-example-basic-single">
+                                                    {% for variant in variants %}
+                                                         
+                                                        <option value="{{ variant.size }}" {% if forloop.first %}selected{% endif %}>
+                                                            {{ variant.size }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <span>Shipping charge :</span>
+                                            <p>Free shipping</p>
+                                        </li>
+                                    </ul>
+                                    
+                                </div>
+                                {% if variants %}
+                                <button type="submit" class="cart-btn " >  Add to cart </button>
+                                    <ul>
+                                        <li><a href="{% url 'add_to_wishlist' id=product.id from_page='product_details' %}"><span class="icon_heart_alt"></span></a></li>
+                                        <li><a href="/showcart/"><span class="icon_adjust-horiz"></span></a></li>
+                                    </ul>
+                                {% else %}
+                                <a class="cart-btn ">Out of Stock</a>
+                                    
+                                {% endif %}
+                            </form>
+                            
+                            {% comment %} <a href="#" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</a> {% endcomment %}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="product__details__tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Description</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Specification</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Reviews ( 2 )</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                                <h6>Description</h6>
+                                <p>{{ product.description }}</p>
+                            </div>
+                            <div class="tab-pane" id="tabs-2" role="tabpanel">
+                                <h6>Specification</h6>
+                                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                    quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                    Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                    voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                    consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                                consequat massa quis enim.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                    dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                    nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                                quis, sem.</p>
+                            </div>
+                            <div class="tab-pane" id="tabs-3" role="tabpanel">
+                                <h6>Reviews ( 2 )</h6>
+                                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                    quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                    Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                    voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                    consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                                consequat massa quis enim.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                    dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                    nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                                quis, sem.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="related__title">
+                        <h5>RELATED PRODUCTS</h5>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="img/product/related/rp-1.jpg">
+                            <div class="label new">New</div>
+                            <ul class="product__hover">
+                                <li><a href="img/product/related/rp-1.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Buttons tweed blazer</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 59.0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="img/product/related/rp-2.jpg">
+                            <ul class="product__hover">
+                                <li><a href="img/product/related/rp-2.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Flowy striped skirt</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 49.0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="img/product/related/rp-3.jpg">
+                            <div class="label stockout">out of stock</div>
+                            <ul class="product__hover">
+                                <li><a href="img/product/related/rp-3.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Cotton T-Shirt</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 59.0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="img/product/related/rp-4.jpg">
+                            <ul class="product__hover">
+                                <li><a href="img/product/related/rp-4.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Slim striped pocket shirt</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 59.0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Initialize Select2 on your dropdown
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
+    {% endblock content %}
+    <!-- Product Details Section End -->
+
+    <!-- Instagram Begin -->
+    {% block instagram %}
+    {% include "inc/instagram.html" %}
+    {% endblock instagram %}
+    <!-- Instagram End -->
+
+
+
+    <!-- Footer Section Begin -->
+    {% block footer %}
+    {% include "inc/footer.html" %}
+    {% endblock footer %}
+    <!-- Footer Section End -->
+
+
+
+    <!-- Search Begin -->
+    <div class="search-model">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch">+</div>
+            <form class="search-model-form">
+                <input type="text" id="search-input" placeholder="Search here.....">
+            </form>
+        </div>
+    </div>
+    <!-- Search End -->
+

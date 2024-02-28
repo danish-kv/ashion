@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% load static %}
+{% load chunks %}
+
+
+    <!-- Header Section start -->
+    {% block header %}
+    {% include "inc/navbar.html" %}
+    {% endblock header %}
+    <!-- Header Section End -->
+
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="/"><i class="fa fa-home"></i> Home</a>
+                        <span>{{ cat.name }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+{% include "inc/message.html" %}
+
+
+{% block content %}
+
+
+
+    <!-- Shop Section Begin -->
+    
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="shop__sidebar">
+                        <!-- Sorting functionality-->
+                        <div class="toolbox-sort pb-5 pt-3">
+                            <form action="{% url "productlist" %}" id="sortForm" >
+                            <label for="sortby">Sort by:</label>
+                            <div class="select-custom">
+                                {% comment %} <select name="sortby" id="sortby" class="form-control" onchange="location.href = finalUrl();"> {% endcomment %}
+                                <select name="sortby" id="sortby" class="form-control" onchange="this.form.submit();">
+
+                                    <option id="popularity" hidden value="popularity" {% if sort_by == 'popularity' %}selected="selected"{% endif %}>Popularity</option>
+                                    <option id="selling_price" value="selling_price"{% if sort_by == 'lowToHigh' %}selected="selected"{% endif %}>Price: Low to High</option>
+                                    <option id="-selling_price" value="-selling_price"{% if sort_by == 'highToLow' %}selected="selected"{% endif %}>Price: High to Low</option>
+                                    <option id="ratings" value="ratings" {% if sort_by == 'ratings' %}selected="selected"{% endif %}>Average Ratings</option>
+                                    <option id="priority" value="priority" {% if sort_by == 'featured' %}selected="selected"{% endif %}>Featured</option>
+                                    <option id="-id" value="-id" {% if sort_by == 'newArriivals' %}selected="selected"{% endif %}>New Arrivals</option>
+                                    <option id="name" value="name" {% if sort_by == 'az' %}selected="selected"{% endif %}>A-Z</option>
+                                    <option id="-name" value="-name" {% if sort_by == 'za' %}selected="selected"{% endif %}>Z-A</option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="data" value="{{ data }}">
+                        </form>
+                        <a href="?page={{ dara }}{% if data %}&data={{ data }}{% endif %}"></a>
+
+                        </div><!-- End .toolbox-sort -->
+                         
+                        <div class="sidebar__filter">
+                            <div class="section-title">
+                                <h4>Shop by price</h4>
+                            </div>
+                            <div class="filter-range-wrap">
+                                <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
+                                data-min="33" data-max="99"></div>
+                                <div class="range-slider">
+                                    <div class="price-input">
+                                        <p>Price:</p>
+                                        <input type="text" id="minamount">
+                                        <input type="text" id="maxamount">
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">Filter</a>
+                        </div>
+                        <div class="sidebar__sizes">
+                            <div class="section-title">
+                                <h4>Shop by size</h4>
+                            </div>
+                            <div class="size__list">
+                                
+                                <label for="s">
+                                    s
+                                    <input type="checkbox" id="s">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label for="m">
+                                    m
+                                    <input type="checkbox" id="m">
+                                    <span class="checkmark"></span>
+                                </label>
+                                
+                                <label for="l">
+                                    l
+                                    <input type="checkbox" id="l">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+               
+                <div class="col-lg-9 col-md-9">
+                    {% if product %}
+                    {% for product_chunk in product|chunks:9 %}
+                    <div class="row">
+                        {% for p in product_chunk %}
+                        <div class="col-lg-4 col-md-6">
+                            <div class="product__item">
+                                {% if p.img1 %}
+                                <div class="product__item__pic set-bg" alt='ima' data-setbg="{% static p.img1.url %}" >
+                                 <a href="/product_details/{{p.id}}"><img href="#" src="{{p.img1.url}}" alt="jhasdkfl"></a>
+                                    {% comment %} <div class="label new">New</div> {% endcomment %}
+                                    <ul class="product__hover">
+                                        <li><a href="{{ p.img1.url }}" class="image-popup"><span class="arrow_expand"></span></a></li>
+<!-- Product List template -->
+                                        <li><a href="{% url 'add_to_wishlist' id=p.id from_page='product_list' %}?data={{ request.GET.data }}"><span class="icon_heart_alt"></span></a></li>
+                                        <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                                    </ul>
+                                </div>
+                                {% endif %}
+                                <div class="product__item__text">
+                                    <h6><a href="#">{{ p.name }}</a></h6>
+                                    <div class="rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <div class="product__price">{{ p.orginal_price }}</div>
+                                    <div class="product__price">{{ p.selling_price }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% if not sortby %}
+                        <div class="col-lg-12 text-center">
+                            <div class="pagination__option">
+                                {% if product.has_previous %}
+                                <a href="?page={{ product.previous_page_number }}{% if data %}&data={{ data }}{% endif %}"><i class="fa fa-angle-left"></i></a>
+                                {% endif %}
+                                
+                                {% for i in product.paginator.page_range  %}
+                                <a href="?page={{i}}{% if data %}&data={{ data }}{% endif %}">{{i}}</a>
+                                {% endfor %}
+
+                                {% if product.has_next %}
+                                <a href="?page={{ product.next_page_number }}{% if data %}&data={{ data }}{% endif %}"><i class="fa fa-angle-right"></i></a>
+                                {% endif %}
+                                
+                            </div>
+                        </div>
+                        {% endif %}
+                       
+                        
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p>No products available.</p>
+                    {% endif %}
+                    
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    {% comment %} <script>
+      function sortProducts(criteria) {
+        // Add logic to sort and update product listings based on the selected criteria
+        console.log(`Sorting by: ${criteria}`);
+        // Update product listings here
+      }
+    </script> {% endcomment %}
+    
+{% comment %} <script>
+    function finalUrl() {
+        // Construct the final URL based on the selected sorting option
+        var selectedOption = document.getElementById("sortby");
+        var selectedValue = selectedOption.options[selectedOption.selectedIndex].value;
+        
+        // Assuming you want to redirect to the current URL with the selected sorting option
+        var currentUrl = window.location.href;
+        var finalUrl = currentUrl + "?sortby=" + selectedValue;
+
+        return finalUrl;
+    }
+</script> {% endcomment %}
+
+    <!-- Shop Section End -->
+    {% endblock content %}
+    <!-- Instagram Begin -->
+
+    {% block instagram %}
+    {% include "inc/instagram.html" %}
+    {% endblock instagram %}
+    <!-- Instagram End -->
+
+
+
+    <!-- Footer Section Begin -->
+  {% block footer %}
+  {% include "inc/footer.html" %}
+  {% endblock footer %}
+    <!-- Footer Section End -->
+
+    <!-- Search Begin -->
+    <div class="search-model">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch">+</div>
+            <form class="search-model-form">
+                <input type="text" id="search-input" placeholder="Search here.....">
+            </form>
+        </div>
+    </div>
+    <!-- Search End -->
+

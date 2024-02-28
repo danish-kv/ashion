@@ -14,7 +14,7 @@
             </a></li>
         </ul>
         <div class="offcanvas__logo">
-            <a href="./index.html"><img src="img/logo.png" alt=""></a>
+            <a href="./index."><img src="img/logo.png" alt=""></a>
         </div>
         <div id="mobile-menu-wrap"></div>
         <div class="offcanvas__auth">
@@ -35,48 +35,27 @@
             <div class="col-xl-6 col-lg-7">
                 <nav class="header__menu">
                     <ul>
-                        <li class="active"><a href="{% url "home" %}">Home</a></li>
-                        <li><a href="/product_list/?data=Women ">Women’s</a>
-                            <ul class="dropdown">
-                                <li><a href="#">All</a></li>
-                                <li><a href="#">Jackets</a></li>
-                                <li><a href="#">Dresses</a></li>
-                                <li><a href="#">Shirts</a></li>
-                                <li><a href="#">T-shirts</a></li>
-                                <li><a href="#">Jeans</a></li>
-                            </ul>
-                        </li>
 
-                        <li><a href="/product_list/?data=Men ">Men’s</a>
+                        <li class="active"><a href="{% url "home" %}">Home</a></li>
+                        
+                        {% comment %} <li><a href="/product_list/?data=Women ">Women’s</a></li>
+                        <li><a href="/product_list/?data=Men ">Men’s</a></li>
+                        <li><a href="/product_list/?data=Kids">Kids</a></li> {% endcomment %}
+                        
+                        
+                        {% for i in cat %}
+                          <li><a href="/product_list/?data={{ i.name }}">{{ i.name }}</a></li>
+                        {% endfor %} 
+                        
+                        {% comment %} <li><a href="">Pages</a>
                             <ul class="dropdown">
-                                <li><a href="#">All</a></li>
-                                <li><a href="#">Shirt</a></li>
-                                <li><a href="#">Pant</a></li>
-                                <li><a href="#">T-Shirt</a></li>
-                                <li><a href="#">T</a></li>
-                                <li><a href="#">Jeans</a></li>
+                                <li><a href="">My Profile</a></li>
+                                <li><a href="">Cart</a></li>
+                                <li><a href="">Cart</a></li>
                             </ul>
-                        </li>
-                        <li><a href="/product_list/?data=Kids">Kids</a>
-                            <ul class="dropdown">
-                                <li><a href="#">Coats</a></li>
-                                <li><a href="#">Jackets</a></li>
-                                <li><a href="#">Dresses</a></li>
-                                <li><a href="#">Shirts</a></li>
-                                <li><a href="#">T-shirts</a></li>
-                                <li><a href="#">Jeans</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="">Pages</a>
-                            <ul class="dropdown">
-                                {% comment %} <li><a href="{% url "" %}">Product Details</a></li> {% endcomment %}
-                                <li><a href="">Shop Cart</a></li>
-                                <li><a href="">Checkout</a></li>
-                                {% comment %} <li><a href="./blog-details.html">Blog Details</a></li> {% endcomment %}
-                            </ul>
-                        </li>
-                        {% comment %} <li><a href="./blog.html">Blog</a></li> {% endcomment %}
-                        <li><a href="{% url "contact" %}">Contact</a></li>
+                        </li> {% endcomment %}
+                        <li>
+                        <a href="{% url "contact" %}">Contact</a></li>
                     </ul>
                 </nav>
             </div>
@@ -84,22 +63,20 @@
                 <div class="header__right">
                     <div class="header__right__auth">
                         {% if 'email' in request.session %}
-                        {% comment %} <li>
-                            <a href="#">My Account</a>
-                            <ul class="dropdown">
-                                <li><a href="./product-details.html">Product Details</a></li>
-                                <li><a href="./shop-cart.html">Shop Cart</a></li>
-                                <li><a href="{% url "logout" %}">Logout</a></li>
-                            </ul>
-                        </li> {% endcomment %}
-                        <!-- Add this to your navigation menu -->
-                        <li class="nav-item dropdown">
+                        
+                        
+                        <li class="nav-item dropdown" style="list-style: none; padding: 0; margin: 0;">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 My Account
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="">Product Details</a>
-                                <a class="dropdown-item" href="">Shop Cart</a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                                <a class="dropdown-item"  href="/user_dashbord/">Profile</a>
+                                <a class="dropdown-item" href="/user_dashbord/">Wishlist</a>
+                                <a class="dropdown-item" href="/my_order/">Orders</a>
+                                <a class="dropdown-item" href="/showcart/">Cart</a>
+
+                                {% comment %} <a class="dropdown-item" href="/cart/" >Cart</a> {% endcomment %}
                                 <a class="dropdown-item" href="{% url "logout" %}">Logout</a>
                             </div>
                         </li>
@@ -118,15 +95,22 @@
 							</form>
 						</div>
 					</div> {% endcomment %}
+                   
                     <ul class="header__right__widget">
                         <li>
-                            <a href="#/?search/"><span class="icon_search search-switch"></span></a>
-                                                          
+                            <li class="nav-item">
+                                <div class="header-search">
+                                    <a href="#" class="search-toggle" role="button" title="Search">
+                                        <span class="icon_search search-switch"></span>
+                                    </a>
+                                    
+                            </li>        
+                          
                         </li>
-                        <li><a href=""><span class="icon_heart_alt"></span>
+                        <li><a href="/wishlist/"><span class="icon_heart_alt"></span>
                             <div class="tip">2</div>
                         </a></li>
-                        <li><a href="cart/"><span class="icon_bag_alt"></span>
+                        <li><a href="/showcart/"><span class="icon_bag_alt"></span>
                             <div class="tip">2</div>
                         </a></li>
                     </ul>
@@ -138,4 +122,9 @@
         </div>
     </div>
 </header>
+
+
+
+
+
 

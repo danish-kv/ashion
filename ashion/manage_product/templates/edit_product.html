@@ -17,7 +17,7 @@
                 <li class="breadcrumb-item active">Edit Product</li>
             </ol>
         </nav>
-        {% if messages %}
+                {% if messages %}
                     {% for message in messages %}
                         <div class="text-danger">{{ message }}</div>
                     {% endfor %}
@@ -42,7 +42,7 @@
                         <div class="text-danger error-message" id="description-error"></div>
                     </div>
                 </div>
-                <div class="row mb-3">
+                {% comment %} <div class="row mb-3">
                     <label for="id_gender" class="col-sm-2 col-form-label">Gender</label>
                     <div class="col-sm-10">
                         <select name="gender" id="id_gender" class="form-select" required>
@@ -51,7 +51,7 @@
                             <option value="Kids" >Kids</option> 
                         </select>
                     </div>
-                </div>
+                </div> {% endcomment %}
                 {% comment %} <div class="row mb-3">
                     <label for="id_category" class="col-sm-2 col-form-label">Category</label>
                     <div class="col-sm-10">

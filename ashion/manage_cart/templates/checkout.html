@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block header %}
+{% include "inc/navbar.html" %}
+{% endblock header %}
+
+
+{% block content %}
+<style>
+
+/* CSS */
+.button-31 {
+  background-color: #222;
+  border-style: none;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Farfetch Basis","Helvetica Neue",Arial,sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0;
+  max-width: none;
+  min-width: 10px;
+  outline: none;
+  overflow: hidden;
+  padding: 9px 20px 8px;
+  position: relative;
+  text-align: center;
+}
+
+.button-31:hover,
+.button-31:focus {
+  opacity: .75;
+}
+
+
+</style>
+<main class="main">
+     <!-- Breadcrumb Begin -->
+     <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="/"><i class="fa fa-home"></i> Home</a>
+                        <a href="/"><i class="fa fa-cart"></i> Shopping cart</a>
+                        <span>Checkout</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+  
+    <div class="page-content">
+      <div class="cart mb-5">
+        <div class="container">
+          <div class="row">
+            
+           
+            <div class="col-md-8 cart-item-box">
+              {% comment %} <h5 class="text-dark mb-3">1. &nbsp; Select a delivery address</h5> {% endcomment %}
+                  
+              {% if addresses %}
+              
+                  <a href="/checkout_add_address/">
+                      <div class="d-flex justify-content-end mr-3">
+                          <button type='button' class="btn btn-dark" id="addAddressBtn">Add New Address</button>
+                      </div>
+                  </a>
+                  <form method="post" action="{% url "place_order" %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                  {% comment %} <form method="post" id="addressForm"> {% endcomment %}
+                    <div class="address-container" >
+                        <label for="selected_address">Choose a delivery address:</label>
+                        {% if messages %}
+                    <ul class="messages  " style="list-style: none; color:red">
+                        {% for message in messages %}
+                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                        <ul style="list-style: none;">
+                          {% for address in addresses %}
+                            <li style="border: 1px solid #333; margin: 10px; padding: 20px; color: black;">
+                              <input type="radio" name="selected_address" id="address_{{ address.id }}" value="{{ address.id }}" required>
+                              <label for="address_{{ address.id }}">
+                                <span style="font-weight: bold;">Address {{ address.counter }}:</span>
+                                <br>
+                                {{ address.name }}<br>
+                                {{ address.number }}<br>
+                                {{ address.address }}, {{ address.city }}, {{ address.state }}, {{ address.pincode }}
+                              </label>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+          
+                  {% comment %} {% if addresses|length > 2 %}
+                  <div class="text-center d-flex justify-content-end mr-3 ">
+                    <button type="button" class="btn btn-" id="chooseOtherAddressBtn" style="display: none; display: flex; justify-content: end; align-items: center;">
+                      Other
+                      <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M2 334.5c-3.8 8.8-2 19 4.6 26l136 144c4.5 4.8 10.8 7.5 17.4 7.5s12.9-2.7 17.4-7.5l136-144c6.6-7 8.4-17.2 4.6-26s-12.5-14.5-22-14.5l-72 0 0-288c0-17.7-14.3-32-32-32L128 0C110.3 0 96 14.3 96 32l0 288-72 0c-9.6 0-18.2 5.7-22 14.5z"/></svg>
+                  </button>
+                  </div>
+                  {% endif %}
+          
+                  <div id="otherAddresses" style="display: none;">
+                      {% for address in addresses|slice:"2:" %}
+                      <div class="address-container" style="border: 1px solid #333; margin: 10px; padding: 20px; color: black;">
+                          <div style="margin-bottom: 10px;">
+                              <input type="radio" name="selected_address" value="{{ address.id }}" id="address_{{ address.id }}">
+                              <label for="address_{{ address.id }}">
+                                  <span style="font-weight: bold;">Address:</span><br>
+                                  {{ address.full_name }} <br>
+                                  {{ address.mobile_number }} <br>
+                                  {{ address.address_line }}, {{ address.city }}, {{ address.state }}, {{ address.pincode }}<br>
+                              </label>
+                          </div>
+                          <div class="d-flex justify-content-end">
+                              <a href="../checkout_update_address/{{ address.id }}" class="btn-primary" id="editAddressBtn_{{ address.id }}" style="font-size: 12px; width: 65px; margin-right: 10px; text-align: center; display: inline-block; line-height: 1.5;">Edit</a>
+                          </div>
+                      </div>
+                      
+                      {% endfor %}
+                      <div class="d-flex justify-content-end mr-3">
+                          <button type="button" class="btn btn-secondery" id="closeOtherAddressesBtn" style="display: none;">Close Addresses<i class="fa-solid fa-x" style="color: #000000;"></i></button>
+                      </div>
+                  </div> {% endcomment %}
+          
+              {% else %}
+                  <!-- Display add address button with an image when there are no addresses -->
+                  <div class="text-center">
+                    <img src="{% static 'main/shirt2.3.jpg' %}" alt="No Address Image" style="height: 35rem; display: block; margin: 0 auto;display: flex; justify-content: end; align-items: center;">
+                    <p>No addresses available. Add a new address.</p>
+                    <a href="/checkout_add_address/">
+                        <button type="button" class="btn btn-dark" id="addAddressBtn">Add New Address</button>
+                    </a>
+                </div>
+                
+              {% endif %}
+          
+          
+            {% comment %} </form> {% endcomment %}
+            
+            </div><!-- End .col-lg-9 -->
+              
+
+
+
+            {% comment %} side start {% endcomment %}
+            <div class="col-lg-4">
+                <div class="checkout__order">
+                    <h5>Your order</h5>
+                    <div class="checkout__order__product">
+                        <ul>
+                            <li>
+                                <span class="top__text">Product</span>
+                                <span class="top__text__right">Total</span>
+                            </li>
+                            {% for i in cart_items  %}
+                            <li>01. {{ i.size_variant }} <span>$ {{ i.pro_total }}</span></li>
+                            
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="checkout__order__total">
+                        <ul>
+                            <li>Subtotal <span>$ {{ sub_total1 }}</span></li>
+                            <li>Total <span>$ {{ sub_total1 }}</span></li>
+                        </ul>
+                    </div>
+                
+                    <div class="checkout__order__widget">
+                        <label for="payment-option">Choose a payment option:</label>
+                        <div class="payment-options">
+                          <label for="cod">
+                            Cash on payment
+                            <input type="radio" name="payment_option" id="cod" value="cod" required>
+                            <span class="checkmark"></span>
+                          </label>
+                          <label for="razar-pay">
+                            Razar pay
+                            <input type="radio" name="payment_option" id="razar-pay" value="razar-pay" required>
+                            <span class="checkmark"></span>
+                          </label>
+                          <label for="Wallet">
+                            Wallet
+                            <input type="radio" name="payment_option" id="Wallet" value="Wallet" required>
+                            <span class="checkmark"></span>
+                          </label>
+                        </div>
+                      </div>
+                      
+                    
+                    <input type="hidden" name="sub_total" value="{{ sub_total1 }}"  >
+                    <button type="submit" class="primary-btn"><a href=""></a>Place Order</button>
+                </form>
+                </div>
+            </div>
+          </div><!-- End .row -->
+        </div><!-- End .container -->
+      </div><!-- End .cart -->
+    </div><!-- End .page-content -->
+  </main><!-- End .main -->
+
+ <script>
+  const selectedPayment = document.querySelector('input[name="payment-option"]:checked').value;
+</script>
+ 
+{% endblock content %}
+
+
+        
+        <!-- Instagram Begin -->
+       {% block instagram %}
+       {% include "inc/instagram.html" %}
+       {% endblock instagram %}
+        <!-- Instagram End -->
+
+        <!-- Footer Section Begin -->
+        {% block footer %}
+        {% include "inc/footer.html" %}
+        {% endblock footer %}
+        <!-- Footer Section End -->

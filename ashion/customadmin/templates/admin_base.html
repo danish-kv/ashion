@@ -25,6 +25,8 @@
   
   {% endblock style %}
   <body>
+
+    
     <div class="container-scroller">
       <!-- partial:partials/_navbar.html -->
       <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -221,18 +223,9 @@
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item"> <a class="nav-link" href="/product/">Products</a></li>
                   <li class="nav-item"> <a class="nav-link" href="/addproduct/">Add Product</a></li>
-                  {% comment %} <li class="nav-item"> <a class="nav-link" href="/editproduct/">Edit Product</a></li> {% endcomment %}
-                  <li class="nav-item"> <a class="nav-link" href="/varient">Varients</a></li>
-                  <li class="nav-item"> <a class="nav-link" href="/addvarient">Add Varient</a></li>
                 </ul>
               </div>
             </li>
-            {% comment %} <li class="nav-item">
-              <a class="nav-link" href="pages/icons/mdi.html">
-                <span class="menu-title">Icons</span>
-                <i class="mdi mdi-contacts menu-icon"></i>
-              </a>
-            </li> {% endcomment %}
             <li class="nav-item">
               <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
                 <span class="menu-title">Categories</span>
@@ -249,7 +242,7 @@
               </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="">
+              <a class="nav-link" href="/manage_order/">
                 <span class="menu-title">Orders</span>
                 <i class="mdi mdi-chart-bar menu-icon"></i>
               </a>
@@ -280,40 +273,67 @@
         <!-- partial -->
         <div class="main-panel">
           {% block content %}
-          
+
           {% endblock content %}
 
 
-          <!-- content-wrapper ends -->
-          <!-- partial:partials/_footer.html -->
-          {% comment %} <footer class="footer">
-            <div class="container-fluid d-flex justify-content-between">
-              <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
-              <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
-            </div>
-          </footer> {% endcomment %}
-          <!-- partial -->
+          <div id="message-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 11;">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="toast {% if message.tags == 'error' %}bg-danger{% elif message.tags == 'success' %}bg-success{% endif %}" role="alert" aria-live="assertive" aria-atomic="true" data-delay="1000" >
+                        <div class="toast-header">
+                            <strong class="mr-auto">{{ message.tags }}</strong>
+                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        
+
         </div>
         <!-- main-panel ends -->
       </div>
       <!-- page-body-wrapper ends -->
     </div>
+
+
+    <!-- Include Bootstrap JS and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.1/dist/js/bootstrap.min.js"></script>
+
+
+
     <!-- container-scroller -->
     <!-- plugins:js -->
-    <script src="{% static "admin/assets/vendors/js/vendor.bundle.base.js" %}"></script>
+    <script src="{% static 'admin/assets/vendors/js/vendor.bundle.base.js' %}"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
-    <script src="{% static "admin/assets/vendors/chart.js/Chart.min.js" %}"></script>
-    <script src="{% static "admin/assets/js/jquery.cookie.js" %}" type="text/javascript"></script>
+    <script src="{% static 'admin/assets/vendors/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'admin/assets/js/jquery.cookie.js' %}" type="text/javascript"></script>
     <!-- End plugin js for this page -->
     <!-- inject:js -->
-    <script src="{% static "admin/assets/js/off-canvas.js" %}"></script>
-    <script src="{% static "admin/assets/js/hoverable-collapse.js" %}"></script>
-    <script src="{% static "admin/assets/js/misc.js" %}"></script>
+    <script src="{% static 'admin/assets/js/off-canvas.js' %}"></script>
+    <script src="{% static 'admin/assets/js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'admin/assets/js/misc.js' %}"></script>
     <!-- endinject -->
     <!-- Custom js for this page -->
-    <script src="{% static "admin/assets/js/dashboard.js" %}"></script>
-    <script src="{% static "admin/assets/js/todolist.js" %}"></script>
+    <script src='{% static "admin/assets/js/dashboard.js" %}'></script>
+    <script src='{% static "admin/assets/js/todolist.js" %}'></script>
+
     <!-- End custom js for this page -->
+    <script>
+      $(document).ready(function () {
+          // Manually trigger a Bootstrap toast and append it to the new container
+          $('.toast').toast('show').appendTo('#message-container');
+      });
+  </script>
   </body>
 </html>

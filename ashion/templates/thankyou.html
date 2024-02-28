@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block header %}
+{% include "inc/navbar.html" %}
+{% endblock header %}
+
+
+
+{% block content %}
+<style>
+        body {
+            background-color: #f8f9fa;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .thank-you-container {
+            text-align: center;
+            padding: 200px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .thank-you-icon {
+            font-size: 3em;
+            color: #28a745;
+        }
+    </style>
+
+
+    
+
+<div class="thank-you-container">
+    <i class="fa fa-check-circle thank-you-icon"></i>
+    <h2 class="mt-3 mb-4">Thank You for Your Order!</h2>
+    <p>Your order has been successfully placed. We appreciate your business.</p>
+    <a href="/" class="btn btn-primary mt-3">Continue Shopping</a>
+</div>
+
+
+
+{% endblock content %}
+
+
+{% block instagram %}
+{% include "inc/instagram.html" %}
+{% endblock instagram %}
+
+{% block footer %}
+{% include "inc/footer.html" %}
+{% endblock footer %}

@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+
+{% block header %}
+{% include "inc/navbar.html" %}
+{% endblock header %}
+
+
+
+
+
+{% block content %}
+
+
+
+<section class="shop-cart spad" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12" >
+                <div class="shop__cart__table" id="reload" >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Variant</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if cart_product %}
+                                {% for i in cart_product %}
+                            <tr>
+                                
+                                <td class="cart__product__item"><a href="/">
+                                    <img src="{{ i.size_variant.product_id.img1.url  }}" alt="{{ i.size_variant.product_id.name }}" width="100" height="100"></a>
+                                    <div class="cart__product__item__title">
+                                        <h6>{{ i.size_variant.product_id.name }}</h6>
+                                        <div class="rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="cart__price">{{ i.size_variant.size }}</td>
+                                <td class="cart__price">$ {{ i.size_variant.product_id.selling_price }}</td>
+                                <td class="cart__quantity">
+                                    {% comment %} <div class="pro-qty">
+                                        <input type="number" value="{{ i.quantity }}"       >
+                                    </div> {% endcomment %}
+
+                                    <div class="prod-qty">
+                                        <input type="hidden" name="product_id" value="{{i.id}}">
+                                        {% csrf_token %}
+                                        <!-- Update the buttons class names to match the jQuery selector -->
+                                        <button class="update_quantity minus" data-action="minus" data-product-id="{{ i.id }}">-</button>
+                                        <input type="number" class="quantity1" value="{{ i.quantity }}" min="1" max="5" readonly>
+                                        <button class="update_quantity plus" data-action="plus" data-product-id="{{ i.id }}">+</button>
+                              
+                                    </div>
+                                </td>
+                                <td class="cart__total">$ {{ i.pro_total }}</td>
+                                <td class="cart__close"><a href="/remove_from_cart/{{i.id}}"><span class="icon_close"></span></a></td>
+                                
+                                {% endfor %}
+                                {% else %}
+                                <td class="cart__total"><p>Your cart is empty! </p> </td>
+                                {% endif %}
+                            </tr>
+                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="cart__btn">
+                    <a href="/">Continue Shopping</a>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="cart__btn update__btn">
+                    <a href="/showcart/"><span class="icon_loading"></span> Update cart</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="discount__content">
+                    <h6>Discount codes</h6>
+                    <form action="#">
+                        <input type="text" placeholder="Enter your coupon code">
+                        <button type="submit" class="site-btn">Apply</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-4 offset-lg-2" >
+                <div class="cart__total__procced" id="2load">
+                    <h6>Cart total</h6>
+                    <ul>
+                        <li>Subtotal <span>${{ sub_total }}</span></li>
+                        <li>Total <span>${{ sub_total }}</span></li>
+                    </ul>
+                    <form action="{% url "checkout" %}" enctype="multipart/form-data">
+                        <input type="hidden" name="total" value="{{ sub_total }}"  >
+                        <button type="submit" class="primary-btn">Proceed to checkout</button>
+                    </form>
+               </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shop Cart Section End -->
+
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#reload').on('click', '.update_quantity', function (e) {
+            
+            e.preventDefault();
+            console.log('hi')
+
+            var product_id = $(this).data('product-id');
+            var action = $(this).data('action');
+            var token = $('input[name=csrfmiddlewaretoken]').val()
+            console.log(product_id)
+            console.log(action)
+            console.log(token)
+
+            $.ajax({
+                method: 'POST',
+                url: '/update_quantity/',
+                data: {
+                    product_id: product_id,
+                    action: action,
+                    csrfmiddlewaretoken: token
+                },
+                success: function (response) {
+                    if (response.status === 'updated successfully') {
+                        // Reload only the specific part of the page that needs updating
+                        $('#reload').load('/showcart/ #reload');
+                        console.log('hello')
+                        $('#2load').load('/showcart/ #2load');
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            })
+        })
+    })
+</script>
+
+
+<script src="{% static "/main/js/jquery-3.3.1.min.js" %}"></script>
+{% endblock content %}
+
+
+{% block instagram %}
+{% include "inc/instagram.html" %}
+{% endblock instagram %}
+
+
+{% block footer %}
+{% include "inc/footer.html" %}
+{% endblock footer %}
+

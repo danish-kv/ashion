@@ -70,6 +70,7 @@ TEMPLATES = [
                  'manage_cart/templates',
                  'manage_order/templates',
                  'user_profile/templates'
+                 'home/templates',
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -78,6 +79,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'home.context_processor.category_nav'
+                
             ],
         },
     },
@@ -158,3 +161,14 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "muhammeddanishkv05@gmail.com"
 EMAIL_HOST_PASSWORD = "rpni cdzt cabp mdvc"
 EMAIL_USE_TLS = True  # Set it to False if your email server doesn't support TLS
+
+
+
+
+
+# key_id,key_secret
+# rzp_test_knlgt6hZbKsPvf,jKVbQLxIqFkMCJsnShuPX37R
+
+
+RAZORPAY_API_KEY = 'rzp_test_knlgt6hZbKsPvf'
+RAZORPAY_API_SECRET = 'jKVbQLxIqFkMCJsnShuPX37R'

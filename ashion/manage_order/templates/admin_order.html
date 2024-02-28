@@ -1,0 +1,89 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+
+
+
+
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1>Orders</h1>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="addproductbutton">
+                    {% comment %} <a href="/cancel_request/" class="btn btn-danger mt-2">Cancel Requests</a> {% endcomment %}
+                </div>
+            </div>
+        </div>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Admin</li>
+                <li class="breadcrumb-item active">Orders</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+
+    <!-- Recent Sales -->
+    <div class="col-12">
+        <div class="card recent-sales overflow-auto">
+            <div class="card-body">
+                <table class="table table-border datatable  mt-3">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Order Date</th>
+                            <th>Payment Method</th>
+                            <th>Amount</th>
+                            <th>Order Status</th>
+                            <th>Details</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in order %}
+                        <tr class="align-middle">
+                            <td  class="align-middle">
+                                {{ i.id|upper }}
+                            </td> 
+                            <td class="align-middle">
+                                {{ i.order_id.order_date }}
+                            </td>
+                            <td class="align-middle">
+                                {{ i.order_id.payment_method }}
+                            </td>
+                            
+                            <td class="align-middle">
+                                {{ i.status }}
+                            </td>
+                            <td class="align-middle">
+                                {{ i.total_amount }}
+                            </td>
+                            <td class="align-middle">
+                                <a href="/order_details_view/{{i.id}}" type="button" class="btn btn-sm btn-secondary">View Details</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <!-- Repeat this block for additional dummy content -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div><!-- End Recent Sales -->
+</main>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="{% static "your-other-javascript-file.js" %}"></script>
+
+{% endblock %}
