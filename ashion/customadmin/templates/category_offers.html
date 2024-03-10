@@ -1,0 +1,173 @@
+ 
+
+{% extends 'admin_base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+{% comment %} <style>
+    .table td,{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style> {% endcomment %}
+<div>
+    <div class="pagetitle">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1>Category Offers</h1>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="addproductbutton">
+                    <a href="#addProductOffers" class="btn btn-dark mt-2" data-bs-toggle="modal">
+                    <span>Add Category Offers</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Admin</li>
+                <li class="breadcrumb-item active">Add Category Offers</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+
+    <!-- Recent Sales -->
+    <div class="col-12">
+        <div class="card recent-sales overflow-auto">
+            <div class="card-body">
+                <table class="table table-borderless datatable mt-3">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Category</th>
+                            <th>Offer Percentage</th>
+                            <th>Edit</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        {% for i in offers %}
+                        <tr class="align-middle">
+                            <td>{{ i.id }}</td>
+                
+                            
+                            <td class="align-middle">
+                                {{ i.category_id }}
+                            </td>
+                            
+                            <td class="align-middle">
+                                {{ i.percentage }}
+                            </td>
+                            
+                            <td class="align-middle">
+                                <a href="#editEmployeeModal-{{forloop.counter}}" class="btn btn-primary mt-2" data-bs-toggle="modal">Edit</a>
+                               
+                            </td> 
+                            <td class="align-middle">
+                                {% if i.is_active == False %}
+                                        <a href="/category_offer_status/{{i.id}}" class="btn btn btn-success mt-2" >Activate</a>
+                                    {% else %}
+                                        <a href="/category_offer_status/{{i.id}}" class="btn  btn btn-danger mt-2"  >Deactivate</a>
+                                    {% endif %}
+                            </td> 
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div><!-- End Recent Sales -->
+<div>
+
+
+<!-- Add Modal HTML -->
+<div id="addProductOffers" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action='/add_category_offers/' method='post'>
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Category Offer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="CategoryName">Category</label>
+                        <select id="CategoryName" name="CategoryName" class="form-control" required>
+                            <option value="" disabled hidden selected>Select Category</option>
+
+                            {% for i in categories %}
+                            <option value="{{ i.id }}">{{ i.name }}</option>
+                            {% endfor %}
+                            <!-- Add more options as needed -->
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="percentage">Percentage</label>
+                        <input id="percentage" name="percentage" type="number" class="form-control" required>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+{% for i in offers %}
+
+<div id="editEmployeeModal-{{forloop.counter}}" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/edit_category_offers/{{ i.id }}" method="post">
+                {% csrf_token %}
+                <div class="modal-header">						
+                    <h4 class="modal-title">Edit Category Offer</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">					
+                    <div class="form-group">
+                        <label>Category Name</label>
+                        <input name="productName" disabled value="{{ i.category_id.name }}" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Percentage</label>
+                        <input name="percentage" value="{{ i.percentage }}" type="number" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-info" value="Update">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    
+
+{% endblock content %}

@@ -7,29 +7,6 @@ from django.views.decorators.cache import never_cache
 
 
 
-def brand_view(request):
-    pass
-
-def add_brand_view(request):
-    if request.method == "POST":
-        brand_name = request.POST.get('brand_name')
-
-        if Brand.objects.filter(name__contains=brand_name).exists():
-            messages.error(request, f'Brand with name "{brand_name}" already exists!')
-            return redirect('addbrand')
-        
-        data  = Brand(name = brand_name)
-        data.save()
-        messages.success(request,'Brand added. ')
-
-    return render(request, 'add_brand.html')
-
-def edit_brand_view(request):
-    pass
-
-
-
-
 
 @login_required(login_url='adminlogin')
 def category_view(request):

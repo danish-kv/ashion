@@ -236,35 +236,60 @@
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item"><a class="nav-link" href="{% url 'category' %}">Category</a></li>
                   <li class="nav-item"><a class="nav-link" href="{% url 'addcategory' %}">Add Category</a></li>
-                  <li class="nav-item"><a class="nav-link" href="{% url 'brand' %}">Brand</a></li>
-                  <li class="nav-item"><a class="nav-link" href="{% url 'addbrand' %}">Add Brand</a></li>
+
                 </ul>
               </div>
             </li>
-            <li class="nav-item">
+            {% comment %} <li class="nav-item">
               <a class="nav-link" href="/manage_order/">
                 <span class="menu-title">Orders</span>
                 <i class="mdi mdi-chart-bar menu-icon"></i>
               </a>
-            </li>
+            </li> {% endcomment %}
+
             <li class="nav-item">
-              <a class="nav-link" href="">
-                <span class="menu-title">Return Request</span>
-                <i class="mdi mdi-table-large menu-icon"></i>
+              <a class="nav-link" data-bs-toggle="collapse" href="#general-pages1" aria-expanded="false" aria-controls="general-pages">
+                <span class="menu-title">Orders</span>
+                <i class="menu-arrow"></i>
+                <i class="fa-solid fa-store" style="color: #e4e2e2;"></i>
               </a>
+              <div class="collapse" id="general-pages1">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"><a class="nav-link" href="/manage_order/">Order</a></li>
+                  <li class="nav-item"><a class="nav-link" href="/cancelled_orders/">Cancelled</a></li>
+                  <li class="nav-item"><a class="nav-link" href="/order_return/">Return </a></li>
+
+
+                </ul>
+              </div>
             </li>
+
             <li class="nav-item">
-              <a class="nav-link" href="">
+              <a class="nav-link" href="{% url "coupon" %}">
                 <span class="menu-title">Coupon</span>
                 <i class="mdi mdi-table-large menu-icon"></i>
               </a>
             </li>
             <li class="nav-item">
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#offers" aria-expanded="false" aria-controls="general-pages">
+                  <span class="menu-title">Offers</span>
+                  <i class="menu-arrow"></i>
+                  <i class="fa-solid fa-store" style="color: #e4e2e2;"></i>
+                </a>
+                <div class="collapse" id="offers">
+                  <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"><a class="nav-link" href="/product_offers/">Product Offers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/category_offers/">Category Offers</a></li>
+                  </ul>
+                </div>
+              </li>
+            {% comment %} <li class="nav-item">
               <a class="nav-link" href="">
                 <span class="menu-title">Banners</span>
                 <i class="mdi mdi-table-large menu-icon"></i>
               </a>
-            </li>
+            </li> {% endcomment %}
           </ul>
         </nav>
 

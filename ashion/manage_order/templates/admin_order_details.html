@@ -153,8 +153,8 @@
                               {% comment %} <input type="radio" name="statusRadio" id="statusRadio5" value="Returned" {% if obj.status == "Returned" %}checked{% endif %}>
                               <label for="statusRadio5">Returned</label> {% endcomment %}
 
-                              <input type="radio" name="statusRadio" id="statusRadio6" value="Cancel" {% if obj.status == "Cancelled" %}checked{% endif %}>
-                              <label for="statusRadio6">Cancel</label>
+                              {% comment %} <input type="radio" name="statusRadio" id="statusRadio6" value="Cancel" {% if obj.status == "Cancelled" %}checked{% endif %}>
+                              <label for="statusRadio6">Cancel</label> {% endcomment %}
                           </div>
                           <br><br>
                           <button class="btn btn-dark border-0">Change Status</button>
@@ -164,7 +164,7 @@
                           <h3><b>Order is Cancelled</b></h3>
                           <span class="text-dark"><b>Reason For Cancelling:</b></span><br><br>
                           <div class="text-dark">
-                              {{ reason }}
+                               {{ reason.cancel_reason }} 
                           </div>
                       </div>
                   {% endif %}

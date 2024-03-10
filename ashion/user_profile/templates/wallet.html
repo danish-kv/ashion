@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block header %}
+{% include "inc/navbar.html" %}
+{% endblock header %}
+
+
+
+{% block content %}
+
+<head>
+    <!-- Add your meta tags here -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Include Roboto font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+
+    <!-- Your styles -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .wallet-container {
+            max-width: 1200px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .user-details {
+            text-align: right;
+            margin-top: 20px;
+            margin-right: 20px;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .balance-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .balance {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .btn-dark,
+        .btn-success {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-dark:hover,
+        .btn-info:hover,
+        .btn-success:hover {
+            opacity: 0.8;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .wallet-history {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .wallet-history table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .wallet-history th,
+        .wallet-history td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+
+</head>
+{% comment %} <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url({% static "molla/assets/images/page-header-bg.jpg" %});">
+    <h2 class="ltext-105 cl0 txt-center">
+       <span class="text-dark"> Wallet</span>
+    </h2> {% endcomment %}
+    <div class="page-header text-center" style="background-image: url('{% static "molla/assets/images/page-header-bg.jpg" %}')">
+        <div class="container">
+            <h1 class="page-title">Wallet<span></span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+{% comment %} </section>	 {% endcomment %}
+
+<body class="mb-5">
+    <!-- Wallet Container -->
+    <div class="container-fluid p-5 mb-5">
+        <div class="row">
+            <!-- Left Side: Account Balance and Add Money -->
+            <div class="col-md-4" style=" center; color: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);">
+                <!-- User Details Section -->
+                <div class="user-details ml-auto"> <!-- Add ml-auto here -->
+                    <p class="user-name">{{ user.username }} </p>
+                    <p class="user-email">{{ user.email }}</p>
+                </div>
+                <br>
+            
+                <!-- Balance Section -->
+                <div class="balance-section">
+                    <h2 style="font-size: 27px; color: black; font-weight: bold; margin-bottom: 10px;">Wallet Balance</h2>
+                    <p class="balance p-3" style="font-size: 40px; font-weight: bold; color: #002b4d; margin: 0;">
+                        &#8377;{{ balance }}
+                    </p>
+                </div>
+            </div>
+            
+
+            <!-- Right Side: Transaction History -->
+            <div class="col-md-8  mt-4">
+                <span class="mb-3" ><b><p class="text-dark" >Transaction History</p></b></span>
+                <!-- Wallet History -->
+                <div class="wallet-history ">
+                    
+                    <!-- Add your tables here -->
+                    <!-- Example table 1 -->
+                    
+
+                    <!-- Example table 2 -->
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Add more rows as needed -->
+                                {% for wal in wallet %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{ wal.date }}</td>
+                                    <td>{{ wal.transaction_type }}</td>
+                                    <td>{{ wal.amount }}</td>
+                                    <td class="text-dark" ><b>{{ wal.balance }}</b></td>
+                                </tr>
+                                {% endfor %}
+
+                                
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   <div class="mb-5" style="text-align: center; margin-top: 20px;">
+    <a href="" style="background-color: #343a40; color: #fff; border: none; border-radius: 2px; padding: 10px 20px; font-size: 18px; font-weight: bold;">Back to Shop</a>
+</div>
+    
+</body>
+
+</html>
+
+{% endblock content %}
+
+
+
+
+{% block instagram %}
+{% include "inc/instagram.html" %}
+{% endblock instagram %}
+
+
+
+{% block footer %}
+{% include "inc/footer.html" %}
+{% endblock footer %}
+
+
+
+
+<!-- Add Money Section -->
+                {% comment %} <div class="input-group" style="margin-bottom: 20px;">
+                    <input type="number" class="form-control" name="amountToAdd" placeholder="Add money to your wallet" style="border-radius: 5px; padding: 10px;">
+                    <div class="input-group-append"></div>
+                </div> {% endcomment %}
+                
+                <!-- Container for validation message -->
+                
+                {% comment %} {% csrf_token %} {% endcomment %}
+                <!-- Add id="addMoneyButton" to the button -->
+                {% comment %} <button id="addMoneyButton" class="btn btn-dark" type="button" style="border-radius: 5px; padding: 10px; font-size: 18px; font-weight: bold;">Add Money</button>
+                <div class="validation-container" style="margin-bottom: 20px;">
+                    <div id="validationMessage"></div>
+                </div> {% endcomment %}

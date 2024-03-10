@@ -65,7 +65,9 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="product__details__text">
-                        <h3>{{ product.name }} <span>Brand: SKMEIMore Men Watches from SKMEI</span></h3>
+                        <h3>{{ product.name }}
+                             {% comment %} <span>Brand: SKMEIMore Men Watches from SKMEI</span> {% endcomment %}
+                            </h3>
                         <div class="rating">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -74,7 +76,11 @@
                             <i class="fa fa-star"></i>
                             <span>( 138 reviews )</span>
                         </div>
+                        {% if product.discounted_price < product.selling_price %}
+                        <div class="product__details__price">{{ product.discounted_price }}.00 <span> {{ product.selling_price }}</span></div>
+                        {% else %}
                         <div class="product__details__price">{{ product.selling_price }} <span> {{ product.original_price }}</span></div>
+                        {% endif %}
                         <p>{{ product.description }}</p>
                         <div class="product__details__button">
 
@@ -100,17 +106,7 @@
                                             {% endif %}
                                         </li>
                                         
-                                        {% comment %} <li>
-                                            <span>Available color:</span>
-                                            <div class="color__checkbox" id="color-options">
-                                                {% for variant in variants %}
-                                                    <label for="{{ variant.color }}">
-                                                        <input type="radio" name="color__radio" id="{{ variant.color }}" >
-                                                        <span class="checkmark {{ variant.color }}-bg"></span>
-                                                    </label>
-                                                {% endfor %}
-                                            </div>
-                                        </li> {% endcomment %}
+                                       
                                         <li>
                                             <span>Available size:</span>
                                             <div class="size__btn">
@@ -320,15 +316,4 @@
     <!-- Footer Section End -->
 
 
-
-    <!-- Search Begin -->
-    <div class="search-model">
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <div class="search-close-switch">+</div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
-            </form>
-        </div>
-    </div>
-    <!-- Search End -->
 

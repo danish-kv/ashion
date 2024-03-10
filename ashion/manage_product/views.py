@@ -7,7 +7,9 @@ from manage_category.models import Brand, Category
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 
-
+from PIL import Image
+from django.core.exceptions import ValidationError
+from django.core.files.images import get_image_dimensions
 # Create your views here.
 
 
@@ -22,6 +24,8 @@ def product(request):
 
 @login_required(login_url='adminlogin')
 def addproduct(request):
+    category = Category.objects.filter(is_listed = True)
+    context = {'categories' : category}
 
     if request.method == "POST":
         name = request.POST.get('name')
@@ -42,6 +46,19 @@ def addproduct(request):
             messages.error(request, f'Product with name "{name}" already exists!')
             return render(request,'add_product.html')
         
+        def is_image(file):
+            try:
+                img = Image.open(file)
+                img.verify()
+                get_image_dimensions(file)
+                return True
+            except Exception as e:
+                return False
+
+        if any(file and not is_image(file) for file in [img1, img2, img3, img4]):
+            messages.error(request, 'Please upload valid image files.')
+            return render(request, 'add_product.html', context)
+        
         data = products(
             name = name,
             description = description,
@@ -57,9 +74,7 @@ def addproduct(request):
         data.save()
         messages.success(request, f'"{name}" is added Successfully')
         return redirect('product')
-    category = Category.objects.filter(is_listed = True)
-    context = {'categories' : category}
-
+    
 
     return render(request,'add_product.html',context)
 
@@ -70,6 +85,11 @@ def addproduct(request):
 
 @login_required(login_url='adminlogin')
 def editproduct(request,id):
+
+    product = products.objects.get(id = id)
+    category_data = Category.objects.all()
+    context = {'product' : product,
+            'all_categories' :category_data}
     
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -84,9 +104,27 @@ def editproduct(request,id):
         img2 = request.FILES.get('img2')
         img3 = request.FILES.get('img3')
         img4 = request.FILES.get('img4')
-        if products.objects.filter(name__contains=name).exists():
+        
+        if products.objects.filter(name=name).exclude(id=id).exists():
             messages.error(request, f'Product with name "{name}" already exists!')
-            return render(request,'edit_product.html')
+            return render(request,'edit_product.html',context)
+        
+
+
+        def is_image(file):
+            try:
+                img = Image.open(file)
+                img.verify()
+                get_image_dimensions(file)
+                return True
+            except Exception as e:
+                return False
+
+        if any(file and not is_image(file) for file in [img1, img2, img3, img4]):
+            messages.error(request, 'Please upload valid image files.')
+            return render(request, 'edit_product.html', context)
+        
+
         obj = products.objects.get(id=id)
         obj.name = name
         obj.description = desc
@@ -116,10 +154,7 @@ def editproduct(request,id):
         messages.success(request, 'Product details updated')
         return redirect('product')
     
-    product = products.objects.get(id = id)
-    category_data = Category.objects.all()
-    context = {'product' : product,
-            'all_categories' :category_data}
+    
     return render(request,'edit_product.html',context)
 
 
@@ -209,3 +244,20 @@ def Edit_variant(request,id):
 
     return render(request,'edit_variant.html',context)
 
+
+
+
+
+# def is_listed_variant(request,id):
+
+#     variant = Variant.objects.get(id = id)
+
+#     if variant.is_listed == True:
+#         variant.is_listed = False
+#         variant.save()
+#     else:
+#         variant.is_listed = True
+#         variant.save()
+
+#     messages.success(request,'Status Changed succssufully')
+#     return redirect('show_variant',id=id)

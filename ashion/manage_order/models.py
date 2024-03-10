@@ -3,6 +3,7 @@ from logintohome.models import Customer
 from manage_product.models import Variant
 from user_profile.models import Address
 from django.utils import timezone
+from manage_coupen.models import Coupons
 # Create your models here.
 
 
@@ -15,10 +16,13 @@ class Order(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, blank=True, null=True)
     payment_method = models.CharField(max_length=10)
     order_date = models.DateTimeField(auto_now_add=True)
-    
+    coupon_id = models.ForeignKey(Coupons, on_delete = models.SET_NULL, null=True, blank=True)
+
+
     def __str__(self) -> str:
         return f"{self.user}'s Order {self.id}"
     
+
 
 class OrderedProducts(models.Model):
     STATUS_CHOICES = (
@@ -27,6 +31,7 @@ class OrderedProducts(models.Model):
         ( 'Out for delivery', 'Out for delivery' ),
         ( 'Delivered', 'Delivered' ),
         ( 'Cancelled', 'Cancelled' ),
+        ( 'Returned', 'Returned' ),
     )
 
     order_id = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
@@ -64,10 +69,10 @@ class CancelledOrder(models.Model):
     cancel_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Cancelled order item: {self.order_id.variant} in order {self.order_id.order}"
+        return f"Cancelled order item: {self.order_id.product} in order {self.order_id.order_id}"
 
 
-class Returns(models.Model):
+class OrderReturns(models.Model):
     order_id = models.ForeignKey(OrderedProducts, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     reason = models.TextField(null=True, blank=True)
@@ -75,17 +80,18 @@ class Returns(models.Model):
     pickup_date = models.DateField(null=True, blank=True)
 
 
-    
+
     def set_pick_up_date(self):
         # Set expected delivery date based on the current date and time
-        if self.order_id and self.order_id.pickup_date:
-            # Calculate expected delivery date (assuming 7 days)
-            set_pick_up_date = self.order_id.pickup_date + timezone.timedelta(days=2)
-            self.pickup_date = set_pick_up_date.date()
+        if self.request_date:
+            # Calculate expected delivery date (assuming 2 days)
+            set_pick_up_date = self.request_date + timezone.timedelta(days=2)
+            self.pickup_date = set_pick_up_date
 
     def save(self, *args, **kwargs):
         self.set_pick_up_date()
         super().save(*args, **kwargs)
+
 
 
     def __str__(self) -> str:

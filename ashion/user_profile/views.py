@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from logintohome.models import Customer
 from django.contrib import messages
-from user_profile.models import Address
+from .models import *
 # Create your views here.
 
 
@@ -103,14 +103,12 @@ def edit_address(request,id):
         pincode = request.POST.get('pincode')
         landmark = request.POST.get('landmark')
 
-        # if len(int(number)) != 10:
-        #     messages.error(request,'Phone Number should be 10 digits')
-        #     return redirect('checkout_add_address')
+        if len(int(number)) != 10:
+            messages.error(request,'Phone Number should be 10 digits')
+            return redirect('checkout_add_address')
         # if len(pincode) != 6:
         #     messages.error(request,'Pincode should be 6 digits')
 
-    
-    
         add.name = name
         add.number = number
         add.address = address
@@ -135,3 +133,27 @@ def delete_address(request,id):
     add.save()
     messages.success(request,'Address deleted successfully')
     return redirect('user_profile')
+
+
+
+
+def wallet(request):
+    if 'email' in request.session:
+        email = request.session.get('email')
+        user = Customer.objects.get(email=email)
+        wallet = Wallet_User.objects.filter(user_id=user).order_by('-id')
+
+        if wallet:
+            balance = wallet.first().balance
+        else:
+            balance = 0
+
+        context = { 'wallet' : wallet,
+                   'user' : user,
+                   'balance' : balance}
+        
+        return render(request,'wallet.html',context)
+    return redirect('login')
+
+
+

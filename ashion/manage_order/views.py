@@ -6,14 +6,14 @@ from logintohome.models import Customer
 from manage_cart.models import Cart
 from django.views.decorators.cache import never_cache
 from  manage_product.models import Variant
-
+from django.db.models import Q
 # Create your views here.
 
 
 
 
 def manage_order(request):
-    orders = OrderedProducts.objects.all()
+    orders = OrderedProducts.objects.all().exclude(Q(status = 'Cancelled') | Q(status = 'Returned'))
     context = { 'order' : orders }
     return render(request,'admin_order.html',context)
 
@@ -41,7 +41,13 @@ def change_order_status(request,id):
     
 
 
-def cancel_request(request):
+def cancelled_orders(request):
     data = CancelledOrder.objects.all()
-    context = { 'data' : data}
+    context = { 'data' : data }
     return render(request,'cancel_request.html',context)
+
+
+def order_return(reqesut):
+    data = OrderReturns.objects.all()
+    context = { 'data' : data }
+    return render(reqesut,'order_return.html',context)

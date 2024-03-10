@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'manage_product',
     'manage_cart',
     'manage_order',
+    'manage_coupen',
     'user_profile',
 ]
 
@@ -69,8 +70,10 @@ TEMPLATES = [
                  'manage_category/templates',
                  'manage_cart/templates',
                  'manage_order/templates',
-                 'user_profile/templates'
+                 'manage_coupen/templates',
+                 'user_profile/templates',
                  'home/templates',
+                 
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -79,7 +82,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'home.context_processor.category_nav'
+                'home.context_processor.category_nav',
+                'home.context_processor.count_of_cart',
+                'home.context_processor.wishlist_of_cart'
                 
             ],
         },
@@ -170,5 +175,5 @@ EMAIL_USE_TLS = True  # Set it to False if your email server doesn't support T
 # rzp_test_knlgt6hZbKsPvf,jKVbQLxIqFkMCJsnShuPX37R
 
 
-RAZORPAY_API_KEY = 'rzp_test_knlgt6hZbKsPvf'
-RAZORPAY_API_SECRET = 'jKVbQLxIqFkMCJsnShuPX37R'
+RAZORPAY_API_KEY = 'rzp_test_kjPVyHrg75EHqw'
+RAZORPAY_API_SECRET = '8ooNg13rAFQWYiCVWR0tYuBm'

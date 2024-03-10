@@ -12,6 +12,7 @@ from django.db.models import Max
 from .models import Wishlist
 from logintohome.models import Customer
 from django.urls import reverse
+from customadmin.models import Product_Offer
 # Create your views here.
 
 
@@ -19,6 +20,8 @@ from django.urls import reverse
 def product_list(request):
     context ={}
     product_list = products.objects.filter(is_listed = True) 
+    pro_offer = Product_Offer.objects.filter(is_active=True)
+    print(pro_offer)
 
     data = request.GET.get('data')
     print(data)
@@ -150,3 +153,19 @@ def remove_from_wishlist(request,id):
     wish.delete()
     messages.success(request,f"'{wish.product_id.name}' removed from wishlist")
     return redirect('wishlist')
+
+
+
+
+def Search_Products(request):
+    search_query = request.GET.get('query',' ')
+    print(search_query)
+
+    if search_query:
+        result = products.objects.filter(name__istartswith = search_query)
+    else:
+        result = []
+
+    context = { 'product' : result }
+
+    return render(request,'product_list.html',context)

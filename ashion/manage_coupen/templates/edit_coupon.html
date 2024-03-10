@@ -1,0 +1,250 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+
+
+
+{% block content %}
+
+ 
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1>Add Coupon</h1>
+            </div>
+        </div>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Admin</li>
+                <li class="breadcrumb-item"><a href="/coupon/">Coupons</a></li>
+                <li class="breadcrumb-item active">Add Coupon</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="col-12">
+        <div class="card recent-sales overflow-auto">
+            <div class="card-body p-5">
+                <form id="couponForm" method="post">
+                    {% csrf_token %}
+                    <!-- General Form Elements -->
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Coupon Title</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="title" id="coupon_title" placeholder="Enter Coupon Title" value="{{ coupon.title }}">
+                        </div>
+                    </div>
+        
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Coupon Code</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="code" id="coupon_code" placeholder="Enter Coupon Code" value="{{ coupon.code }}">
+                        </div>
+                    </div>
+        
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Valid From</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" name="start_date" id="valid_from" placeholder="Enter Start date" value="{% if coupon.start_date %}{{ coupon.start_date|date:'Y-m-d' }}{% endif %}">
+                        </div>
+                    </div>
+        
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Valid To</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" name="end_date" id="valid_to" placeholder="Enter End date" value="{% if coupon.end_date %}{{ coupon.start_date|date:'Y-m-d' }}{% endif %}">
+                        </div>
+                    </div>
+        
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Quantity</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" name="quantity" id="quantity" placeholder="Enter Quantity" value="{{ coupon.quantity }}">
+                        </div>
+                    </div>
+        
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Minimum Order Amount</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" name="min_amount" id="minimum_order_amount" placeholder="Enter Minimum Order Amount" value="{{ coupon.min_amount }}">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Discount Amount</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" name="discount_amount" id="discount_amount" placeholder="Enter Discount Amount" value="{{ coupon.discount_amount }}">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Active</label>
+                        <div class="col-sm-8">
+                            <input type="checkbox" class="form-check-input" name="active" id="active" value="1" {% if coupon.active %}checked{% endif %}>
+                            <label class="form-check-label" for="active">Active</label>
+                        </div>
+                    </div>
+        
+                    <!-- Include other fields according to your model -->
+        
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-8">
+                            <button type="submit" class="btn btn-dark">Update Coupon</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% comment %} 
+<!-- Include SweetAlert library and jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#couponForm").validate({
+            rules: {
+                coupon_title: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 250,
+                    noConsecutiveSpaces: true,
+                },
+                coupon_code: {
+                    required: true,
+                    alphanumeric: true,
+                    noConsecutiveSpaces: true,
+                },
+                description: {
+                    required: true,
+                    noConsecutiveSpaces: true,
+                },
+                discount_amount: {
+                    required: true,
+                    positiveDecimal: true,
+                    lessThanMinPurchase: true,
+                    noConsecutiveSpaces: true,
+                },
+                discount_type: {
+                    required: true,
+                    noConsecutiveSpaces: true,
+                },
+                valid_from: {
+                    required: true,
+                    noConsecutiveSpaces: true,
+                },
+                valid_to: {
+                    required: true,
+                    noConsecutiveSpaces: true,
+                },
+                quantity: {
+                    required: true,
+                    positiveInteger: true,
+                    noConsecutiveSpaces: true,
+                },
+                minimum_order_amount: {
+                    required: true,
+                    positiveDecimal: true,
+                    noConsecutiveSpaces: true,
+                    
+                },
+                maximum_order_amount: {
+                    required: true,
+                    positiveDecimal: true,
+                    noConsecutiveSpaces: true,
+                },
+            },
+            messages: {
+                messages: {
+                coupon_title: {
+                    required: "Please enter the coupon title",
+                    minlength: "Coupon title should be at least 3 characters",
+                    maxlength: "Coupon title should not exceed 250 characters",
+                    noConsecutiveSpaces: "Coupon title should not contain 2 consecutive spaces",
+                },
+                coupon_code: {
+                    required: "Please enter the coupon code",
+                    alphanumeric: "Coupon code should be alphanumeric with no spaces or symbols",
+                },
+                description: {
+                    required: "Please enter the description",
+                    noConsecutiveSpaces: "Description should not contain 2 consecutive spaces",
+                },
+                discount_amount: {
+                    required: "Please enter the discount amount",
+                    positiveDecimal: "Discount amount should be a positive decimal value",
+                },
+                discount_type: {
+                    required: "Please select the discount type",
+                },
+                valid_from: {
+                    required: "Please enter the valid from date",
+                },
+                valid_to: {
+                    required: "Please enter the valid to date",
+                },
+                quantity: {
+                    required: "Please enter the quantity",
+                    positiveInteger: "Quantity should be a positive integer",
+                },
+                minimum_order_amount: {
+                    required: "Please enter the minimum order amount",
+                    positiveDecimal: "Minimum order amount should be a positive decimal value",
+                },
+                maximum_order_amount: {
+                    required: "Please enter the maximum order amount",
+                    positiveDecimal: "Maximum order amount should be a positive decimal value",
+                },
+                
+            },
+            errorClass: "is-invalid",
+            errorPlacement: function(error, element) {
+                error.addClass("invalid-feedback");
+                error.insertAfter(element);
+            }
+            },
+            errorClass: "is-invalid",
+            errorPlacement: function (error, element) {
+                error.addClass("invalid-feedback");
+                error.insertAfter(element);
+            }
+        });
+
+        // Custom validation methods
+        $.validator.addMethod("alphanumeric", function (value, element) {
+            return /^[a-zA-Z0-9]+$/.test(value);
+        }, "This field should be alphanumeric with no spaces or symbols");
+
+        $.validator.addMethod("positiveDecimal", function (value, element) {
+            return /^[+]?\d+(\.\d+)?$/.test(value);
+        }, "Please enter a positive decimal value");
+
+        $.validator.addMethod("positiveInteger", function (value, element) {
+            return /^\d+$/.test(value);
+        }, "Please enter a positive integer");
+
+        $.validator.addMethod("noConsecutiveSpaces", function (value, element) {
+            return !/\s{2,}/.test(value);
+        }, "This field should not contain 2 consecutive spaces");
+
+        $.validator.addMethod("lessThanMinPurchase", function (value, element) {
+            // Get the value of Minimum Order Amount
+            var minOrderAmount = parseFloat($("[name='minimum_order_amount']").val());
+        
+            // Check if Discount Value is less than Minimum Order Amount
+            return parseFloat(value) < minOrderAmount;
+        }, "Discount value should be less than the Minimum Order Amount");
+    });
+</script> {% endcomment %}
+
+
+{% endblock %}
+
+
+
+
+
+

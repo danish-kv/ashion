@@ -134,8 +134,11 @@
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
                                     </div>
-                                    <div class="product__price">{{ p.orginal_price }}</div>
+                                    {% if p.discounted_price < p.selling_price %}
+                                    <div class="product__list__price"> <span> {{ p.selling_price }}</span>&nbsp;   {{ p.discounted_price }}.00</div>
+                                    {% else %}
                                     <div class="product__price">{{ p.selling_price }}</div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

@@ -51,11 +51,13 @@
                                     </div>
                                 </td>
                                 <td class="cart__price">{{ i.size_variant.size }}</td>
+                                {% if i.size_variant.product_id.discounted_price < i.size_variant.product_id.selling_price %}
+                                <td class="cart__price">$ {{ i.size_variant.product_id.discounted_price }}</td>
+                                {% else %}
                                 <td class="cart__price">$ {{ i.size_variant.product_id.selling_price }}</td>
+                                {% endif %}
                                 <td class="cart__quantity">
-                                    {% comment %} <div class="pro-qty">
-                                        <input type="number" value="{{ i.quantity }}"       >
-                                    </div> {% endcomment %}
+                                   
 
                                     <div class="prod-qty">
                                         <input type="hidden" name="product_id" value="{{i.id}}">
@@ -87,20 +89,12 @@
                     <a href="/">Continue Shopping</a>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="cart__btn update__btn">
-                    <a href="/showcart/"><span class="icon_loading"></span> Update cart</a>
-                </div>
-            </div>
+
         </div>
         <div class="row">
             <div class="col-lg-6">
                 <div class="discount__content">
-                    <h6>Discount codes</h6>
-                    <form action="#">
-                        <input type="text" placeholder="Enter your coupon code">
-                        <button type="submit" class="site-btn">Apply</button>
-                    </form>
+
                 </div>
             </div>
             <div class="col-lg-4 offset-lg-2" >

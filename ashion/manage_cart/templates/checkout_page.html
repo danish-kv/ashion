@@ -87,7 +87,7 @@
                         <ul style="list-style: none;">
                           {% for address in addresses %}
                             <li style="border: 1px solid #333; margin: 10px; padding: 20px; color: black;">
-                              <input type="radio" name="selected_address" id="address_{{ address.id }}" value="{{ address.id }}" required>
+                              <input type="radio" name="selected_address" id="address_{{ address.id }}" value="{{ address.id }}" {% if forloop.last %}checked{% endif %} required>
                               <label for="address_{{ address.id }}">
                                 <span style="font-weight: bold;">Address {{ address.counter }}:</span>
                                 <br>
@@ -99,40 +99,8 @@
                           {% endfor %}
                         </ul>
                       </div>
-          
-                  {% comment %} {% if addresses|length > 2 %}
-                  <div class="text-center d-flex justify-content-end mr-3 ">
-                    <button type="button" class="btn btn-" id="chooseOtherAddressBtn" style="display: none; display: flex; justify-content: end; align-items: center;">
-                      Other
-                      <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M2 334.5c-3.8 8.8-2 19 4.6 26l136 144c4.5 4.8 10.8 7.5 17.4 7.5s12.9-2.7 17.4-7.5l136-144c6.6-7 8.4-17.2 4.6-26s-12.5-14.5-22-14.5l-72 0 0-288c0-17.7-14.3-32-32-32L128 0C110.3 0 96 14.3 96 32l0 288-72 0c-9.6 0-18.2 5.7-22 14.5z"/></svg>
-                  </button>
-                  </div>
-                  {% endif %}
-          
-                  <div id="otherAddresses" style="display: none;">
-                      {% for address in addresses|slice:"2:" %}
-                      <div class="address-container" style="border: 1px solid #333; margin: 10px; padding: 20px; color: black;">
-                          <div style="margin-bottom: 10px;">
-                              <input type="radio" name="selected_address" value="{{ address.id }}" id="address_{{ address.id }}">
-                              <label for="address_{{ address.id }}">
-                                  <span style="font-weight: bold;">Address:</span><br>
-                                  {{ address.full_name }} <br>
-                                  {{ address.mobile_number }} <br>
-                                  {{ address.address_line }}, {{ address.city }}, {{ address.state }}, {{ address.pincode }}<br>
-                              </label>
-                          </div>
-                          <div class="d-flex justify-content-end">
-                              <a href="../checkout_update_address/{{ address.id }}" class="btn-primary" id="editAddressBtn_{{ address.id }}" style="font-size: 12px; width: 65px; margin-right: 10px; text-align: center; display: inline-block; line-height: 1.5;">Edit</a>
-                          </div>
-                      </div>
-                      
-                      {% endfor %}
-                      <div class="d-flex justify-content-end mr-3">
-                          <button type="button" class="btn btn-secondery" id="closeOtherAddressesBtn" style="display: none;">Close Addresses<i class="fa-solid fa-x" style="color: #000000;"></i></button>
-                      </div>
-                  </div> {% endcomment %}
-          
               {% else %}
+
                   <!-- Display add address button with an image when there are no addresses -->
                   <div class="text-center">
                     <img src="{% static 'main/shirt2.3.jpg' %}" alt="No Address Image" style="height: 35rem; display: block; margin: 0 auto;display: flex; justify-content: end; align-items: center;">
@@ -144,16 +112,55 @@
                 
               {% endif %}
           
-          
-            {% comment %} </form> {% endcomment %}
-            
             </div><!-- End .col-lg-9 -->
               
 
 
 
-            {% comment %} side start {% endcomment %}
+<!-- side start--> 
             <div class="col-lg-4">
+                <div class="coupon">
+                    <input type="text" name="code" class="form-control m-2" id="couponCode" placeholder="Enter coupon code"   >
+                  <div class="d-flex justify-content-end mb-3" >
+                    <button style="margin-right: 7px;" class="btn btn-light" type="button"  data-toggle="modal" data-target="#couponModal">Available Coupons</button>
+                    <button id="applyCouponBtn" style="margin-right: 7px;" class="button-31" type="submit" >Apply</button>
+                    <a href="/remove_coupen/"><button class="bg-danger button-31 removeCouponBtn" role="button">Remove</button> </a>
+                    
+                  </div> 
+                </div>
+                
+                        <!-- Bootstrap Modal -->
+                        <div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-labelledby="couponModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content p-5 mar">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="couponModalLabel">Available Coupons</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <!-- Dummy Data for Coupons -->
+                                <ul>
+                                  {% if coupons %}
+                                    {% for c in coupons %}
+                                    <li style="display: flex; flex-direction: column; background-color: #fffff0; padding: 10px; margin-bottom: 15px;">
+                                      <span style="font-weight: bold; color: #ff9900; font-size: 18px;"></span>
+                                      <span style="font-weight: bold; color: #ff9900; font-size: 16px;"> Coupon Code :  {{ c.code }} </span>
+                                      <span style="color: #666; font-size: 14px;">Minimum Purchase: &#8377; {{ c.min_amount }}</span>
+                                      <span style="color: #666; font-size: 14px;">Expiry Date: {{ c.end_date }}</span>
+                                    </li>
+                                    {% endfor %}
+                                  {% else %}
+                                    No Coupon Available...
+                                  {% endif %}
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        
                 <div class="checkout__order">
                     <h5>Your order</h5>
                     <div class="checkout__order__product">
@@ -176,31 +183,26 @@
                     </div>
                 
                     <div class="checkout__order__widget">
-                        <label for="payment-option">Choose a payment option:</label>
+                        <label for="payment-option" >Choose a payment option:</label>
+                        <input type="hidden" id="total_amount" name="sub_total" value="{{ sub_total1 }}">
+
                         <div class="payment-options">
-                          <label for="cod">
-                            Cash on payment
-                            <input type="radio" name="payment_option" id="cod" value="cod" required>
-                            <span class="checkmark"></span>
-                          </label>
-                          <label for="razar-pay">
-                            Razar pay
-                            <input type="radio" name="payment_option" id="razar-pay" value="razar-pay" required>
-                            <span class="checkmark"></span>
-                          </label>
-                          <label for="Wallet">
-                            Wallet
-                            <input type="radio" name="payment_option" id="Wallet" value="Wallet" required>
-                            <span class="checkmark"></span>
-                          </label>
+                          <div class="col-md-6 mb-3">
+
+                            <input type="hidden" name="payment_option" value="cod">
+                            <button type="submit" class="btn btn-danger btn-block">COD</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <button type="submit" class="btn btn-danger btn-block">Wallet</button>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <button type="button" id="rzp-button1" class="btn btn-danger btn-block razor">Razorpay</button>
+                    </div>
                         </div>
                       </div>
-                      
-                    
-                    <input type="hidden" name="sub_total" value="{{ sub_total1 }}"  >
-                    <button  id="rzp-button1"  class="primary-btn"><a href=""></a>Place Order</button>
+                  </div>
                 </form>
-                </div>
+              </div>
             </div>
           </div><!-- End .row -->
         </div><!-- End .container -->
@@ -208,48 +210,97 @@
     </div><!-- End .page-content -->
   </main><!-- End .main -->
 
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
- <script>
-  const selectedPayment = document.querySelector('input[name="payment-option"]:checked').value;
 
 
-    var options = {
-        "key": "{{ settings.RAZORPAY_API_KEY }}", // Enter the Key ID generated from the Dashboard
-        "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-        "currency": "INR",
-        "name": "Acme Corp",
-        "description": "Purchases",
-        "image": "https://example.com/your_logo",
-        "order_id": "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-        "handler": function (response){
-            alert(response.razorpay_payment_id);
-            alert(response.razorpay_order_id);
-            alert(response.razorpay_signature)
-        },
-        
-        "theme": {
-            "color": "#3399cc"
-        }
-    };
-    var rzp1 = new Razorpay(options);
-    rzp1.on('payment.failed', function (response){
-            alert(response.error.code);
-            alert(response.error.description);
-            alert(response.error.source);
-            alert(response.error.step);
-            alert(response.error.reason);
-            alert(response.error.metadata.order_id);
-            alert(response.error.metadata.payment_id);
-    });
-    document.getElementById('rzp-button1').onclick = function(e){
-        rzp1.open();
+
+<!-- rzp-button1 -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+ <!--razor-pay scripts -->
+
+<script>
+
+  $(document).ready(function (){
+
+    $('.razor').click(function (e){
         e.preventDefault();
-    }
-    
-</script>
- 
+        var selectedValue = $('input[name="selected_address"]:checked').val();
+        var token = $('input[name=csrfmiddlewaretoken]').val();
+        var totalAmount = $('#total_amount').val();
+
+        
+        
+        console.log('Total Amount:', totalAmount); 
+console.log('hi')
+
+  var options = {
+      "key": "rzp_test_kjPVyHrg75EHqw",
+      "amount": "{{ payment.amount }}",
+      "currency": "INR",
+      "name": "Ashion",
+      "description": "Test Transaction",
+      "image": "https://example.com/your_logo",
+      "order_id": "{{ payment.id }}", 
+     // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+      "handler": function (response){
+        if (response.razorpay_payment_id){
+          $.ajax({
+            method : 'POST',
+            url: '/razorpay_payment/',
+            data: {
+              address : selectedValue,
+              csrfmiddlewaretoken:token,
+              total_amount : totalAmount
+                  },
+          success : function (data){
+              window.location.href = data.redirect_url + data.order_id;   
+              }
+          });
+        }
+        else{
+            alert("payment failed")
+        }
+        
+      },
+      "prefill": {
+          "name": "Gaurav Kumar",
+          "email": "gaurav.kumar@example.com",
+          "contact": "9000090000"
+      },
+      "theme": {
+          "color": "#cc3333"
+      }
+  };
+  
+  console.log("Script executed" );
+  var rzp1 = new Razorpay(options);
+  rzp1.on('payment.success', function (response){
+    console.log("Payment success");
+          alert(response.error.reason);
+          
+  });
+  document.getElementById('rzp-button1').onclick = function(e){
+      rzp1.open();
+      e.preventDefault();
+  }
+
+  });
+});
+
+
+  </script>
+
+
+  
+
+
 {% endblock content %}
+
+
+
 
 
         
@@ -264,3 +315,58 @@
         {% include "inc/footer.html" %}
         {% endblock footer %}
         <!-- Footer Section End -->
+{% comment %} 
+
+
+        <script>
+          $(document).ready(function (){
+
+            $('.razor').click(function (e){
+                e.preventDefault();
+                var selectedValue = $('input[name="address"]:checked').val();
+                var total_prize = $('input[name="total_prize"]').val();
+                var token = $('input[name=csrfmiddlewaretoken]').val();
+        
+                        var options = {
+                            "key": "rzp_test_ja90f2UETSDOKd",
+                            "amount": total_prize * 100, 
+                            "currency": "INR",
+                            "name": "Shoezy",
+                            "description": "Thank you for buying from us ",
+                            "image": "https://imgs.search.brave.com/EF6YntA6IJLW85LIWBz8pQfw5BpeNOdleik58EunoJs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9keW5h/bWljLmJyYW5kY3Jv/d2QuY29tL2Fzc2V0/L2xvZ28vZjgzODFi/NjQtZGRmZC00MDI4/LWE3MDUtNDdkOTc3/ZGQzNzhhL2xvZ28t/c2VhcmNoLWdyaWQt/MXg_bG9nb1RlbXBs/YXRlVmVyc2lvbj0x/JnY9NjM4MzAxOTEz/Nzk5NDAwMDAw.jpeg",
+                
+                            "handler": function (response1){
+                                    if (response1.razorpay_payment_id){
+                                        $.ajax({
+                                            method : 'POST',
+                                            url: '/razor_pay/',
+                                            data: {
+                                                'address': selectedValue,
+                                                csrfmiddlewaretoken:token
+        
+                                                    },
+                                            success : function (data){
+                                                window.location.href = data.redirect_url  + data.order_id1;
+                                        }
+                                    });
+                                }
+                                else{
+                                    alert("payment failed")
+                                }
+        
+                            },
+                            "prefill": {
+                                "name": 'name', 
+                                "email": "sample123@gmail.com", 
+                                "contact": 9876543219 , 
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            }
+                        };
+                          var rzp1 = new Razorpay(options);
+                        rzp1.open();
+               
+            });
+        });
+        </script> {% endcomment %}

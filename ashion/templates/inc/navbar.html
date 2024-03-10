@@ -65,18 +65,16 @@
                         {% if 'email' in request.session %}
                         
                         
-                        <li class="nav-item dropdown" style="list-style: none; padding: 0; margin: 0;">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <li class="nav-item dropdown" style="list-style: none; padding: 0; margin: 0;" data-hover="dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 My Account
                             </a>
-
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" >
-                                <a class="dropdown-item"  href="/user_dashbord/">Profile</a>
-                                <a class="dropdown-item" href="/user_dashbord/">Wishlist</a>
+                        
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/user_dashbord/">Profile</a>
+                                <a class="dropdown-item" href="/wishlist/">Wishlist</a>
                                 <a class="dropdown-item" href="/my_order/">Orders</a>
                                 <a class="dropdown-item" href="/showcart/">Cart</a>
-
-                                {% comment %} <a class="dropdown-item" href="/cart/" >Cart</a> {% endcomment %}
                                 <a class="dropdown-item" href="{% url "logout" %}">Logout</a>
                             </div>
                         </li>
@@ -95,6 +93,11 @@
 							</form>
 						</div>
 					</div> {% endcomment %}
+
+
+
+     
+        
                    
                     <ul class="header__right__widget">
                         <li>
@@ -103,15 +106,14 @@
                                     <a href="#" class="search-toggle" role="button" title="Search">
                                         <span class="icon_search search-switch"></span>
                                     </a>
-                                    
-                            </li>        
-                          
+                                </div>
+                            </li> 
                         </li>
                         <li><a href="/wishlist/"><span class="icon_heart_alt"></span>
-                            <div class="tip">2</div>
+                            <div class="tip">{{ wishlist_count }}</div>
                         </a></li>
                         <li><a href="/showcart/"><span class="icon_bag_alt"></span>
-                            <div class="tip">2</div>
+                            <div class="tip">{{ cart_count }}</div>
                         </a></li>
                     </ul>
                 </div>
@@ -125,6 +127,10 @@
 
 
 
-
-
+<script>
+    $(document).ready(function() {
+        // Enable Bootstrap's hover dropdown
+        $('[data-hover="dropdown"]').dropdownHover();
+    });
+</script>
 

@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+  {% include 'inc/navbar.html' %}
+{% endblock %}
+
+{% block content %}
+  <style>
+    .card {
+      background-color: ##222;
+      border: 1px solid #fff;
+      border-radius: 5x;
+      margin-top: 10px;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    .table {
+      color: #fff;
+    }
+    
+    .table th {
+      background-color: #000;
+      color: #fff;
+    }
+    
+    .table td {
+      color: #000;
+    }
+    
+    .btn-primary {
+      background-color: #000;
+      border: 2px solid #fff;
+      color: #fff;
+    }
+    
+    .btn-primary:hover {
+      background-color: #fff;
+      color: #000;
+    }
+  </style>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center m-t-100">
+      <div class="col-md-12">
+        <div class="card mt-4 border-0 shadow">
+          <div class="card-body">
+            <h2 class="mb-4">Order Details</h2>
+            <div class="table-responsive">
+              <table class="table table-bordered text-center">
+                <thead>
+                  <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for ord in orders %}
+                    <tr>
+                      <td>
+                        <img src="{{ ord.product.product_id.img1.url }}" alt="Product Image" height="100px" />
+                      </td>
+                      <td class="align-middle">{{ ord.product.product_id.name }}</td>
+                      
+                      {% if ord.product.product_id.discounted_price %}
+                      <td class="align-middle">{{ ord.product.product_id.discounted_price }}</td>
+                      {% else %}
+                      <td class="align-middle">{{ ord.product.product_id.selling_price }}</td>
+                      {% endif %}
+
+                      <td class="align-middle">{{ ord.quantity }}</td>
+                      <td class="align-middle">{{ ord.total_amount }}</td>
+                      <td class="align-middle">{{ ord.status }}</td>
+
+                      <td class="cart__price">
+                        {% if  ord.status == 'Cancelled' or ord.status == 'Returned' %}
+                          <a href="/product_details/{{ ord.product.product_id.id }}" class="btn btn-sm btn-outline-info mt-4">View Product</a>
+                        {% elif ord.status == 'Delivered' %}
+                          <a href="#returnModal-{{ forloop.counter }}" class="btn btn-sm btn-outline-danger mt-4" data-toggle="modal">Return Product</a>
+                        {% else %}
+                          <a href="#cancelModal-{{ forloop.counter }}" class="btn btn-sm btn-outline-danger mt-4" data-toggle="modal">Cancel</a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-4 border-0 shadow">
+          <div class="card-body">
+            <div style="margin-bottom: 10px;">
+              <label for="address_{{ order.id }}">
+                <span style="font-weight: bold;">Address:</span><br />
+                {{ addr.address.name }} <br />
+                {{ addr.address.number }} <br />
+                {{ addr.address.address }},<br />
+                {{ addr.address.city }}, {{ addr.address.pincode }}<br />
+              </label>
+              <h5>Payment Method : <strong>{{ addr.payment_method }}</strong></h5>
+              <h5>Total Amount : <strong>{{ addr.total_amount }}</strong></h5>
+              {% for i in orders|slice:1 %}
+                <h5>Delivery Date: <strong>{{ i.delivery_date }}</strong></h5>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-4">
+          <a href="/my_order/" class="btn btn-dark continue-btn mb-4"><i class="bi bi-house-door"></i> Go Back</a>
+          {% comment %} <a href="../show_invoice/{{ current_order.order_id }}/" class="btn btn-primary continue-btn mb-4" target="_blank">
+            <i class="bi bi-house-door"></i>
+            Download Invoice
+          </a> {% endcomment %}
+        </div>
+        <div class="text-center mt-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel Modal HTML -->
+  {% for i in orders %}
+    <div id="cancelModal-{{ forloop.counter }}" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form action="/order_cancel/{{ i.id }}" method="post">
+            {% csrf_token %}
+            <div class="modal-header">
+              <h5 class="modal-title">Reason for Cancellation</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+              {% comment %} <label for="cancelReason">Are you sure to Cancel:- <br /><strong>{{ i.product.product_id.name }}</strong></label> {% endcomment %}
+              {% comment %} <input type="hidden" id="cancelOrderID" name="orderid" /> {% endcomment %}
+              <label for="cancelReason">Please provide a reason:</label>
+              <textarea required name="reason" id="cancelReason" class="form-control" rows="4" cols="50"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-danger">Confrim</button>
+            </div>
+            <input type="hidden" value="{{ addr.id }}" name="orderid" />
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  <!-- Return Modal HTML -->
+  {% for i in orders %}
+    <div id="returnModal-{{ forloop.counter }}" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form action="/return_order/{{ i.id }}" method="post">
+            {% csrf_token %}
+            <div class="modal-header">
+              <h5 class="modal-title">Reason for return</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+              <label for="cancelReason">Are you sure to return:- <br /><strong>{{ i.product.product_id.name }}</strong></label><br>
+
+              <label for="cancelReason">Please provide a reason:</label>
+              <textarea required name="reason" id="cancelReason" class="form-control" rows="4" cols="50"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-danger">Confrim</button>
+            </div>
+            <input type="hidden" value="{{ addr.id }}" name="orderid" />
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  <!-- Bootstrap JavaScript and dependencies -->
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" crossorigin="anonymous"></script>
+
+  <!-- Bootstrap JavaScript and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+<!-- Instagram Begin -->
+{% block instagram %}
+  {% include 'inc/instagram.html' %}
+{% endblock %}
+<!-- Instagram End -->
+
+<!-- Footer Section Begin -->
+{% block footer %}
+  {% include 'inc/footer.html' %}
+{% endblock %}
+<!-- Footer Section End -->

@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block header %}
+{% include "inc/navbar.html" %}
+{% endblock header %}
+
+
+
+{% block content %}
+
+<style>
+        
+
+        .card {
+            background-color: ##222;
+            border: 1px solid #fff;
+            border-radius: 5x;
+            margin-top: 10px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .table {
+            color: #fff;
+        }
+
+        .table th {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .table td{
+            color:#000
+        }
+
+        .btn-primary {
+            background-color: #000;
+            border: 2px solid #fff;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #fff;
+            color: #000;
+        }
+    </style>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center m-t-100">
+            <div class="col-md-12">
+                <div class="card border-0 shadow">
+                    <div class="card-body text-center">
+                        <i class="bi bi-check2-circle-fill order-icon"></i>
+                        <h3 class="order-title mt-4">Thank You For Your Purchase!</h1>
+                        <p class="card-text">We have received it and will process it shortly.</p>
+                        <p class="order-id">Your Order ID : <strong>#{{ addr.id }}</strong></p>
+                    </div>
+                </div>
+                <div class="card mt-4 border-0 shadow">
+                    <div class="card-body">
+                        <h2 class="mb-4">Order Details</h2>
+                        <div class="table-responsive">
+                            <table class="table table-bordered  text-center">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Product Name</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Total Price</th>
+                                        <th scope="col">Status</th>                                        
+                                        {% comment %} <th scope="col">Action</th> {% endcomment %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ord in orders %}
+                                    <tr>
+                                        <td><img src="{{ ord.product.product_id.img1.url }}" alt="Product Image" height="100px"></td>
+                                        <td class="align-middle">{{ ord.product.product_id.name }}</td>
+                                        {% if ord.product.product_id.discounted_price %}
+                                        <td class="align-middle">{{ ord.product.product_id.discounted_price }}</td>
+                                        {% else %}
+                                        <td class="align-middle">{{ ord.product.product_id.selling_price }}</td>
+                                        {% endif %}
+                                        <td class="align-middle">{{ord.quantity}}</td>
+                                        <td class="align-middle">{{ ord.total_amount }}</td>
+                                        <td class="align-middle">{{ ord.status }}</td>
+
+                                       
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card mt-4 border-0 shadow">
+                    <div class="card-body">
+                        <div style="margin-bottom: 10px;">
+                            <label for="address_{{ order.id }}">
+                                <span style="font-weight: bold;">Address:</span><br>
+                                {{ addr.address.name }} <br>
+                                {{ addr.address.number }} <br>
+                                {{ addr.address.address }},<br>
+                                {{ addr.address.city }}, {{ addr.address.pincode }}<br>
+                            </label>
+                            <h5>Payment Method : <strong>{{ addr.payment_method  }}</strong></h5>
+                            <h5>Total Amount : <strong> {{ addr.total_amount}} </strong> </h5>
+                            {% for i in orders|slice:1 %}
+                            <h5>Delivery Date: <strong>{{ i.delivery_date }} </strong></h5></h5>
+                            {% endfor %}
+                        </div></p>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="/my_order/" class="btn btn-dark continue-btn mb-4"><i class="bi bi-house-door"></i> Go Back</a>
+                    {% comment %} <a href="../show_invoice/{{current_order.order_id}}/" class="btn btn-primary continue-btn mb-4" target="_blank">
+                        <i class="bi bi-house-door"></i>
+                       Download Invoice
+                    </a> {% endcomment %}
+                </div>
+                <div class="text-center mt-4">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- Bootstrap JavaScript and dependencies -->
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" crossorigin="anonymous"></script>
+
+<!-- Bootstrap JavaScript and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+
+{% endblock content %}
+
+        
+<!-- Instagram Begin -->
+{% block instagram %}
+{% include "inc/instagram.html" %}
+{% endblock instagram %}
+ <!-- Instagram End -->
+
+ <!-- Footer Section Begin -->
+ {% block footer %}
+ {% include "inc/footer.html" %}
+ {% endblock footer %}
+ <!-- Footer Section End -->
+
+
+
+

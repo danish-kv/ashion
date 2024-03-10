@@ -47,11 +47,10 @@
                             <th>ID</th>
                             <th>Product Image</th>
                             <th>Product Name</th>
-                            {% comment %} <th>Stock</th> {% endcomment %}
+                            {% comment %} <th>Offer</th> {% endcomment %}
                             <th>Variant Details</th>
                             <th>Category</th>
                             <th>Price</th>
-                            <th>Unlist</th>
                             <th>Actions</th>
                             
                         </tr>
@@ -69,9 +68,12 @@
                                 {{i.name}}
                             </td>
                             {% comment %} <td class="align-middle">
-                                {{i.category.}}
-                            </td>
-                             {% endcomment %}
+                                {% if i.variant_set.all %}
+                                <a href='/variant/{{i.id}}' type="button" class="btn btn-sm btn-primary ">Show offer</a>
+                                {% else %}
+                                <a href='/add_variant/{{i.id}}' type="button" class="btn btn-sm btn-danger ">Add Offer</a>
+                                {% endif %}
+                            </td>  {% endcomment %}
                              
                             <td class="align-middle">
                                 {% if i.variant_set.all %}
@@ -87,17 +89,15 @@
                             <td class="align-middle">
                                 {{i.selling_price}}
                             </td>
-                             <td class="align-middle">
+                            <td class="align-middle">
+                                <a class="badge btn btn-warning" href="/editproduct/{{i.id}}">
+                                    Edit
+                                </a>
                                 {% if i.is_listed %}
                                 <a class="badge btn btn-sm bg-danger" href="/unlist_product/{{ i.id }}">Unlist</a>
                                 {% else %}
                                 <a class="badge btn btn-sm bg-danger" href="/list_product/{{ i.id }}">List</a>
                                 {% endif %}
-                            </td>
-                            <td class="align-middle">
-                                <a class="badge btn btn-warning" href="/editproduct/{{i.id}}">
-                                    Edit
-                                </a>
                             </td> 
                         </tr>
                         {% endfor %}

@@ -1747,6 +1747,23 @@ a{
 	display: inline-block;
 }
 
+
+.product__list__price {
+	font-size: 20px ;
+	font-weight: 600;
+	color: #ca1515;
+	margin-bottom: 30px;
+	padding-left: 10px;
+}
+
+.product__list__price span {
+	font-size: 15px;
+	color: #b1b0b0;
+	text-decoration: line-through;
+	margin-left: 10px;
+	display: inline-block;
+}
+
 .quantity {
 	float: left;
 	margin-right: 10px;

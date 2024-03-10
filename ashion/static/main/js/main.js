@@ -50,6 +50,12 @@ Created: Colorib
         });
     });
 
+
+    // Handle form submission
+$('.search-model-form').on('submit', function () {
+    // You may add additional logic here if needed
+});
+
     //Canvas Menu
     $(".canvas__open").on('click', function () {
         $(".offcanvas-menu-wrapper").addClass("active");

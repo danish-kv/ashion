@@ -74,6 +74,11 @@
                                         {% endif %}
                                     </td>
                                     <td class="align-middle">
+                                        {% comment %} {% if variant.is_listed == False %}
+                                                <a href="/is_listed_variant/{{variant.id}}" class="badge btn btn-success" data-toggle="tooltip" data-placement="top" title="Activate">List</a>
+                                            {% else %}
+                                                <a href="/is_listed_variant/{{variant.id}}" class="badge btn btn-danger" data-toggle="tooltip" data-placement="top" title="Deactivate">Unlist</a>
+                                            {% endif %} {% endcomment %}
                                         <a class="badge btn btn-warning" href="/edit_variant/{{variant.id}}">
                                             Edit
                                         </a>

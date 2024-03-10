@@ -1,5 +1,6 @@
 from django.db import models
 from logintohome.models import Customer
+from django.utils import timezone
 
 # Create your models here.
 
@@ -18,3 +19,11 @@ class Address(models.Model):
 
     def __str__(self) -> str:
         return f"'{self.name}'s address "
+    
+    
+class Wallet_User(models.Model):
+    user_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+    transaction_type = models.CharField(max_length=50)
+    amount = models.DecimalField(max_digits=10, decimal_places=2,default=0)
+    balance = models.DecimalField(max_digits=10, decimal_places=2,default=0)

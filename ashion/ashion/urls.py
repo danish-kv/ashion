@@ -29,7 +29,8 @@ urlpatterns = [
     path('',include('manage_order.urls')),
     path('',include('user_profile.urls')),
     path('',include('home.urls')),
-    
+    path('',include('manage_coupen.urls')),
+
 ]
 urlpatterns +=  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns +=  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
