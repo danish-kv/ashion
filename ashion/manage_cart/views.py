@@ -450,6 +450,91 @@ def razorpay_payment(request):
 
 
 
+@never_cache
+def wallet_payment(request):
+    if 'email' in request.session:
+        email = request.session.get('email')
+        user = Customer.objects.get(email=email)
+        check_out = checkout.objects.get(user = user)
+        cart_objects = Cart.objects.filter(user_id=user)
+
+        wallet_user = Wallet_User.objects.filter(user_id = user).order_by('-id').first()
+
+
+        for cart_obj in cart_objects:
+            if cart_obj.quantity > cart_obj.size_variant.stock:
+                messages.error(request,'OUT OF STOCK')
+                return redirect('checkout')
+        
+        if request.method == 'POST':
+            address_id = request.POST.get('address')
+            address = Address.objects.get(id = address_id)
+            total_amount = float(request.POST.get('total_amount'))
+            payment_method = 'Wallet'
+
+
+            if total_amount > int(wallet_user.balance):
+                return JsonResponse({'error': f'Insufficient balance in your wallet. Current wallet balance: {int(wallet_user.balance)}'})
+
+
+            new_balance = wallet_user.balance - int(total_amount)
+            print(wallet_user.balance, total_amount, new_balance)
+            Wallet_User.objects.create(
+                user_id = user,
+                transaction_type = "Debit",
+                amount = total_amount,
+                balance = new_balance
+                )
+            
+            order_id = Order.objects.create(
+                user = user,
+                address = address,
+                total_amount = total_amount,
+                payment_method = payment_method,
+                coupon_id = check_out.coupon,
+            )
+
+
+
+            for cart_obj in cart_objects:
+                
+                var = Variant.objects.get(product_id=cart_obj.size_variant.product_id, size=cart_obj.size_variant.size)
+                var.stock = var.stock - cart_obj.quantity 
+                var.save()
+
+                discounted_price = cart_obj.size_variant.product_id.discounted_price()
+
+                if discounted_price < cart_obj.size_variant.product_id.selling_price:
+                        pro_total = discounted_price * cart_obj.quantity
+                        print(pro_total)
+                else:
+                    pro_total = cart_obj.size_variant.product_id.selling_price * cart_obj.quantity
+                
+                OrderedProducts.objects.create(
+                    order_id = order_id,
+                    user = user,
+                    product = cart_obj.size_variant,
+                    size = cart_obj.size_variant.size,
+                    quantity = cart_obj.quantity,
+                    total_amount = pro_total,
+                    status = 'Order confirmed',
+                    address = address
+                )
+
+            cart_objects.delete()
+            check_out.delete()
+
+            data = {
+            'redirect_url': '/order_success/',
+            'order_id': order_id.id 
+            }
+            return JsonResponse(data)
+   
+    messages.warning(request,'Please login to continue...')
+    return redirect('login')
+
+
+
 
 
 
@@ -492,42 +577,61 @@ def order_cancel(request,id):
             reason = request.POST.get('reason')
             ord_pro = OrderedProducts.objects.get(id=id)
 
-            CancelledOrder.objects.create(
-                order_id = ord_pro,
-                user_id = user,
-                cancel_reason = reason,
-            )
+            
             
             if ord_pro.order_id.payment_method == 'Razor pay' or ord_pro.order_id.payment_method == 'Wallet':
-                wallet_user = Wallet_User.objects.filter(user_id = user).order_by('-id').first()
-
-
-                if not wallet_user:
-                    balance = 0
-                else:
-                    balance = wallet_user.balance
                 
-                new_balance = balance + ord_pro.total_amount
-            
-                Wallet_User.objects.create(
-                    user_id = user,
-                    transaction_type = "Credit",
-                    amount = ord_pro.total_amount,
-                    balance = new_balance
-                )
+                try:
+                    discount_amount = 0
+                    if ord_pro.order_id.coupon_id:
+                        discount_amount = ord_pro.order_id.coupon_id.discount_amount
 
-            
-            #change the status
-            ord_pro.status = 'Cancelled'
-            pro = Variant.objects.get(product_id = ord_pro.product.product_id, id=ord_pro.product.id )
+                    
+                    total_products = ord_pro.order_id.orderedproducts_set.count()
+                    refund_amount = discount_amount / total_products
+                    print(f'{total_products} total products,, {refund_amount} refund_amount ')
 
-            # #re stocking
-            pro.stock = pro.stock + ord_pro.quantity
-            ord_pro.save()
-            pro.save()
+                    # refunding amount
+                    for product in ord_pro.order_id.orderedproducts_set.all():
+                        amount = product.total_amount - Decimal(refund_amount)
+                        print(amount)
+                        print( product.total_amount)
+                        print(product.quantity)
+                        print( refund_amount)
+                        wallet_user = Wallet_User.objects.filter(user_id = user).order_by('-id').first()
 
-            messages.success(request,'Product cancelled')
-            return redirect('ordered_products',id = ordered_id)
+                        if not wallet_user:
+                            balance = 0
+                        else:
+                            balance = wallet_user.balance
+
+                        new_balance = balance + amount
+                        Wallet_User.objects.create(
+                            user_id = user,
+                            transaction_type = "Credit",
+                            amount = amount,
+                            balance = new_balance
+                        )
+
+                        #Change the status and ReStocking
+                        product.status = 'Cancelled'
+                        pro = Variant.objects.get(product_id = ord_pro.product.product_id, id=ord_pro.product.id )
+                        pro.stock = pro.stock + ord_pro.quantity
+                        product.save()
+                        pro.save()
+
+                    CancelledOrder.objects.create(
+                        order_id = ord_pro,
+                        user_id = user,
+                        cancel_reason = reason,
+                    )
+
+                    messages.success(request,'Product cancelled')
+                    return redirect('ordered_products',id = ordered_id)
+                
+                except Exception as e:
+                    print(e)
+                    messages.error(request,f'Facing some issues {str(e)}')
         
         messages.error(request,'some issues facing. try again later...')
         return redirect('ordered_products',id = ordered_id)
@@ -552,11 +656,7 @@ def return_order(request,id):
 
 
 
-                OrderReturns.objects.create(
-                    order_id = ord_pro,
-                    user = user,
-                    reason = reason,
-                )
+                
 
 
                 total_products = ord_pro.order_id.orderedproducts_set.count()
@@ -592,6 +692,13 @@ def return_order(request,id):
                     pro.stock = pro.stock + ord_pro.quantity
                     product.save()
                     pro.save()
+
+
+
+                OrderReturns.objects.create(
+                order_id = ord_pro,
+                user = user,
+                reason = reason)
 
                 messages.success(request,'Product Returned')
                 return redirect('ordered_products',id = ordered_id)

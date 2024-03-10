@@ -36,13 +36,27 @@
 }
 
 
-  .coupon_error {
-      color: red;
-  }
-  .coupon_success{
-    color: green;
-  }
+.error-message {
+  display: none;
+}
 
+.inner-error {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #d9534f;
+  border-radius: 4px;
+  color: #d9534f;
+  background-color: #f2dede;
+}
+
+.inner-success {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #5cb85c;
+  border-radius: 4px;
+  color: #5cb85c;
+  background-color: #dff0d8;
+}
 
 
 </style>
@@ -129,8 +143,8 @@
 <!-- side start--> 
             <div class="col-lg-4">
                 <div class="coupon" id="reload" >
-                  <span id="Success" class="coupon_success"></span>
-                  <span id="Error" class="coupon_error"></span>
+                  <span id="Success" class="error-message inner-success"></span>
+                  <span id="Error" class="error-message inner-error"></span>
                     <input type="text"  name="coupon-Code" class="form-control m-2" id="couponCode" placeholder="Enter coupon code"   >
                     {% csrf_token %}
                   <div class="d-flex justify-content-end mb-3" >
@@ -199,6 +213,7 @@
                         </ul>
                     </div>
                 
+                    <span id="WalletError" class="error-message inner-error"></span>
                     <div class="checkout__order__widget">
                         <label for="payment-option" >Choose a payment option:</label>
                         <input type="hidden" id="total_amount" name="sub_total" value="{{ final_amount }}">
@@ -210,8 +225,9 @@
                             <button type="submit" class="btn btn-danger btn-block">COD</button>
                         </div>
                         <div class="col-md-6 mb-3">
-                          <button type="submit" class="btn btn-danger btn-block">Wallet</button>
+                          <button type="button" id="wallet-pay" class="btn btn-danger btn-block wallet">Wallet</button>
                       </div>
+
                       <div class="col-md-6 mb-3">
                         <button type="button" id="rzp-button1" class="btn btn-danger btn-block razor">Razorpay</button>
                     </div>
@@ -363,6 +379,68 @@ console.log('hi')
     })
 </script>
 
+
+
+
+
+
+
+
+
+
+<!-------------------------- wallet pay  starts ------------------------------>
+
+
+<script>
+  $(document).ready(function () {
+    $('#wallet-pay').on('click', function (e) {
+      e.preventDefault();
+
+      var selectedAddrress = $('input[name="selected_address"]:checked').val();
+      var token = $('input[name=csrfmiddlewaretoken]').val();
+      var totalAmount = $('#total_amount').val();
+
+      console.log(selectedAddrress)
+      console.log(token)
+      console.log('Total Amount:', totalAmount);
+
+      $.ajax({
+        method: 'POST',
+        url: '/wallet_payment/',
+        data: {
+          address: selectedAddrress,
+          csrfmiddlewaretoken: token,
+          total_amount: totalAmount
+        },
+        success: function (data) {
+          var errorBlock = document.getElementById('WalletError');
+          var successBlock = document.getElementById('Success');
+      
+          if (data.error !== undefined && data.error !== null && data.error.trim() !== "") {
+              // Show error message
+              errorBlock.innerHTML = data.error;
+              errorBlock.style.display = 'block';
+              // Hide success message
+              successBlock.style.display = 'none';
+          } else {
+              // Clear error message
+              errorBlock.innerHTML = '';
+              errorBlock.style.display = 'none';
+              // Show success message
+              successBlock.innerHTML = 'Payment successful! Redirecting...';
+              successBlock.style.display = 'block';
+              // Redirect to success page
+              window.location.href = data.redirect_url + data.order_id;
+          }
+      },
+      
+        
+      });
+    });
+  });
+</script>
+
+<!-------------------------- Wallet Pay Ends ------------------------------>
 
 
 {% endblock content %}
