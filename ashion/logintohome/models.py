@@ -1,9 +1,9 @@
-from django.db import models
+from django.db import models, IntegrityError
 import pyotp
 from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+import string, random
 # Create your models here.
 
 
@@ -20,8 +20,26 @@ class Customer(models.Model):
     otp_field = models.CharField(max_length=10)
     is_verified = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
+    referral_code = models.CharField(max_length=10, unique=True, blank=True, null=True)
+
     def __str__(self):
         return self.username
+    
+    def save(self, *args, **kwargs):
+        # Generate a referral code if it doesn't exist
+        if not self.referral_code:
+            self.referral_code = self.generate_referral_code()
+
+        try:
+            super().save(*args, **kwargs)
+        except IntegrityError:
+            # Handle the case where a non-unique code was generated
+            self.referral_code = self.generate_referral_code()
+            super().save(*args, **kwargs)
+
+    def generate_referral_code(self):
+        # Generate a random 5-character alphanumeric code
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=5))
     
 
 

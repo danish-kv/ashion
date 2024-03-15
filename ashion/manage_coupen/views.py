@@ -2,18 +2,19 @@ from django.shortcuts import render, redirect
 from .models import Coupons
 from django.contrib import messages
 
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
 
-
+@login_required(login_url='adminlogin')
 def show_coupon(request):
     data = Coupons.objects.all()
     context = { 'coupons' : data }
     return render(request,'coupon.html',context)
 
 
-
+@login_required(login_url='adminlogin')
 def add_coupon(request):
     if request.method == 'POST':
         title = request.POST.get('title')

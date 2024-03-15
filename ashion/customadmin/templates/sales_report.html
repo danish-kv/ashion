@@ -1,0 +1,165 @@
+<!-- sales_report.html -->
+{% load division %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+
+
+<div class="container mt-4" >
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="mb-3">Sales Report</h2>
+        </div>
+        <div class="col-md-4 text-right" id="hidediv">
+            <button id="downloadBtn" onclick="downloadInvoice()" class="btn btn-danger">Download</button>
+            <button id="downloadExcel"  class="btn btn-danger">Excel</button>
+            <p> {{ date_of_download }}</p>
+            
+            
+        </div>
+    </div>
+
+    <table class="table" >
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Product Name</th>
+                <th>Image</th>
+                <th>User</th>
+                <th>Address</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Coupon</th>
+                <th>Total</th>
+                <th>Size</th>
+                <th>Payment Method</th>
+                <th>Ordered Date</th>
+                <th>Delivered Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.order_id.id }}</td>
+                    <td>{{ order.product.product_id.name }}</td>
+                    <td><img src="{{ order.product.product_id.img1.url }}" alt="{{ order.product.product_id.img1.url }}" style="max-height: 50px;"></td>
+                    <td>{{ order.user.username }}</td>
+                    <td>{{ order.address.address }}</td>
+                    <td>{{ order.total_amount|div:order.quantity }}</td>
+
+                    <td>{{ order.quantity }}</td>
+
+                    {% if order.order_id.coupon_id %}
+                        <td>{{ order.order_id.coupon_id.discount_amount }}</td>
+                    {% else %}
+                        <td>Not Applied</td>
+                    {% endif %}
+                    
+                    <td>{{ order.total_amount }}</td>
+                    <td>{{ order.size }}</td>
+                    <td>{{ order.order_id.payment_method }}</td>
+                    <td>{{ order.order_id.order_date|date:"F j, Y"}}</td>
+                    <td>{{ order.delivery_date }}</td>
+                    <td>{{ order.status }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Include Bootstrap JS and jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+``
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+<script src="https://kit.fontawesome.com/412a20d28b.js" crossorigin="anonymous"></script>
+
+
+
+<script>
+    function downloadInvoice() 
+	{     
+        hideDownloadButton()
+        window.print();
+        showDownloadButton()
+
+        // Hide download button while downloading
+        function hideDownloadButton() {
+          const downloadButton = document.getElementById('hidediv');
+          if (downloadButton) {
+              downloadButton.style.display = 'none';
+          }
+      }
+  
+      function showDownloadButton() {
+          const downloadButton = document.getElementById('hidediv');
+
+          if (downloadButton) {
+              downloadButton.style.display = 'inline-block';
+          }
+      }
+    }
+
+    function downloadExcel() {
+        var salesReportData = [
+          {% for order in orders %}
+          {
+            "order id":" {{order.id}}",
+            "product name": "{{ order.product.product_id.name }} {{ order.product.product_id.name }}",
+            "User": "{{ order.user.username }}",
+            
+            "address": "{{ order.address.address }}",
+            "price": "{{ order.product.product_id.selling_price }} ",
+            " quantity": " {{ order.quantity }}",
+            {% if order.order_id.coupon_id %}
+            "coupen name": "{{ order.order_id.coupon_id.title }}",
+            "coupen amount": "{{ order.order_id.coupon_id.discount_amount }}",
+            {% else %}
+            "coupen ": "Not Applied",
+            {% endif %}
+            "total amount": "₹{{ order.total_amount }}",
+            "size": "{{ order.size }}",
+            "payment method": "{{ order.order_id.payment_method }}",
+            "order date": "{{ order.order_id.order_date }}",
+            "delivery date": "{{ order.delivery_date }}",
+            "status": "{{ order.status }}",
+            
+          }
+          {% if not forloop.last %},{% endif %}
+          {% endfor %}
+        ];
+      
+        var ws = XLSX.utils.json_to_sheet(salesReportData);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sales Report");
+      
+        XLSX.writeFile(wb, "sales_report.xlsx");
+      }
+      
+      document.getElementById("downloadExcel").addEventListener("click", downloadExcel);
+
+
+
+
+
+
+
+    
+</script>
+
+
+
+</body>
+</html>

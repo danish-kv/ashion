@@ -88,7 +88,7 @@
 {% endif %}
 
 
-<div class="header-search">
+{% comment %} <div class="header-search">
     <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
     <form action="#" method="get">
         <div class="header-search-wrapper">
@@ -96,12 +96,12 @@
             <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
         </div><!-- End .header-search-wrapper -->
     </form>
-</div><!-- End .header-search -->
+</div><!-- End .header-search --> {% endcomment %}
 
 
 
 
-<!-- Search Begin -->
+{% comment %} <!-- Search Begin -->
 <div class="search-model">
     <div class="h-100 d-flex align-items-center justify-content-center">
         <div class="search-close-switch">+</div>
@@ -111,7 +111,7 @@
         </form>
     </div>
 </div>
-<!-- Search End -->
+<!-- Search End --> {% endcomment %}
 
 <!-- Js Plugins -->
 <script src="{% static "/main/js/jquery-3.3.1.min.js" %}"></script>

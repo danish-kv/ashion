@@ -212,7 +212,7 @@
                   <span class="menu-title">Customer</span>
                   <i class="mdi mdi-contacts menu-icon"></i>
                 </a>
-              </li>
+            </li>
             <li class="nav-item">
               <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                 <span class="menu-title">Products</span>
@@ -284,12 +284,7 @@
                   </ul>
                 </div>
               </li>
-            {% comment %} <li class="nav-item">
-              <a class="nav-link" href="">
-                <span class="menu-title">Banners</span>
-                <i class="mdi mdi-table-large menu-icon"></i>
-              </a>
-            </li> {% endcomment %}
+
           </ul>
         </nav>
 
@@ -305,7 +300,7 @@
           <div id="message-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 11;">
             {% if messages %}
                 {% for message in messages %}
-                    <div class="toast {% if message.tags == 'error' %}bg-danger{% elif message.tags == 'success' %}bg-success{% endif %}" role="alert" aria-live="assertive" aria-atomic="true" data-delay="1000" >
+                    <div class="toast {% if message.tags == 'error' %}bg-danger{% elif message.tags == 'success' %}bg-success{% endif %}" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000" >
                         <div class="toast-header">
                             <strong class="mr-auto">{{ message.tags }}</strong>
                             <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
@@ -338,20 +333,24 @@
 
     <!-- container-scroller -->
     <!-- plugins:js -->
-    <script src="{% static 'admin/assets/vendors/js/vendor.bundle.base.js' %}"></script>
+    <script src="{% static "admin/assets/vendors/js/vendor.bundle.base.js" %}"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
-    <script src="{% static 'admin/assets/vendors/chart.js/Chart.min.js' %}"></script>
-    <script src="{% static 'admin/assets/js/jquery.cookie.js' %}" type="text/javascript"></script>
+    <script src="{% static "admin/assets/vendors/chart.js/Chart.min.js" %}"></script>
+    <script src="{% static "admin/assets/js/jquery.cookie.js" %}" type="text/javascript"></script>
     <!-- End plugin js for this page -->
     <!-- inject:js -->
-    <script src="{% static 'admin/assets/js/off-canvas.js' %}"></script>
-    <script src="{% static 'admin/assets/js/hoverable-collapse.js' %}"></script>
-    <script src="{% static 'admin/assets/js/misc.js' %}"></script>
+    <script src="{% static "admin/assets/js/off-canvas.js" %}"></script>
+    <script src="{% static "admin/assets/js/hoverable-collapse.js" %}"></script>
+    <script src="{% static "admin/assets/js/misc.js" %}"></script>
     <!-- endinject -->
     <!-- Custom js for this page -->
-    <script src='{% static "admin/assets/js/dashboard.js" %}'></script>
-    <script src='{% static "admin/assets/js/todolist.js" %}'></script>
+    <script src="{% static "admin/assets/js/dashboard.js" %}"></script>
+    <script src="{% static "admin/assets/js/todolist.js" %}"></script>
+
+    {% block scripts %}
+    
+    {% endblock scripts %}
 
     <!-- End custom js for this page -->
     <script>

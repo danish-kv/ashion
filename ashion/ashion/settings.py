@@ -177,3 +177,6 @@ EMAIL_USE_TLS = True  # Set it to False if your email server doesn't support T
 
 RAZORPAY_API_KEY = 'rzp_test_kjPVyHrg75EHqw'
 RAZORPAY_API_SECRET = '8ooNg13rAFQWYiCVWR0tYuBm'
+
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"

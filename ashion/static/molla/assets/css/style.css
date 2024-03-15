@@ -128,11 +128,11 @@ img {
     background-color: #333
 }
 
-.bg-overlay .container,
+/* .bg-overlay .container,
 .bg-overlay .container-fluid {
     position: relative;
     z-index: 2
-}
+} */
 
 @keyframes rotating {
     from {
@@ -629,7 +629,7 @@ blockquote.text-white cite span {
         margin-right: auto
     }
 }
-
+/* 
 .header {
     width: 100%;
     background-color: #fff
@@ -724,7 +724,7 @@ blockquote.text-white cite span {
         left: 70px;
         right: 70px
     }
-}
+} */
 
 .top-menu {
     text-transform: uppercase;
@@ -1486,7 +1486,7 @@ blockquote.text-white cite span {
     padding: 0 !important;
     overflow: hidden
 }
-
+/* 
 .header-intro-clearance .header-middle .header-left,
 .header-intro-clearance .header-bottom .header-left {
     flex: 0 0 calc((100% + 20px) / 4);
@@ -1732,7 +1732,7 @@ blockquote.text-white cite span {
         flex: 0 0 50px;
         max-width: 50px
     }
-}
+} */
 
 @media screen and (max-width: 991px) {
     .top-menu:not(.top-link-menu) {
@@ -3524,9 +3524,9 @@ p {
     color: #333
 }
 
-.header-4.header-intro-clearance .header-search .header-search-wrapper {
-    border-color: #ccc
-}
+    .header-4.header-intro-clearance .header-search .header-search-wrapper {
+        border-color: #ccc
+    }
 
 .header-4 .header-bottom {
     background-color: #fff
@@ -4437,25 +4437,25 @@ p {
     margin-left: 0
 }
 
-.header-10 .header-search-extended {
-    margin-right: 2.8rem;
-    margin-top: 2.25rem;
-    margin-bottom: 2.25rem
-}
+    .header-10 .header-search-extended {
+        margin-right: 2.8rem;
+        margin-top: 2.25rem;
+        margin-bottom: 2.25rem
+    }
 
-.header-10 .header-search .header-search-wrapper {
-    border-radius: .2rem;
-    border-color: #c96
-}
+    .header-10 .header-search .header-search-wrapper {
+        border-radius: .2rem;
+        border-color: #c96
+    }
 
-.header-10 .header-search .btn {
-    border-radius: 0 .2rem .2rem 0
-}
+    .header-10 .header-search .btn {
+        border-radius: 0 .2rem .2rem 0
+    }
 
-.header-10 .header-search .select-custom:before {
-    left: auto;
-    right: 0
-}
+    .header-10 .header-search .select-custom:before {
+        left: auto;
+        right: 0
+    }
 
 .header-10 .header-bottom {
     background-color: #333

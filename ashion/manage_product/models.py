@@ -56,6 +56,8 @@ class products(models.Model):
             return int(self.selling_price - offer)
 
         else:
+
+            
             return int(self.selling_price)
 
 

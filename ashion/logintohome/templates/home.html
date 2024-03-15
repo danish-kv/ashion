@@ -89,6 +89,8 @@
             </div>
         </div>
         <div class="row property__gallery">
+            {% if  data %}
+            
             {% for p in data %}
             <div class="col-lg-3 col-md-4 col-sm-6 mix women">
                 <div class="product__item">
@@ -117,7 +119,8 @@
                     </div>
                 </div>
             </div>
-            {% endfor %}            
+            {% endfor %}     
+            {% endif %}        
         </div>
     </div>
 </section>

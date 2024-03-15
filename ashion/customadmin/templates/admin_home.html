@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block content %}
+
+
 <div class="content-wrapper">
   <div class="page-header">
     <h3 class="page-title">
@@ -22,9 +24,9 @@
       <div class="card bg-gradient-danger card-img-holder text-white">
         <div class="card-body">
           <img src="{% static "admin/assets/images/dashboard/circle.svg" %}" class="card-img-absolute" alt="circle-image" />
-          <h4 class="font-weight-normal mb-3">Weekly Sales <i class="mdi mdi-chart-line mdi-24px float-right"></i>
+          <h4 class="font-weight-normal mb-3">Total Sales <i class="mdi mdi-chart-line mdi-24px float-right"></i>
           </h4>
-          <h2 class="mb-5">$ 15,0000</h2>
+          <h2 class="mb-5">{{ total_amount }}</h2>
           <h6 class="card-text">Increased by 60%</h6>
         </div>
       </div>
@@ -33,9 +35,9 @@
       <div class="card bg-gradient-info card-img-holder text-white">
         <div class="card-body">
           <img src="{% static "admin/assets/images/dashboard/circle.svg" %}" class="card-img-absolute" alt="circle-image" />
-          <h4 class="font-weight-normal mb-3">Weekly Orders <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+          <h4 class="font-weight-normal mb-3">Total Orders <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
           </h4>
-          <h2 class="mb-5">45,6334</h2>
+          <h2 class="mb-5">{{ orders_count }}</h2>
           <h6 class="card-text">Decreased by 10%</h6>
         </div>
       </div>
@@ -44,9 +46,9 @@
       <div class="card bg-gradient-success card-img-holder text-white">
         <div class="card-body">
           <img src="{% static "admin/assets/images/dashboard/circle.svg" %}" class="card-img-absolute" alt="circle-image" />
-          <h4 class="font-weight-normal mb-3">Visitors Online <i class="mdi mdi-diamond mdi-24px float-right"></i>
+          <h4 class="font-weight-normal mb-3">Customers <i class="mdi mdi-diamond mdi-24px float-right"></i>
           </h4>
-          <h2 class="mb-5">95,5741</h2>
+          <h2 class="mb-5">{{ user_count }}</h2>
           <h6 class="card-text">Increased by 5%</h6>
         </div>
       </div>
@@ -57,7 +59,7 @@
       <div class="card">
         <div class="card-body">
           <div class="clearfix">
-            <h4 class="card-title float-left">Visit And Sales Statistics</h4>
+            <h4 class="card-title float-left">Sales by category</h4>
             <div id="visit-sale-chart-legend" class="rounded-legend legend-horizontal legend-top-right float-right"></div>
           </div>
           <canvas id="visit-sale-chart" class="mt-4"></canvas>
@@ -67,13 +69,226 @@
     <div class="col-md-5 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Traffic Sources</h4>
+          <h4 class="card-title">Payment</h4>
           <canvas id="traffic-chart"></canvas>
           <div id="traffic-chart-legend" class="rounded-legend legend-vertical legend-bottom-left pt-4"></div>
         </div>
       </div>
     </div>
   </div>
+
+
+
+
+
+
+{% comment %} 
+<div class="container mb-5">
+  <div class="row justify-content-center">
+      <div class="col-md-12">
+          <form action="/sales_report/" method="post" class="bg-white p-4 rounded shadow">
+            {% csrf_token %}  
+              <div class="form-row">
+                  <div class="form-group ">
+                      <label for="start_date">Start Date:</label>
+                      <input type="date" id="start_date" name="start_date" class="form-control" required>
+                  </div>
+
+                  <div class="form-group ">
+                      <label for="end_date">End Date:</label>
+                      <input type="date" id="end_date" name="end_date" class="form-control" required>
+                  </div>
+              </div>
+
+              <button type="submit" class="btn btn-success btn-block">Generate Report</button>
+          </form>
+      </div>
+  </div>
+</div> {% endcomment %}
+
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <form action="/sales_report/" method="post" class="bg-white p-4 rounded shadow">
+        {% csrf_token %}  
+        <div class="form-group col-6" >
+          <label for="report_type">Select Report Type:</label>
+          <select id="report_type" name="report_type" class="form-control">
+            <option value="last_day">Last Day</option>
+            <option value="last_week">Last Week</option>
+            <option value="last_month">Last Month</option>
+            <option value="last_year">Last Year</option>
+            <option value="custom">Custom Date</option>
+          </select>
+        </div>
+
+        <div id="custom_date_range">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="start_date">Start Date:</label>
+              <input type="date" id="start_date" name="start_date" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="end_date">End Date:</label>
+              <input type="date" id="end_date" name="end_date" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block">Generate Report</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <form action="/sales_report/" method="post" class="bg-white p-4 rounded shadow">
+        {% csrf_token %}  
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="report_type">Select Report Type:</label>
+              <select id="report_type" name="report_type" class="form-control">
+                <option value="last_day">Last Day</option>
+                <option value="last_week">Last Week</option>
+                <option value="last_month">Last Month</option>
+                <option value="last_year">Last Year</option>
+                <option value="custom">Custom Date</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div id="custom_date_range">
+              <div class="form-row">
+                <div class="form-group ">
+                  <label for="start_date">Start Date:</label>
+                  <input type="date" id="start_date" name="start_date" class="form-control">
+                </div>
+                <div class="form-group ">
+                  <label for="end_date">End Date:</label>
+                  <input type="date" id="end_date" name="end_date" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Generate Report</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <form action="/sales_report/" method="post" class="bg-white p-4 rounded shadow">
+        {% csrf_token %}  
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="start_date">Start Date:</label>
+              <input type="date" id="start_date" name="start_date" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="end_date">End Date:</label>
+              <input type="date" id="end_date" name="end_date" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="report_type">Select Report Type:</label>
+              <select id="report_type" name="report_type" class="form-control">
+                <option value="last_day">Last Day</option>
+                <option value="last_week">Last Week</option>
+                <option value="last_month">Last Month</option>
+                <option value="last_year">Last Year</option>
+                <option value="custom">Custom Date</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <button type="submit" class="btn btn-success btn-block mt-4">Generate Report</button>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <form action="/sales_report/" method="post" class="bg-white p-4 rounded shadow">
+        {% csrf_token %}  
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="start_date">Start Date:</label>
+              <input type="date" id="start_date" name="start_date" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="end_date">End Date:</label>
+              <input type="date" id="end_date" name="end_date" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <button type="submit" class="btn btn-success btn-block mt-4">Generate Report</button>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <form action="/sales_report/" method="post" class="bg-white p-4 rounded shadow">
+        {% csrf_token %}  
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="report_type">Select Report Type:</label>
+              <select id="report_type" name="report_type" class="form-control">
+                <option value="last_day">Last Day</option>
+                <option value="last_week">Last Week</option>
+                <option value="last_month">Last Month</option>
+                <option value="last_year">Last Year</option>
+                <option value="custom">Custom Date</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <button type="submit" class="btn btn-success btn-block mt-4">Generate Report</button>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</div>
+
+
   <div class="row">
     <div class="col-12 grid-margin">
       <div class="card">
@@ -104,7 +319,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <img src="assets/images/faces/face2.jpg" class="me-2" alt="image"> Stella Johnson
+                    <img src="{% static 'admin/assets/images/faces/face2.jpg' %}" class="me-2" alt="image"> Stella Johnson
                   </td>
                   <td> High loading time </td>
                   <td>
@@ -142,7 +357,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  {% comment %} <div class="row">
     <div class="col-12 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
@@ -180,20 +395,19 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> {% endcomment %}
   <div class="row">
-    <div class="col-md-7 grid-margin stretch-card">
+    <div class="col-md-6 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Project Status</h4>
+          <h4 class="card-title">Best Selling Products</h4>
           <div class="table-responsive">
             <table class="table">
               <thead>
                 <tr>
-                  <th> # </th>
+                  <th>  </th>
                   <th> Name </th>
-                  <th> Due Date </th>
-                  <th> Progress </th>
+                  <th> Total Orders  </th>
                 </tr>
               </thead>
               <tbody>
@@ -201,126 +415,44 @@
                   <td> 1 </td>
                   <td> Herman Beck </td>
                   <td> May 15, 2015 </td>
-                  <td>
-                    <div class="progress">
-                      <div class="progress-bar bg-gradient-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td> 2 </td>
-                  <td> Messsy Adam </td>
-                  <td> Jul 01, 2015 </td>
-                  <td>
-                    <div class="progress">
-                      <div class="progress-bar bg-gradient-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td> 3 </td>
-                  <td> John Richards </td>
-                  <td> Apr 12, 2015 </td>
-                  <td>
-                    <div class="progress">
-                      <div class="progress-bar bg-gradient-warning" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td> 4 </td>
-                  <td> Peter Meggik </td>
-                  <td> May 15, 2015 </td>
-                  <td>
-                    <div class="progress">
-                      <div class="progress-bar bg-gradient-primary" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td> 5 </td>
-                  <td> Edward </td>
-                  <td> May 03, 2015 </td>
-                  <td>
-                    <div class="progress">
-                      <div class="progress-bar bg-gradient-danger" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td> 5 </td>
-                  <td> Ronald </td>
-                  <td> Jun 05, 2015 </td>
-                  <td>
-                    <div class="progress">
-                      <div class="progress-bar bg-gradient-info" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </td>
-                </tr>
+
               </tbody>
             </table>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-5 grid-margin stretch-card">
+
+
+    <div class="col-md-6 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title text-white">Todo</h4>
-          <div class="add-items d-flex">
-            <input type="text" class="form-control todo-list-input" placeholder="What do you need to do today?">
-            <button class="add btn btn-gradient-primary font-weight-bold todo-list-add-btn" id="add-task">Add</button>
-          </div>
-          <div class="list-wrapper">
-            <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-              <li>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="checkbox" type="checkbox"> Meeting with Alisa </label>
-                </div>
-                <i class="remove mdi mdi-close-circle-outline"></i>
-              </li>
-              <li class="completed">
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="checkbox" type="checkbox" checked> Call John </label>
-                </div>
-                <i class="remove mdi mdi-close-circle-outline"></i>
-              </li>
-              <li>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="checkbox" type="checkbox"> Create invoice </label>
-                </div>
-                <i class="remove mdi mdi-close-circle-outline"></i>
-              </li>
-              <li>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="checkbox" type="checkbox"> Print Statements </label>
-                </div>
-                <i class="remove mdi mdi-close-circle-outline"></i>
-              </li>
-              <li class="completed">
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="checkbox" type="checkbox" checked> Prepare for presentation </label>
-                </div>
-                <i class="remove mdi mdi-close-circle-outline"></i>
-              </li>
-              <li>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="checkbox" type="checkbox"> Pick up kids from school </label>
-                </div>
-                <i class="remove mdi mdi-close-circle-outline"></i>
-              </li>
-            </ul>
+          <h4 class="card-title">Best Selling Categories</h4>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>  </th>
+                  <th> Name </th>
+                  <th> Total Order</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td> 1 </td>
+                  <td> Herman Beck </td>
+                  <td> May 15, 2015 </td>
+                </tr>
+
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-{% endblock content %}
+
+{% endblock %}
+
+
 

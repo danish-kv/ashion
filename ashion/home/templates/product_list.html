@@ -3,6 +3,7 @@
 {% load chunks %}
 
 
+
     <!-- Header Section start -->
     {% block header %}
     {% include "inc/navbar.html" %}
@@ -57,7 +58,7 @@
                             </div>
                             <input type="hidden" name="data" value="{{ data }}">
                         </form>
-                        <a href="?page={{ dara }}{% if data %}&data={{ data }}{% endif %}"></a>
+                        <a href="?page={{ data }}{% if data %}&data={{ data }}{% endif %}"></a>
 
                         </div><!-- End .toolbox-sort -->
                          
@@ -143,7 +144,7 @@
                             </div>
                         </div>
                         {% endfor %}
-                        {% if not sortby %}
+                        {% if not disable_pagination %}
                         <div class="col-lg-12 text-center">
                             <div class="pagination__option">
                                 {% if product.has_previous %}
@@ -217,14 +218,5 @@
   {% endblock footer %}
     <!-- Footer Section End -->
 
-    <!-- Search Begin -->
-    <div class="search-model">
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <div class="search-close-switch">+</div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
-            </form>
-        </div>
-    </div>
-    <!-- Search End -->
+
 

@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="{% static "molla/assets/css/style.css" %}">  
 
 
+
     <div class="page-wrapper">
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
@@ -94,6 +95,10 @@
                                             <input type="text" class="form-control"  value="{{ user.gender }}" readonly> 
                                             <label>Date of Birth</label>
                                             <input type="date" class="form-control"  value="{{ user.dob|date:'Y-m-d'  }}" readonly> 
+                                            {% if user.referral_code %}
+                                            <label>Refferal Code</label>
+                                            <input type="text" class="form-control"  value="{{ user.referral_code  }}" readonly> 
+                                            {% endif %}
                                         </form>
                                     </div><!-- .End .tab-pane -->
                                     {% if messages %}
@@ -242,7 +247,7 @@
                                             </select>
 
                                             <label>Date of Birth</label>
-                                            <input type="date" name="dob" class="form-control"  value="{{ user.dob|date:'Y-m-d'  }}" > 
+                                            <input type="date" name="dob" class="form-control"  value="{{ user.dob|date:'Y-m-d'  }} " required > 
                                             <button type="submit" class="btn btn-outline-primary-login">
                                                 <span>SAVE CHANGES</span>
                                                 <i class="icon-long-arrow-right"></i>
@@ -305,11 +310,11 @@
     <script src="{% static "/molla/assets/js/owl.carousel.min.js" %}"></script>
     <!-- Main JS /molla/File -->
     <script src="{% static "/molla/assets/js/main.js" %}"></script>
-
+                                                                                                        
 
         
 
 {% comment %} <link rel="stylesheet" href="{% static "molla/assets/css/bootstrap.min.css" %}">
     <!-- Main CSS File -->
-    <link rel="stylesheet" href="{% static "molla/assets/css/style.css" %}"> {% endcomment %}
+    <link rel="stylesheet" href="{% static "molla/assets/css/style.css" %}"> {% endcomment %}   
 {% endblock %}

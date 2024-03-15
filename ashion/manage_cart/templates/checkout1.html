@@ -1,0 +1,468 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+{% block header %}
+{% include "inc/navbar.html" %}
+{% endblock header %}
+
+
+{% block content %}
+<style>
+
+/* CSS */
+.button-31 {
+  background-color: #222;
+  border-style: none;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Farfetch Basis","Helvetica Neue",Arial,sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0;
+  max-width: none;
+  min-width: 10px;
+  outline: none;
+  overflow: hidden;
+  padding: 9px 20px 8px;
+  position: relative;
+  text-align: center;
+}
+
+.button-31:hover,
+.button-31:focus {
+  opacity: .75;
+}
+
+.error{
+  color: #d9534f;
+}
+
+.success{
+  color: #5cb85c;
+}
+
+.error-message {
+  display: none;
+}
+
+.inner-error {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #d9534f;
+  border-radius: 4px;
+  color: #d9534f;
+  background-color: #f2dede;
+}
+
+.inner-success {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #5cb85c;
+  border-radius: 4px;
+  color: #5cb85c;
+  background-color: #dff0d8;
+}
+
+
+</style>
+<main class="main" id="changed">
+     <!-- Breadcrumb Begin -->
+     <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="/"><i class="fa fa-home"></i> Home</a>
+                        <a href="/"><i class="fa fa-cart"></i> Shopping cart</a>
+                        <span>Checkout</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+  
+    <div class="page-content">
+      <div class="cart mb-5">
+        <div class="container">
+          <div class="row">
+            
+
+            <div class="col-md-8 cart-item-box">
+                  
+              {% if addresses %}
+              
+                  <a href="/add_address/">
+                      <div class="d-flex justify-content-end mr-3">
+                          <button type='button' class="btn btn-dark" id="addAddressBtn">Add New Address</button>
+                      </div>
+                  </a>
+                  <form method="post" action="{% url "place_order" %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="address-container" >
+                        <label for="selected_address">Choose a delivery address:</label>
+                        {% if messages %}
+                    <ul class="messages  " style="list-style: none; color:red">
+                        {% for message in messages %}
+                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                        <ul style="list-style: none;">
+                          {% for address in addresses %}
+                            <li style="border: 1px solid #333; margin: 10px; padding: 20px; color: black;">
+                              <input type="radio" name="selected_address" id="address_{{ address.id }}" value="{{ address.id }}" {% if forloop.last %}checked{% endif %} required>
+                              <label for="address_{{ address.id }}">
+                                <span style="font-weight: bold;">Address {{ address.counter }}:</span>
+                                <br>
+                                {{ address.name }}<br>
+                                {{ address.number }}<br>
+                                {{ address.address }}, {{ address.city }}, {{ address.state }}, {{ address.pincode }}
+                              </label>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+              {% else %}
+
+                  <!-- Display add address button with an image when there are no addresses -->
+                  <div class="text-center">
+                    <img src="{% static 'main/shirt2.3.jpg' %}" alt="No Address Image" style="height: 35rem; display: block; margin: 0 auto;display: flex; justify-content: end; align-items: center;">
+                    <p>No addresses available. Add a new address.</p>
+                    <a href="/add_address/">
+                        <button type="button" class="btn btn-dark" id="addAddressBtn">Add New Address</button>
+                    </a>
+                </div>
+                
+              {% endif %}
+          
+            </div><!-- End .col-lg-9 -->
+              
+
+
+
+<!-- side start--> 
+            <div class="col-lg-4">
+                <div class="coupon" id="reload" >
+                  <span id="Success" class="success"></span>
+                  <span id="Error" class="error"></span>
+                    <input type="text"  name="coupon-Code" class="form-control m-2" id="couponCode" placeholder="Enter coupon code"   >
+                    {% csrf_token %}
+                  <div class="d-flex justify-content-end mb-3" >
+                    <button style="margin-right: 7px;" class="btn btn-light" type="button"  data-toggle="modal" data-target="#couponModal">Available Coupons</button>
+                    <button style="margin-right: 7px;" class="apply_coupon" type="button"  >Apply</button>
+                    <a href="/remove_coupen/{{checkout.coupon.id}}"><button class="bg-danger button-31 removeCouponBtn" type="button">Remove</button> </a>
+                  </div> 
+                  {% if checkout.coupon %}
+                  <a href="/remove_coupen/{{checkout.coupon.id}}" class="btn btn-success">{{checkout.coupon.code }}</a>
+                  {% endif %} 
+                </div>
+                
+                        <!-- Bootstrap Modal -->
+                        <div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-labelledby="couponModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content p-5 mar">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="couponModalLabel">Available Coupons</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <!-- Dummy Data for Coupons -->
+                                <ul>
+                                  {% if coupons %}
+                                    {% for c in coupons %}
+                                    <li style="display: flex; flex-direction: column; background-color: #fffff0; padding: 10px; margin-bottom: 15px;">
+                                      <span style="font-weight: bold; color: #ff9900; font-size: 18px;"></span>
+                                      <span style="font-weight: bold; color: #ff9900; font-size: 16px;"> Coupon Code :  {{ c.code }} </span>
+                                      <span style="color: #666; font-size: 14px;">Minimum Purchase: &#8377; {{ c.min_amount }}</span>
+                                      <span style="color: #666; font-size: 14px;">Expiry Date: {{ c.end_date }}</span>
+                                    </li>
+                                    {% endfor %}
+                                  {% else %}
+                                    No Coupon Available...
+                                  {% endif %}
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        
+                <div class="checkout__order"  >
+                    <h5>Your order</h5>
+                    <div class="checkout__order__product">
+                        <ul>
+                            <li>
+                                <span class="top__text">Product</span>
+                                <span class="top__text__right">Total</span>
+                            </li>
+                            {% for i in cart_items  %}
+                            <li>{{ forloop.counter}}. {{ i.size_variant }} <span>$ {{ i.pro_total }}</span></li>
+                            
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="checkout__order__total">
+                        <ul>
+                            <li>Subtotal <span>$ {{ product_total }}</span></li>
+                            {% if offer_amount %}
+                            <li>Offer Amount <span>$ {{ offer_amount }}</span></li>
+                            {% endif %}
+                            <li>Total <span>$ {{ final_amount }}</span></li>
+                        </ul>
+                    </div>
+                
+                    <span id="WalletError" class="error-message inner-error"></span>
+                    <div class="checkout__order__widget">
+                        <label for="payment-option" >Choose a payment option:</label>
+                        <input type="hidden" id="total_amount" name="sub_total" value="{{ final_amount }}">
+
+                        <div class="payment-options">
+                          <div class="col-md-6 mb-3">
+
+                            <input type="hidden" name="payment_option" value="cod">
+                            <button type="submit" class="btn btn-danger btn-block">COD</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <button type="button" id="wallet-pay" class="btn btn-danger btn-block wallet">Wallet</button>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                        <button type="button" id="rzp-button1" class="btn btn-danger btn-block razor">Razorpay</button>
+                    </div>
+                        </div>
+                      </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div><!-- End .row -->
+        </div><!-- End .container -->
+      </div><!-- End .cart -->
+    </div><!-- End .page-content -->
+  </main><!-- End .main -->
+
+
+
+
+<!-- rzp-button1 -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+ <!--razor-pay scripts -->
+
+<script>
+
+  $(document).ready(function (){
+
+    $('.razor').click(function (e){
+        e.preventDefault();
+        var selectedValue = $('input[name="selected_address"]:checked').val();
+        var token = $('input[name=csrfmiddlewaretoken]').val();
+        var totalAmount = $('#total_amount').val();
+
+        
+        
+        console.log('Total Amount:', totalAmount); 
+console.log('hi')
+
+  var options = {
+      "key": "rzp_test_kjPVyHrg75EHqw",
+      "amount": "{{ payment.amount }}",
+      "currency": "INR",
+      "name": "Ashion",
+      "description": "Test Transaction",
+      "image": "https://example.com/your_logo",
+      "order_id": "{{ payment.id }}", 
+     //"callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+      "handler": function (response){
+        if (response.razorpay_payment_id){
+          $.ajax({
+            method : 'POST',
+            url: '/razorpay_payment/',
+            data: {
+              address : selectedValue,
+              csrfmiddlewaretoken:token,
+              total_amount : totalAmount
+                  },
+          success : function (data){
+              window.location.href = data.redirect_url + data.order_id;   
+              }
+          });
+        }
+        else{
+            alert("payment failed")
+        }
+        
+      },
+      "prefill": {
+          "name": "Gaurav Kumar",
+          "email": "gaurav.kumar@example.com",
+          "contact": "9000090000"
+      },
+      "theme": {
+          "color": "#cc3333"
+      }
+  };
+  
+  console.log("Script executed" );
+  var rzp1 = new Razorpay(options);
+  rzp1.on('payment.success', function (response){
+    console.log("Payment success");
+          alert(response.error.reason);
+          
+  });
+  document.getElementById('rzp-button1').onclick = function(e){
+      rzp1.open();
+      e.preventDefault();
+  }
+
+  });
+});
+
+
+  </script>
+
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+  <!-- Coupon  Ajax  Script-->
+  <script>
+    $(document).ready(function () {
+        $('#reload').on('click', '.apply_coupon', function (e) {
+            e.preventDefault();
+            console.log('hi')
+
+            var coupon_code = $('input[name=coupon-Code]').val()
+            var token = $('input[name=csrfmiddlewaretoken]').val()
+
+            //if (name === ''){
+            //  document.getElementById('Error').innerHTML = "No code";
+            //  return false;
+            //}
+
+            
+            console.log(coupon_code)
+            console.log(token)
+
+            $.ajax({
+                method: 'POST',
+                url: '/apply_coupon/',
+                data: {
+                    coupon_code: coupon_code,
+                    csrfmiddlewaretoken: token
+                },
+                success: function (response) {
+                    if (response.status === 'Coupon applied') {
+                      document.getElementById('Success').innerHTML = response.status
+                      //alert('success :-'  + response.status);
+                        // Reload only the specific part of the page that needs updating
+                        $('#changed').load('/checkout/ #changed');
+                    }
+                    else{
+                      document.getElementById('Error').innerHTML = response.error
+                      //alert('Error :-'  + response.error);
+                      $('#reload').load('/checkout/ #reload');
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            })
+        })
+    })
+</script>
+
+
+
+
+
+
+
+
+
+
+<!-------------------------- wallet pay  starts ------------------------------>
+
+
+<script>
+  $(document).ready(function () {
+    $('#wallet-pay').on('click', function (e) {
+      e.preventDefault();
+
+      var selectedAddrress = $('input[name="selected_address"]:checked').val();
+      var token = $('input[name=csrfmiddlewaretoken]').val();
+      var totalAmount = $('#total_amount').val();
+
+      console.log(selectedAddrress)
+      console.log(token)
+      console.log('Total Amount:', totalAmount);
+
+      $.ajax({
+        method: 'POST',
+        url: '/wallet_payment/',
+        data: {
+          address: selectedAddrress,
+          csrfmiddlewaretoken: token,
+          total_amount: totalAmount
+        },
+        success: function (data) {
+          var errorBlock = document.getElementById('WalletError');
+          var successBlock = document.getElementById('Success');
+      
+          if (data.error !== undefined && data.error !== null && data.error.trim() !== "") {
+              // Show error message
+              errorBlock.innerHTML = data.error;
+              errorBlock.style.display = 'block';
+              // Hide success message
+              successBlock.style.display = 'none';
+          } else {
+              // Clear error message
+              errorBlock.innerHTML = '';
+              errorBlock.style.display = 'none';
+              // Show success message
+              successBlock.innerHTML = 'Payment successful! Redirecting...';
+              successBlock.style.display = 'block';
+              // Redirect to success page
+              window.location.href = data.redirect_url + data.order_id;
+          }
+      },
+      
+        
+      });
+    });
+  });
+</script>
+
+<!-------------------------- Wallet Pay Ends ------------------------------>
+
+
+{% endblock content %}
+
+
+
+
+
+        
+        <!-- Instagram Begin -->
+       {% block instagram %}
+       {% include "inc/instagram.html" %}
+       {% endblock instagram %}
+        <!-- Instagram End -->
+
+        <!-- Footer Section Begin -->
+        {% block footer %}
+        {% include "inc/footer.html" %}
+        {% endblock footer %}
+        <!-- Footer Section End -->

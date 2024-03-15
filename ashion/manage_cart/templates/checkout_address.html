@@ -41,7 +41,7 @@
                         <div class="text-danger">{{ message }}</div>
                     {% endfor %}
                 {% endif %}
-                <form id="address-form" method="post" action="/checkout_add_address/">
+                <form id="address-form" method="post" action="/add_address/">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="full-name">Full Name</label>

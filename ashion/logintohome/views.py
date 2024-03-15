@@ -11,7 +11,8 @@ from datetime import datetime
 from django.utils import timezone
 from . import models
 from django.core.paginator import Paginator
-
+from user_profile.models import Wallet_User
+from decimal import Decimal
 
 # Create your views here.
 
@@ -29,12 +30,14 @@ def home(request):
         obj = products.objects.filter(category__name='Men', is_listed=True)[:8]
     elif data == 'Kids':
         obj = products.objects.filter(category__name='Kids', is_listed=True)[:8]
+    else:
+        obj = products.objects.filter(is_listed=True)[:8]
 
     new_products = products.objects.order_by('id')[:8]
 
     context = {"new_products": new_products,
                'data': obj,
-               'user' :request.user}
+               'user' :request.user if 'email' in request.session else None}
     
     return render(request, 'home.html', context)
 
@@ -88,6 +91,8 @@ def signup(request):
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
         date_joined=timezone.now().date()
+        referral_code = request.POST.get('ref_code',None)
+
 
         if password1 != password2:
             messages.error(request,'Both password is not same!')
@@ -112,10 +117,60 @@ def signup(request):
         if Customer.objects.filter(email=email).exists():
             messages.error(request, 'Email is already taken')
             return redirect('signup')
+        
 
-
-        user = Customer(username=username, number=number, email=email, password=password1,date_joined=date_joined)  
+        user = Customer(username=username,
+                        number=number,
+                        email=email,
+                        password=password1,
+                        date_joined=date_joined
+                        )
         user.save()
+        
+        # new_user_wallet = Wallet_User(user_id =user.id)
+        
+
+        if referral_code:
+            reffered_get_amount = 271
+            new_user_get_amount = 101
+            reffered_user = Customer.objects.get(referral_code = referral_code)
+            print(f'{reffered_user} checkkkkkk')
+
+            reffered_wallet = Wallet_User.objects.filter(user_id = reffered_user.id).order_by('-id').first()
+
+            if reffered_wallet:
+                new_balance = reffered_wallet.balance + reffered_get_amount
+                print(new_balance, reffered_wallet.amount,reffered_wallet.balance, reffered_get_amount)
+            else:
+                new_balance = reffered_get_amount
+
+            #reffered user
+            Wallet_User.objects.create(
+                user_id = reffered_user,
+                transaction_type = "Refferel Bonus",
+                amount = float(reffered_get_amount),
+                balance = float(new_balance)
+                )
+            print(f"Refferel Bonus: {reffered_user, reffered_get_amount, new_balance}")
+            
+            
+
+            #new user
+            Wallet_User.objects.create(
+                user_id = user,
+                transaction_type = "Signup Refferal Bonus",
+                amount = new_user_get_amount,
+                balance = new_user_get_amount
+                )
+            print(f"Signup Refferal Bonus: {user, new_user_get_amount, new_user_get_amount}")
+            # new_user_wallet.transaction_type = "Reffered Bonus",
+            # new_user_wallet.amount = new_user_get_amount,
+            # new_user_wallet.balance = new_user_get_amount
+            # new_user_wallet.save()
+
+        
+        
+        
 
         return redirect('otpverify', id=user.id)
     
@@ -166,12 +221,6 @@ def logout(request):
         messages.success(request,'You have been successfully logged out. Thank you for using our services!')
         return  redirect('home')
     
-
-
-
-def cart(request):
-    return render (request,'cart.html')
-
 
 
 

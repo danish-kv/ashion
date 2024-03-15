@@ -44,6 +44,7 @@ class OrderedProducts(models.Model):
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
     delivery_date =  models.DateField(null=True)
 
+    
 
     def set_expected_delivery_date(self):
         # Set expected delivery date based on the current date and time
@@ -53,7 +54,8 @@ class OrderedProducts(models.Model):
             self.delivery_date = expected_delivery_date.date()
 
     def save(self, *args, **kwargs):
-        self.set_expected_delivery_date()
+        if self.delivery_date is None:
+            self.set_expected_delivery_date()
         super().save(*args, **kwargs)
 
 

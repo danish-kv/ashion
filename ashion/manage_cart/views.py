@@ -117,6 +117,7 @@ def update_quantity(request):
 
 @never_cache
 def Checkout(request):
+    
     if 'email' in request.session:
         user_id = request.session.get('email')
         user = Customer.objects.get(email = user_id)
@@ -148,14 +149,18 @@ def Checkout(request):
             final_amount += cart_product.pro_total
             product_total += cart_product.pro_total
             print(final_amount,product_total)
+            print()
 
 
             
-
-        checkout_obj,created = checkout.objects.get_or_create(
-            user_id = user.id,
-            sub_total = final_amount,
-            )
+        try:
+            checkout_obj = checkout.objects.get(user_id = user.id)
+            checkout_obj.user_id = user.id
+            checkout_obj.sub_total = final_amount
+            checkout_obj.save()
+        except:
+            checkout_obj = checkout(user_id = user.id, sub_total = final_amount)
+            checkout_obj.save()
 
         if checkout_obj.coupon_active == True:
             coupon_amount = checkout_obj.coupon.discount_amount    
@@ -184,7 +189,7 @@ def Checkout(request):
                    'offer_amount' : offer_amount,
                    }
         
-        return render(request,'checkout.html', context)
+        return render(request,'checkout1.html', context)
     return redirect('home')
 
 
@@ -208,8 +213,8 @@ def checkout_add_address(request):
             if number < 10 and number > 10:
                 messages.error(request,'Phone Number should be 10 digits')
                 return redirect('add_address')
-            if pincode != 6:
-                messages.error(request,'Pincode should be 6 digits')
+            # if pincode != 6:
+            #     messages.error(request,'Pincode should be 6 digits')
             
             data = Address(
                 user = user,
@@ -242,6 +247,10 @@ def apply_coupon(request):
             code = request.POST.get('coupon_code')
             print(code)
 
+            
+            if checkout_obj.coupon_active:
+                return JsonResponse({'error' : 'Coupon already applied'  })
+
             try:
                 coupon_obj = Coupons.objects.get(code__iexact=code.strip())
                 print(coupon_obj)
@@ -249,8 +258,6 @@ def apply_coupon(request):
                 return JsonResponse({ 'error' : 'Coupon does not exist' })
 
 
-            if checkout_obj.coupon_active:
-                return JsonResponse({'error' : 'Coupon already applied'  })
             
             if not coupon_obj.active:
                 return JsonResponse({'error': 'Coupon is not active'})
@@ -540,19 +547,29 @@ def wallet_payment(request):
 
 #All orders
 def my_order(request):
-    obj = Order.objects.all().order_by('-id')
-    context = { 'order' : obj }
-    return render(request,'my_order.html',context)
+    if 'email' in request.session:
+        email = request.session.get('email')
+        user = Customer.objects.get(email = email)
+        
+        obj = Order.objects.filter(user = user).order_by('-id')
+        context = { 'order' : obj }
+        return render(request,'my_order.html',context)
+    return redirect('login')
 
 
 #Ordered Products of order
 def ordered_products(request,id):
-    orders = OrderedProducts.objects.filter(order_id=id)
-    address = Order.objects.get(id=id)
-    context = { 'orders' : orders,
-               'addr' : address }
-    
-    return render(request,'ordered_products.html',context)
+    if 'email' in request.session:
+        email = request.session.get('email')
+        user = Customer.objects.get(email = email)
+
+        orders = OrderedProducts.objects.filter(order_id=id,user = user)
+        address = Order.objects.get(id=id)
+        context = { 'orders' : orders,
+                'addr' : address }
+        
+        return render(request,'ordered_products.html',context)
+    return redirect('login')
 
 
 #Order Success
@@ -576,10 +593,23 @@ def order_cancel(request,id):
             ordered_id = request.POST.get('orderid')
             reason = request.POST.get('reason')
             ord_pro = OrderedProducts.objects.get(id=id)
+            print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+            print(id)
+            print(ord_pro)
+
+
+            if ord_pro.order_id.payment_method == 'cod':
+                ord_pro.status = 'Cancelled'
+                ord_pro.save()
+                CancelledOrder.objects.create(
+                    order_id = ord_pro,
+                    user_id = user,
+                    cancel_reason = reason,
+                )
 
             
             
-            if ord_pro.order_id.payment_method == 'Razor pay' or ord_pro.order_id.payment_method == 'Wallet':
+            elif ord_pro.order_id.payment_method == 'Razor pay' or ord_pro.order_id.payment_method == 'Wallet':
                 
                 try:
                     discount_amount = 0
@@ -592,46 +622,47 @@ def order_cancel(request,id):
                     print(f'{total_products} total products,, {refund_amount} refund_amount ')
 
                     # refunding amount
-                    for product in ord_pro.order_id.orderedproducts_set.all():
-                        amount = product.total_amount - Decimal(refund_amount)
-                        print(amount)
-                        print( product.total_amount)
-                        print(product.quantity)
-                        print( refund_amount)
-                        wallet_user = Wallet_User.objects.filter(user_id = user).order_by('-id').first()
-
-                        if not wallet_user:
-                            balance = 0
-                        else:
-                            balance = wallet_user.balance
-
-                        new_balance = balance + amount
-                        Wallet_User.objects.create(
-                            user_id = user,
-                            transaction_type = "Credit",
-                            amount = amount,
-                            balance = new_balance
-                        )
-
-                        #Change the status and ReStocking
-                        product.status = 'Cancelled'
-                        pro = Variant.objects.get(product_id = ord_pro.product.product_id, id=ord_pro.product.id )
-                        pro.stock = pro.stock + ord_pro.quantity
-                        product.save()
-                        pro.save()
-
-                    CancelledOrder.objects.create(
-                        order_id = ord_pro,
+                    amount = ord_pro.total_amount - Decimal(refund_amount)
+                    print(amount)
+                    print( ord_pro.total_amount)
+                    print(ord_pro.quantity)
+                    print( refund_amount)
+                    wallet_user = Wallet_User.objects.filter(user_id = user).order_by('-id').first()
+                    if not wallet_user:
+                        balance = 0
+                    else:
+                        balance = wallet_user.balance
+                    new_balance = balance + amount
+                    Wallet_User.objects.create(
                         user_id = user,
-                        cancel_reason = reason,
+                        transaction_type = "Credit",
+                        amount = amount,
+                        balance = new_balance
                     )
 
-                    messages.success(request,'Product cancelled')
-                    return redirect('ordered_products',id = ordered_id)
-                
                 except Exception as e:
                     print(e)
                     messages.error(request,f'Facing some issues {str(e)}')
+                    #Change the status and ReStocking
+                    
+            pro = Variant.objects.get(product_id = ord_pro.product.product_id, id=ord_pro.product.id )
+            pro.stock = pro.stock + ord_pro.quantity
+            ord_pro.save()
+            pro.save()
+            ord_pro.status = 'Cancelled'
+            ord_pro.save()
+            CancelledOrder.objects.create(
+                order_id = ord_pro,
+                user_id = user,
+                cancel_reason = reason,
+            )
+            messages.success(request,'Product cancelled')
+            return redirect('ordered_products',id = ordered_id)
+                
+                
+
+            
+                
         
         messages.error(request,'some issues facing. try again later...')
         return redirect('ordered_products',id = ordered_id)
@@ -653,11 +684,6 @@ def return_order(request,id):
                 discounted_amount = 0
                 if ord_pro.order_id.coupon_id:
                     discounted_amount = ord_pro.order_id.coupon_id.discount_amount
-
-
-
-                
-
 
                 total_products = ord_pro.order_id.orderedproducts_set.count()
                 refund_amount = discounted_amount / total_products

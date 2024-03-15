@@ -17,6 +17,14 @@ from customadmin.models import Product_Offer
 
 
 
+# if request.method == "GET":
+#         search = request.GET.get('search')
+
+#         search_result = products.objects.filter(name__icontains = search)
+#         context = { 'product' : search_result } 
+
+
+
 def product_list(request):
     context ={}
     product_list = products.objects.filter(is_listed = True) 
@@ -34,10 +42,21 @@ def product_list(request):
         product_list = product_list.filter(category__name = data, is_listed=True)
         context['data'] = 'Men'
   
-
     elif data == 'Kids':
         product_list = product_list.filter(category__name = data, is_listed=True)
         context['data'] = 'Kids'
+
+    else:
+        context['data'] = 'Men'
+
+
+
+    search_query = request.GET.get('search')
+    print(search_query)
+
+    if search_query:
+        product_list = product_list.filter(name__istartswith = search_query)
+        context['product'] = product_list
 
 
     sort_by = request.GET.get('sortby')
@@ -45,8 +64,10 @@ def product_list(request):
     if sort_by:
         product_list = product_list.order_by(sort_by)
         context['product_list'] = product_list
+        
 
-
+    if sort_by or search_query:
+        context['disable_pagination'] = True
     
     page = 1
     if request.GET:
@@ -86,7 +107,7 @@ def search(request):
         search = request.GET.get('search')
 
         search_result = products.objects.filter(name__icontains = search)
-        context = {'product' : search_result} 
+        context = { 'product' : search_result } 
         return render(request,'product_list.html',context)
 
 
