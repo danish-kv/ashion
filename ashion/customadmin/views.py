@@ -61,10 +61,9 @@ def AdminHome(request):
     print(payment_methods)
 
 
-    data = {
-        'categories' : categories,
-        'payment_methods' : payment_methods,
-    }
+
+    top_products = orders.values('product__product_id__name').annotate(total_sales=Count('product')).order_by('-total_sales')[:10]()
+    top_categories = Category.objects.annotate(total_ordered_products=Count('products__variant__product_id__category')).order_by('-total_ordered_products').values('name', 'total_ordered_products')[:10]
 
 
     context = { 'orders_count' : orders_count,
