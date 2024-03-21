@@ -43,13 +43,12 @@
                             <form action="{% url "productlist" %}" id="sortForm" >
                             <label for="sortby">Sort by:</label>
                             <div class="select-custom">
-                                {% comment %} <select name="sortby" id="sortby" class="form-control" onchange="location.href = finalUrl();"> {% endcomment %}
                                 <select name="sortby" id="sortby" class="form-control" onchange="this.form.submit();">
+                                    <option id="" hidden value=""  >Sort by</option>
 
-                                    <option id="popularity" hidden value="popularity" {% if sort_by == 'popularity' %}selected="selected"{% endif %}>Popularity</option>
+                                    <option id="priority"  value="-priority" {% if sort_by == 'priority' %}selected="selected"{% endif %}>Popularity</option>
                                     <option id="selling_price" value="selling_price"{% if sort_by == 'lowToHigh' %}selected="selected"{% endif %}>Price: Low to High</option>
                                     <option id="-selling_price" value="-selling_price"{% if sort_by == 'highToLow' %}selected="selected"{% endif %}>Price: High to Low</option>
-                                    <option id="ratings" value="ratings" {% if sort_by == 'ratings' %}selected="selected"{% endif %}>Average Ratings</option>
                                     <option id="priority" value="priority" {% if sort_by == 'featured' %}selected="selected"{% endif %}>Featured</option>
                                     <option id="-id" value="-id" {% if sort_by == 'newArriivals' %}selected="selected"{% endif %}>New Arrivals</option>
                                     <option id="name" value="name" {% if sort_by == 'az' %}selected="selected"{% endif %}>A-Z</option>

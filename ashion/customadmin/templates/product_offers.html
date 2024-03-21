@@ -176,11 +176,11 @@
                     </div>
                     <div class="form-group">
                         <label >Starting Date</label>
-                        <input type="date" class="form-control" value="{% if i.end_date %}{{ i.start_date|date:'Y-m-d' }}{% endif %}"name="start_date" id="valid_to"  placeholder="Enter Valid To" required>
+                        <input type="date" class="form-control" value="{% if i.start_date %}{{ i.start_date|date:'Y-m-d' }}{% endif %}"name="start_date" id="valid_to"  placeholder="Enter Valid To" required>
                     </div>
                     <div class="form-group">
                         <label >End Date</label>
-                        <input type="date" class="form-control" value="{% if i.end_date %}{{ i.start_date|date:'Y-m-d' }}{% endif %}" name="end_date" id="valid_to" placeholder="Enter Valid To" required>
+                        <input type="date" class="form-control" value="{% if i.end_date %}{{ i.end_date|date:'Y-m-d' }}{% endif %}" name="end_date" id="valid_to" placeholder="Enter Valid To" required>
                     </div>
                 </div>
                 <div class="modal-footer">

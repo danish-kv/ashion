@@ -153,8 +153,8 @@
                               {% comment %} <input type="radio" name="statusRadio" id="statusRadio5" value="Returned" {% if obj.status == "Returned" %}checked{% endif %}>
                               <label for="statusRadio5">Returned</label> {% endcomment %}
 
-                              {% comment %} <input type="radio" name="statusRadio" id="statusRadio6" value="Cancel" {% if obj.status == "Cancelled" %}checked{% endif %}>
-                              <label for="statusRadio6">Cancel</label> {% endcomment %}
+                              <input type="radio" name="statusRadio" id="statusRadio6" value="Cancelled" {% if obj.status == "Cancelled" %}checked{% endif %}>
+                              <label for="statusRadio6">Cancel</label>
                           </div>
                           <br><br>
                           <button class="btn btn-dark border-0">Change Status</button>

@@ -21,15 +21,26 @@ def user_profile(request):
     return redirect('login')
 
 def update_profile(request):
-    # if 'email' in request.session:
-        # user_id = request.session.get('email')
-        # print(user_id)
+    if 'email' in request.session:
         if request.method == 'POST':
             email_id = request.session.get('email')
             name = request.POST.get('name')
             number = request.POST.get('number')
             dob = request.POST.get('dob')
             gender = request.POST.get('gender')
+
+
+            if name.strip() == '':
+                messages.error(request,'Name field is Empty')
+                return redirect('user_profile')
+            
+            if number.strip() == '':
+                messages.error(request,'Number field is Empty')
+                return redirect('user_profile')
+            
+            if gender.strip() == '':
+                messages.error(request,'Name field is Empty')
+                return redirect('user_profile')
 
             user = Customer.objects.get(email = email_id)
             user.username = name
@@ -41,7 +52,7 @@ def update_profile(request):
             return redirect('user_profile')
         return redirect('user_profile')
         
-    # return redirect('login')
+    return redirect('login')
 
 
 
@@ -58,6 +69,18 @@ def change_password(request):
             except:
                 messages.error(request,'User is not found')
                 return redirect('login')
+            
+            if old_password.strip() == '':
+                messages.error(request,'Old password field is Empty')
+                return redirect('user_profile')
+            
+            if new_password.strip() == '':
+                messages.error(request,'New password field is Empty')
+                return redirect('user_profile')
+            
+            if confirm_password.strip() == '':
+                messages.error(request,'Confrim password field is Empty')
+                return redirect('user_profile')
             
             if user.password != old_password :
                 messages.error(request,'Old Password is incorrect')
@@ -103,9 +126,41 @@ def edit_address(request,id):
         pincode = request.POST.get('pincode')
         landmark = request.POST.get('landmark')
 
-        if len(int(number)) != 10:
+
+
+        if name.strip() == '':
+            messages.error(request,'Name field is Empty')
+            return redirect('user_profile')
+        
+        if str(number).strip() == '':
+            messages.error(request,'Number field is Empty')
+            return redirect('user_profile')
+        
+        if address.strip() == '':
+            messages.error(request,'Address field is Empty')
+            return redirect('user_profile')
+        
+        if state.strip() == '':
+            messages.error(request,'State field is Empty')
+            return redirect('user_profile')
+        
+        if district.strip() == '':
+            messages.error(request,'District field is Empty')
+            return redirect('user_profile')
+        
+        if city.strip() == '':
+            messages.error(request,'City field is Empty')
+            return redirect('user_profile')
+        
+        if landmark.strip() == '':
+            messages.error(request,'Landmark field is Empty')
+            return redirect('user_profile')
+        
+
+        if len(str(number)) != 10:
             messages.error(request,'Phone Number should be 10 digits')
-            return redirect('checkout_add_address')
+            return redirect('user_profile')
+        
         # if len(pincode) != 6:
         #     messages.error(request,'Pincode should be 6 digits')
 

@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'logintohome.custom_middleware.BlockMiddleware'
 ]
 
 ROOT_URLCONF = 'ashion.urls'
@@ -179,4 +180,3 @@ RAZORPAY_API_KEY = 'rzp_test_kjPVyHrg75EHqw'
 RAZORPAY_API_SECRET = '8ooNg13rAFQWYiCVWR0tYuBm'
 
 
-SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"

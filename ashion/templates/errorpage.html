@@ -1,0 +1,102 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+
+
+    <!-- Header Section start -->
+    {% block header %}
+    {% include "inc/navbar.html" %}
+    {% endblock header %}
+    <!-- Header Section End -->
+
+
+    {% block content %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MoVsAlq67LDqSX+CBLTznudXN8ZMIfSkVWtLPnCTvbl9CSeMDSiZtLKXf0+Dyw2vH" crossorigin="anonymous">
+
+    <style>
+        body {
+          background-color: #f0f2f5;
+          font-family: 'Roboto', sans-serif;
+        }
+        .error-container {
+          text-align: center;
+          padding: 100px;
+        }
+        .error-container h1 {
+          font-size: 6rem;
+          margin-bottom: 20px;
+          color: #212529;
+        }
+        .error-container p {
+          font-size: 1.2rem;
+          margin-bottom: 30px;
+          color: #757575;
+        }
+        .btn-shop-more {
+          background-color: #f96b07;
+          color: #fff;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        .btn-shop-more:hover {
+          background-color: #e05b00;
+        }
+      </style>
+    
+    <div class="error-container " >
+        <h1>404</h1>
+        <p>Oops! We can't find the page you're looking for.</p>
+        <p>Perhaps you mistyped the URL or the page has moved.</p>
+        <a href="/" class="btn-shop-more">Go back to Home Page</a>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-KDLxhrqh / ejGwBvEYj7j9ZAOJv5zGUJxZCW89YvTMqD5PwAh7C8z25Oq pqZ9nU" crossorigin="anonymous"></script>
+
+    
+    {% endblock content %}
+
+
+
+
+    <!-- Instagram Begin -->
+    {% block instagram %}
+    {% include "inc/instagram.html" %}
+    {% endblock instagram %}
+    <!-- Instagram End -->
+
+
+
+    <!-- Footer Section Begin -->
+  {% block footer %}
+  {% include "inc/footer.html" %}
+  {% endblock footer %}
+    <!-- Footer Section End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

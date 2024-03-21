@@ -9,11 +9,17 @@ from .models import *
 from datetime import datetime, timedelta
 from manage_order.models import *
 from django.utils import timezone
-from django.db.models import Q, Sum, Count
+from django.db.models import Q, Sum, Count, DateTimeField
 import json
+from django.db.models.functions import ExtractMonth, TruncMonth, ExtractDay
+
+
 # Create your views here.
 
 def AdminLogin(request):
+    if 'email' in request.session:
+        return redirect('error_page')
+
     if request.user.is_authenticated:
         return redirect('AdminHome')
 
@@ -37,54 +43,73 @@ def AdminLogin(request):
 
 @login_required(login_url='adminlogin')
 def AdminHome(request):
-
+    if 'email' in request.session:
+        return redirect('error_page')
+    
+    last_orders = OrderedProducts.objects.all().order_by('-id')[:5]
     orders = OrderedProducts.objects.filter(status = "Delivered" )
-
     user = Customer.objects.filter(is_verified = True, is_blocked=False)
     orders_count = orders.count()
     user_count = user.count()
-
-
-
+    offer_amount = 0
+    offer_amount = orders.aggregate(total_discount=Sum('order_id__coupon_id__discount_amount'))['total_discount']
     total_amount = orders.aggregate(total=Sum('total_amount'))['total'] or 0
-
     delivered_orders = Order.objects.filter(orderedproducts__in=orders)
     payment_methods = delivered_orders.values('payment_method').annotate(total_orders=Count('id'))
-
-    categories = Category.objects.annotate(total_sales=Count('products__variant__product_id__category')).values('name', 'total_sales')
-
-
-    print(categories)
-    print(orders)
-    print(f"count :{orders_count}")
-    print(total_amount)
-    print(payment_methods)
+    payment_method_labels = [item['payment_method'] for item in payment_methods]
+    payment_method_data = [item['total_orders'] for item in payment_methods]
 
 
 
-    top_products = orders.values('product__product_id__name').annotate(total_sales=Count('product')).order_by('-total_sales')[:10]()
+    monthly_sales_data = []
+    months_data = [
+        ("Jan", 1), ("Feb", 2), ("Mar", 3), ("Apr", 4),
+        ("May", 5), ("Jun", 6), ("Jul", 7), ("Aug", 8),
+        ("Sep", 9), ("Oct", 10), ("Nov", 11), ("Dec", 12)
+    ]
+    
+    for month_name, month_number in months_data:
+        monthly_sales = orders.filter(order_id__order_date__month=month_number).aggregate(sum=Sum('total_amount'))['sum'] or 0
+        monthly_sales_data.append(int(monthly_sales))
+    
+    print(monthly_sales_data)
+
+    order_status = OrderedProducts.objects.values('status').annotate(total_count=Count('status'))
+    order_status_type = [order['status'] for order in order_status]
+    order_status_count = [order['total_count'] for order in order_status]
+
+    top_products = orders.values('product__product_id__name').annotate(total_sales=Count('product')).order_by('-total_sales')[:10]
     top_categories = Category.objects.annotate(total_ordered_products=Count('products__variant__product_id__category')).order_by('-total_ordered_products').values('name', 'total_ordered_products')[:10]
 
+    print(top_products)
 
+
+
+    
     context = { 'orders_count' : orders_count,
                'total_amount' : total_amount,
+               'offer_amount' : offer_amount,
                'user_count' : user_count,
- 
+                'payment_methods' : payment_methods,
+                'top_products' : top_products,
+                'top_categories' : top_categories,
+                "last_orders" : last_orders,
+                'payment_method_labels' : payment_method_labels,
+                'payment_method_data' : payment_method_data,
+                'monthly_sales_data' : monthly_sales_data,
+                'order_status_type' : order_status_type,
+                'order_status_count' : order_status_count,                
                }
-
     
     return render(request, 'admin_home.html', context)
 
 
 
-    # end_date = datetime.now()
-    # start_date = end_date - timedelta(days=7)
-    # print(start_date, end_date)
-
-
 
 @never_cache
 def AdminLogout(request):
+
+    
     if request.user.is_authenticated:
 
         logout(request)  
@@ -95,6 +120,8 @@ def AdminLogout(request):
 
 @login_required(login_url='adminlogin')  
 def manage_user(request):
+    if 'email' in request.session:
+        return redirect('error_page')
     data = Customer.objects.all()
     context = {'data' : data}
     return render(request,'user_manage.html',context)
@@ -125,6 +152,8 @@ def Unblockuser(request,id):
 
 @login_required(login_url='adminlogin')
 def product_offers(request):
+    if 'email' in request.session:
+        return redirect('error_page')
     offers = Product_Offer.objects.all()
     product = products.objects.all()
 
@@ -137,10 +166,13 @@ def product_offers(request):
 
 @login_required(login_url='adminlogin')
 def add_product_offers(request):
+    if 'email' in request.session:
+        return redirect('error_page')
+    
+    now_date = timezone.now().date()
 
     if request.method == 'POST':
         pro_id = request.POST.get('productName')
-        # print(pro_id)
         percentage = request.POST.get('percentage')
         start_date_str = request.POST.get('start_date')
         end_date_str = request.POST.get('end_date')
@@ -164,7 +196,11 @@ def add_product_offers(request):
             if end_date < start_date:
                 messages.error(request, 'End date must be after start date.')
                 return redirect('product_offers')
-
+            
+            if now_date > end_date:
+                messages.error(request,'The end date for the Offer cannot be in the past.')
+                return redirect('product_offers')
+            
 
             offers = Product_Offer(
                 product_id = product,
@@ -185,7 +221,12 @@ def add_product_offers(request):
 
 @login_required(login_url='adminlogin')
 def edit_product_offers(request,id):
+    if 'email' in request.session:
+        return redirect('error_page')
+    
+    now_date = timezone.now().date()
     offer = Product_Offer.objects.get(id=id)
+
     if request.method == 'POST':
         percentage = request.POST.get('percentage')
         start_date_str = request.POST.get('start_date')
@@ -207,6 +248,10 @@ def edit_product_offers(request,id):
 
             if end_date < start_date:
                 messages.error(request, 'End date must be after start date.')
+                return redirect('product_offers')
+            
+            if now_date > end_date:
+                messages.error(request,'The end date for the Offer cannot be in the past.')
                 return redirect('product_offers')
 
     
@@ -244,6 +289,8 @@ def product_offer_status(request,id):
 
 @login_required(login_url='adminlogin')
 def category_offers(request):
+    if 'email' in request.session:
+        return redirect('error_page')
 
     offers = Category_Offer.objects.all()
     category = Category.objects.all()
@@ -259,6 +306,8 @@ def category_offers(request):
 
 @login_required(login_url='adminlogin')
 def add_category_offers(request):
+    if 'email' in request.session:
+        return redirect('error_page')
 
     if request.method == 'POST':
         cat_id = request.POST.get('CategoryName')
@@ -295,10 +344,12 @@ def add_category_offers(request):
 
 @login_required(login_url='adminlogin')
 def edit_category_offers(request,id):
+    if 'email' in request.session:
+        return redirect('error_page')
+    
     offer = Category_Offer.objects.get(id=id)
     if request.method == 'POST':
         percentage = request.POST.get('percentage')
-
 
         if not 0 <= float(percentage) <= 100:
             messages.error(request, 'Percentage must be between 0 and 100.')
@@ -335,18 +386,49 @@ def category_offer_status(request,id):
 
 @login_required(login_url='adminlogin')
 def sales_report(request):
+    if 'email' in request.session:
+        return redirect('error_page')
+    
     orders = None
     if request.method == 'POST':
-        start_date = request.POST.get('start_date')
-        end_date = request.POST.get('end_date')
+        filter_type = request.POST.get('filter')
         
 
-        print(f"Start Date: {start_date}, End Date: {end_date}")
-        
-        orders = OrderedProducts.objects.filter(status ='Delivered', delivery_date__range=(start_date, end_date))
+        date_of_download = timezone.now()
+
+        if filter_type == 'fixed':
+            interval = request.POST.get('interval')
+
+            if interval == 'day':
+                end_date = timezone.now()
+                start_date = end_date - timedelta(days=1)
+                print(f"Start Date: {start_date}, End Date: {end_date}")
+                orders = OrderedProducts.objects.filter(status='Delivered',delivery_date__range=(start_date, end_date))
+
+            if interval == 'week':
+                end_date = timezone.now()
+                start_date = end_date - timedelta(days=7)
+                orders = OrderedProducts.objects.filter(status='Delivered',delivery_date__range=(start_date, end_date))
+
+
+            if interval == 'month':
+                end_date = timezone.now()
+                start_date = end_date - timedelta(days=30)
+                orders = OrderedProducts.objects.filter(status='Delivered',delivery_date__range=(start_date, end_date))
+
+            if interval == 'year':
+                end_date = timezone.now()
+                start_date = end_date - timedelta(days=365)
+                orders = OrderedProducts.objects.filter(status='Delivered',delivery_date__range=(start_date, end_date))
+
+        if filter_type == 'custom':
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            print(f"Start Date: {start_date}, End Date: {end_date}")
+            orders = OrderedProducts.objects.filter(status ='Delivered', delivery_date__range=(start_date, end_date))
+
         print(orders)
 
-    date_of_download = timezone.now()
 
     context = { 'orders' : orders,
                 'date_of_download' : date_of_download
@@ -356,34 +438,3 @@ def sales_report(request):
 
 
 
-# # views.py
-# from django.db.models import Count, Sum
-# from django.utils import timezone
-# from datetime import datetime, timedelta
-
-# @login_required(login_url='adminlogin')
-# def AdminHome(request):
-#     # Calculate date range for the last 12 months
-#     end_date = timezone.now()
-#     start_date = end_date - timedelta(days=365)
-
-#     # Monthly orders
-#     monthly_orders = OrderedProducts.objects.filter(
-#         created_at__gte=start_date, created_at__lte=end_date
-#     ).extra({'month': "EXTRACT(month FROM created_at)"}).values('month').annotate(order_count=Count('id'))
-
-#     # Monthly new users
-#     monthly_new_users = Customer.objects.filter(
-#         date_joined__gte=start_date, date_joined__lte=end_date
-#     ).extra({'month': "EXTRACT(month FROM date_joined)"}).values('month').annotate(user_count=Count('id'))
-
-#     # Monthly amount sales
-#     monthly_amount_sales = OrderedProducts.objects.filter(
-#         created_at__gte=start_date, created_at__lte=end_date
-#     ).extra({'month': "EXTRACT(month FROM created_at)"}).values('month').annotate(total_sales=Sum('total_amount'))
-
-#     return render(request, 'admin_home.html', {
-#         'monthly_orders': monthly_orders,
-#         'monthly_new_users': monthly_new_users,
-#         'monthly_amount_sales': monthly_amount_sales,
-#     })

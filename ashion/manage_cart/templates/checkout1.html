@@ -294,8 +294,12 @@ console.log('hi')
               total_amount : totalAmount
                   },
           success : function (data){
+            if(data.error){
+            errorBlock.innerHTML = data.error;
+            }else{
               window.location.href = data.redirect_url + data.order_id;   
               }
+            }
           });
         }
         else{

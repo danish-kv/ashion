@@ -9,4 +9,5 @@ urlpatterns = [
     path('wishlist/',views.wishlist,name='wishlist'),
     path('remove_from_wishlist/<str:id>',views.remove_from_wishlist,name='remove_from_wishlist'),
     path('Search/', views.Search_Products,name='Search_Products'),
+    path('error_page/',views.error_page, name='error_page')
 ]

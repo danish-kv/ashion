@@ -17,13 +17,6 @@ from customadmin.models import Product_Offer
 
 
 
-# if request.method == "GET":
-#         search = request.GET.get('search')
-
-#         search_result = products.objects.filter(name__icontains = search)
-#         context = { 'product' : search_result } 
-
-
 
 def product_list(request):
     context ={}
@@ -161,7 +154,9 @@ def add_to_wishlist(request,id,from_page):
 
 def wishlist(request):
     if 'email' in request.session:
-        wish = Wishlist.objects.all()
+        email_id = request.session.get('email')
+        user = Customer.objects.get(email=email_id)
+        wish = Wishlist.objects.filter(user_id=user)
         context = { 'wishlist' : wish }
         return render(request,'wishlist.html',context)
     
@@ -190,3 +185,8 @@ def Search_Products(request):
     context = { 'product' : result }
 
     return render(request,'product_list.html',context)
+
+
+
+def error_page(request):
+    return render(request,'errorpage.html')

@@ -15,6 +15,8 @@ import razorpay
 from django.conf import settings
 from manage_coupen.models import Coupons
 from decimal import Decimal
+from django.db.models import Sum
+from home.models import Wishlist
 # Create your views here.
 
 
@@ -76,11 +78,15 @@ def add_to_cart(request,id):
                 size_variant = size_variant,
             )
 
+            if Wishlist.objects.filter(user_id = user, product_id = size_variant.product_id).exists():
+                pro = Wishlist.objects.get(user_id = user, product_id = size_variant.product_id)
+                pro.delete()
+
             messages.success(request,'Product added to cart')
             return redirect('productdetails',id = id)
             
     messages.error(request,'Frist you want to login...')
-    return redirect('login.html')
+    return redirect('login')
 
 
 
@@ -269,21 +275,27 @@ def apply_coupon(request):
             if coupon_obj.end_date and current_date > coupon_obj.end_date:
                 return JsonResponse({'error': 'Coupon has expired'})
             
+            if checkout_obj.sub_total <  coupon_obj.min_amount:
+                return JsonResponse({'error': f'Minimum amount requirement not met for this coupon'})
+
+                
+            if coupon_obj.quantity <= 0:
+                return JsonResponse({'error': 'Coupon quantity limit reached'})
+                
+            coupon_obj.quantity -= 1
+            coupon_obj.save()
+            
             print(checkout_obj.sub_total)
             print(coupon_obj.min_amount)
-            if checkout_obj.sub_total <  coupon_obj.min_amount:
-
-                return JsonResponse({'error': f'Minimum amount requirement not met for this coupon'})
-            
-            if coupon_obj.quantity is not None and checkout_obj.coupon_active:
-                if checkout_obj.coupon.quantity <= 0:
-                    return JsonResponse({'error': 'Coupon quantity limit reached'})
 
             checkout_obj.coupon = coupon_obj
             checkout_obj.coupon_active = True
             checkout_obj.save()
             
             return JsonResponse({'status' : 'Coupon applied'})
+    return redirect('login')
+    
+        
 
 
 
@@ -300,6 +312,9 @@ def remove_coupen(request,id):
             checkout_obj.coupon = None
             checkout_obj.coupon_active = False
             checkout_obj.save()
+
+            coupon_id.quantity += 1
+            coupon_id.save()    
             messages.success(request,'Coupon removed')
             return redirect('checkout')
         
@@ -333,9 +348,13 @@ def place_order(request):
             address = Address.objects.get(id = address_id)
             payment_method = request.POST.get('payment_option')
             total_amount = request.POST.get('sub_total')
+            print(total_amount)
 
-            
-                
+
+            if payment_method == 'cod' and float(total_amount) > 1000:
+                messages.error(request, 'COD is not available for orders over 1000' )
+                return redirect('checkout')
+
             if payment_method == 'cod':
                 order_id = Order.objects.create(
                     user = user,
@@ -391,8 +410,8 @@ def razorpay_payment(request):
 
         for cart_obj in cart_objects:
             if cart_obj.quantity > cart_obj.size_variant.stock:
-                messages.error(request,'OUT OF STOCK')
-                return redirect('checkout')
+                print('ooooooooooooooooooooooooooooooooooooooooo')
+                return JsonResponse({'error': f'OUT OF STOCK'})
         
         if request.method == 'POST':
             address_id = request.POST.get('address')
@@ -470,8 +489,8 @@ def wallet_payment(request):
 
         for cart_obj in cart_objects:
             if cart_obj.quantity > cart_obj.size_variant.stock:
-                messages.error(request,'OUT OF STOCK')
-                return redirect('checkout')
+                return JsonResponse({'error': f'OUT OF STOCK'})
+
         
         if request.method == 'POST':
             address_id = request.POST.get('address')
@@ -564,9 +583,11 @@ def ordered_products(request,id):
         user = Customer.objects.get(email = email)
 
         orders = OrderedProducts.objects.filter(order_id=id,user = user)
+        offer = orders.first().order_id.coupon_id
         address = Order.objects.get(id=id)
         context = { 'orders' : orders,
-                'addr' : address }
+                'addr' : address,
+                 'offer' : offer }
         
         return render(request,'ordered_products.html',context)
     return redirect('login')
@@ -593,9 +614,7 @@ def order_cancel(request,id):
             ordered_id = request.POST.get('orderid')
             reason = request.POST.get('reason')
             ord_pro = OrderedProducts.objects.get(id=id)
-            print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-            print(id)
-            print(ord_pro)
+
 
 
             if ord_pro.order_id.payment_method == 'cod':
@@ -666,6 +685,8 @@ def order_cancel(request,id):
         
         messages.error(request,'some issues facing. try again later...')
         return redirect('ordered_products',id = ordered_id)
+    
+    return redirect('login')
 
 
 
@@ -690,36 +711,29 @@ def return_order(request,id):
                 print(f'{total_products} total products,, {refund_amount} refund_amount ')
 
                 # refunding amount
-                for product in ord_pro.order_id.orderedproducts_set.all():
-                    amount = product.total_amount - Decimal(refund_amount)
-                    print(amount)
-                    print( product.total_amount)
-                    print(product.quantity)
-                    print( refund_amount)
-                    wallet_user = Wallet_User.objects.filter(user_id = user).order_by('-id').first()
-
-                    if not wallet_user:
-                        balance = 0
-                    else:
-                        balance = wallet_user.balance
-
-                    new_balance = balance + amount
-                    Wallet_User.objects.create(
-                        user_id = user,
-                        transaction_type = "Credit",
-                        amount = amount,
-                        balance = new_balance
-                    )
-
-
-                    #Change the status and ReStocking
-                    product.status = 'Returned'
-                    pro = Variant.objects.get(product_id = ord_pro.product.product_id, id=ord_pro.product.id )
-                    pro.stock = pro.stock + ord_pro.quantity
-                    product.save()
-                    pro.save()
-
-
+                amount = ord_pro.total_amount - Decimal(refund_amount)
+                print(amount)
+                print( ord_pro.total_amount)
+                print(ord_pro.quantity)
+                print( refund_amount)
+                wallet_user = Wallet_User.objects.filter(user_id = user).order_by('-id').first()
+                if not wallet_user:
+                    balance = 0
+                else:
+                    balance = wallet_user.balance
+                new_balance = balance + amount
+                Wallet_User.objects.create(
+                    user_id = user,
+                    transaction_type = "Credit",
+                    amount = amount,
+                    balance = new_balance
+                )
+                #Change the status and ReStocking
+                pro = Variant.objects.get(product_id = ord_pro.product.product_id, id=ord_pro.product.id )
+                pro.stock = pro.stock + ord_pro.quantity
+                pro.save()
+                ord_pro.status = 'Returned'
+                ord_pro.save()
 
                 OrderReturns.objects.create(
                 order_id = ord_pro,
@@ -746,3 +760,32 @@ def return_order(request,id):
        
 
 
+def invoice(request,id):
+    offer = 0
+    orders = OrderedProducts.objects.filter(order_id=id)
+
+    if orders.first().order_id.coupon_id:
+        offer = orders.first().order_id.coupon_id.discount_amount
+
+    if offer is None:
+        offer = 0
+    pro_total = orders.aggregate(sub_total=Sum('total_amount'))['sub_total']
+    if pro_total is None:
+        pro_total = 0
+    sub_total = pro_total - offer
+
+
+    print(orders)
+    print(pro_total)
+    print(sub_total)
+    print(offer)
+
+    my_order = Order.objects.get(id=id)
+
+    context = { 'orders' : orders,
+               'offer' : offer,
+                'sub_total' : sub_total,
+                'pro_total': pro_total,
+                 "my_order" : my_order }
+    
+    return render(request,'invoice.html',context)

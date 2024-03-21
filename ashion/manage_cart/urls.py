@@ -18,6 +18,7 @@ urlpatterns = [
     path('wallet_payment/',views.wallet_payment,name='wallet_payment'),
     path('apply_coupon/',views.apply_coupon, name='apply_coupon'),
     path('remove_coupen/<str:id>', views.remove_coupen, name='remove_coupen'),
+    path('show_invoice/<str:id>',views.invoice,name='invoice'),
     
 ]
 

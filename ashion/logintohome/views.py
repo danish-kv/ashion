@@ -13,6 +13,7 @@ from . import models
 from django.core.paginator import Paginator
 from user_profile.models import Wallet_User
 from decimal import Decimal
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 
@@ -53,11 +54,18 @@ def login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-
+        print(email)
+        print(password)
+        
+        
         try:
             user = Customer.objects.get(email = email,password = password)
         except Customer.DoesNotExist:
             user = None
+
+        if password.strip() == "":
+            messages.error(request,'Please enter your password')
+            return redirect(login)
 
 
         if user is not None:
@@ -94,6 +102,22 @@ def signup(request):
         referral_code = request.POST.get('ref_code',None)
 
 
+        if username.strip() == "":
+            messages.error(request,'Please enter your Username')
+            return redirect(signup)
+        
+        if number.strip() == "":
+            messages.error(request,'Please enter your Phone Numebr')
+            return redirect(signup)
+        
+        if password1.strip() == "":
+            messages.error(request,'Please enter your Password')
+            return redirect(signup)
+        
+        if password2.strip() == "":
+            messages.error(request,'Please enter your Confirm Password')
+            return redirect(signup)
+
         if password1 != password2:
             messages.error(request,'Both password is not same!')
             return redirect('signup')
@@ -119,10 +143,11 @@ def signup(request):
             return redirect('signup')
         
 
+
         user = Customer(username=username,
                         number=number,
                         email=email,
-                        password=password1,
+                        password= password1,
                         date_joined=date_joined
                         )
         user.save()
@@ -153,8 +178,6 @@ def signup(request):
                 )
             print(f"Refferel Bonus: {reffered_user, reffered_get_amount, new_balance}")
             
-            
-
             #new user
             Wallet_User.objects.create(
                 user_id = user,
@@ -163,17 +186,8 @@ def signup(request):
                 balance = new_user_get_amount
                 )
             print(f"Signup Refferal Bonus: {user, new_user_get_amount, new_user_get_amount}")
-            # new_user_wallet.transaction_type = "Reffered Bonus",
-            # new_user_wallet.amount = new_user_get_amount,
-            # new_user_wallet.balance = new_user_get_amount
-            # new_user_wallet.save()
-
-        
-        
-        
 
         return redirect('otpverify', id=user.id)
-    
     return render(request,'signup.html')
 
 
@@ -185,6 +199,10 @@ def otp_verification(request,id):
         user1 = Customer.objects.get(id = id)
         userotp = user1.otp_field
         entered_otp = request.POST.get('otp')
+
+        if entered_otp.strip() == "":
+            messages.error(request,'Please enter your OTP')
+            return redirect(signup)
 
         userotp = int(userotp)
         entered_otp = int(entered_otp)
@@ -216,7 +234,8 @@ def otp_verification(request,id):
 
 def logout(request):
     if 'email' in request.session:
-        request.session.flush()
+        
+        del request.session['email']
         
         messages.success(request,'You have been successfully logged out. Thank you for using our services!')
         return  redirect('home')

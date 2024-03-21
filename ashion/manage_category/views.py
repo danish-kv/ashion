@@ -10,6 +10,8 @@ from django.views.decorators.cache import never_cache
 
 @login_required(login_url='adminlogin')
 def category_view(request):
+    if 'email' in request.session:
+        return redirect('error_page')
 
     categories = Category.objects.all()
     context = {'category' : categories}
@@ -21,10 +23,18 @@ def category_view(request):
 
 @login_required(login_url='adminlogin')
 def add_category_view(request):
+    if 'email' in request.session:
+        return redirect('error_page')
+
 
     if request.method == "POST":
         category_name = request.POST.get('category_name')
         is_listed = request.POST.get('is_listed') == 'on'
+
+        if category_name.strip() == "":
+            messages.error(request,'Please enter Category Name')
+            return redirect(add_category_view)
+        
         if Category.objects.filter(name__contains=category_name).exists():
             messages.error(request, f'Category with name "{category_name}" already exists!')
             return redirect('addcategory')
@@ -39,11 +49,17 @@ def add_category_view(request):
 
 @login_required(login_url='adminlogin')
 def edit_category_view(request,id):
+    if 'email' in request.session:
+        return redirect('error_page')
+
     if request.method == 'POST':
-    
         name = request.POST.get('category_name')
         is_listed = request.POST.get('is_listed') == 'on'
-        
+
+        if name.strip() == "":
+            messages.error(request,'Please enter Category Name')
+            return redirect(edit_category_view,id)
+
         obj = Category.objects.get(id = id)
         obj.name = name
         obj.is_listed = is_listed

@@ -66,15 +66,7 @@ class products(models.Model):
             
 
 
-            
-
-
-
-
-
-
-
-
+    
 
 
 class Variant(models.Model):

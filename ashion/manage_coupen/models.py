@@ -10,7 +10,7 @@ class Coupons(models.Model):
     discount_amount = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
-    quantity = models.PositiveBigIntegerField(null=True, blank=True)
+    quantity = models.IntegerField(null=True, blank=True)
     min_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True,)
     active = models.BooleanField(default=True)
     created = models.DateField(auto_now_add=True)

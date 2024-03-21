@@ -7,13 +7,12 @@ import string, random
 # Create your models here.
 
 
-
 # user model
 class Customer(models.Model):
-    username = models.CharField(max_length=50)
+    username = models.CharField(max_length=100)
     number = models.BigIntegerField(unique = True)
     email = models.EmailField(max_length=150,unique=True)
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=500)
     dob =  models.DateField(null = True)
     gender = models.CharField(max_length=50, null = True)
     date_joined = models.DateTimeField()

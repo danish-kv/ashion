@@ -1,0 +1,121 @@
+{% load division %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+    }
+    .invoice-container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    .invoice-header h2 {
+      font-weight: bold;
+      color: #333;
+    }
+    .invoice-details p {
+      margin-bottom: 5px;
+    }
+    .product-table th, .product-table td {
+      vertical-align: middle;
+    }
+    .total-table td {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  
+<div class="container mt-5 invoice-container">
+  <div class="row invoice-header">
+    <div class="col-md-6">
+      <h2>Invoice</h2>
+    </div>
+    <div class="col-md-6 text-right">
+      {% for order in orders|slice:1 %}
+      <p><strong>Order ID:</strong> {{ order.order_id.id }} </p>
+      <p><strong>Order Date:</strong> {{ order.order_id.order_date }}</p>
+      {% endfor %}
+    </div>
+  </div>
+  <hr>
+  <div class="row invoice-details">
+    <div class="col-md-6">
+      <h5>Billing Details</h5>
+      {% for order in orders|slice:1 %}
+      <p><strong>Email:</strong> {{ order.user.email }}</p>
+      <p><strong>Address:</strong> <br>{{ order.address.name }},<br>{{ order.address.number }},<br>{{ order.address.address }},<br>{{ order.address.state }},{{ order.address.district }},{{ order.address.city }},{{ order.address.landmark }},<br>{{ order.address.pincode }}</p>
+      {% endfor %}
+    </div>
+    <div class="col-md-5">
+      <p><strong>Name:</strong> Ashion</p>
+      <p><strong>Email:</strong> ashion@gmail.com</p>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table product-table">
+        <thead>
+          
+          <tr>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>quantity</th>
+            <th class="text-right">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <td>{{ order.product.product_id.name }}</td>
+            <td >{{ order.total_amount|div:order.quantity }}</td>
+            <td>{{ order.quantity }}</td>
+            <td class="text-right">{{ order.total_amount }}</td>
+          </tr>
+          {% endfor %}  
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 offset-md-6">
+      <table class="table total-table">
+        <tbody>
+          <tr>
+            <td>Sub Total:</td>
+            <td class="text-right">{{pro_total}}</td>
+          </tr>
+          <tr>
+            <td>Discount:</td>
+            {% if my_order.coupon_id %}
+            <td class="text-right">{{ offer }}</td>
+            {% else %}
+            <td class="text-right">0</td>
+            {% endif %}
+          </tr>
+
+          <tr>
+            <td>Grand Total:</td>
+            <td class="text-right">{{ my_order.total_amount }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="mt-5 text-end" >
+    <a onclick= "window.print()" class="btn btn-danger" >Download </a>
+  </div>
+</div>
+
+</body>
+</html>
