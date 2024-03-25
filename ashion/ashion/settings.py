@@ -68,6 +68,30 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "ashion.urls"
 
+
+CORS_ALLOWED_ORIGINS = [
+"http://43.204.115.200",
+"http://43.204.115.200",
+"http://0.0.0.0",
+"https://0.0.0.0",
+"http://0.0.0.0:9090"]
+
+CORS_ALLOW_HEADERS = [
+                 'access-control-allow-headers',
+                   'access-control-allow-methods',
+                  'access-control-allow-origin',
+                    'content-type',
+                     'x-csrftoken']
+
+CORS_ALLOW_METHODS = [
+               'DELETE',
+               'GET',
+               'OPTIONS',
+               'PATCH',
+               'POST',
+               'PUT']
+
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
