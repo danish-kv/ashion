@@ -101,9 +101,9 @@ WSGI_APPLICATION = "ashion.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ashion",
-        "USER": "postgres",
-        "PASSWORD": "1234",
+        "NAME": "new_ashion",
+        "USER": "danish",
+        "PASSWORD": "pass1234",
         "HOST": "localhost",  # or your database host
         "PORT": "5432",  # By default, PostgreSQL uses port 5432
     }
