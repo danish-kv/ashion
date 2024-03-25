@@ -4,30 +4,29 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('customadmin', '0001_initial'),
+        ("customadmin", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='category_offer',
-            name='end_date',
+            model_name="category_offer",
+            name="end_date",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='category_offer',
-            name='start_date',
+            model_name="category_offer",
+            name="start_date",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='product_offer',
-            name='end_date',
+            model_name="product_offer",
+            name="end_date",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='product_offer',
-            name='start_date',
+            model_name="product_offer",
+            name="start_date",
             field=models.DateField(blank=True, null=True),
         ),
     ]

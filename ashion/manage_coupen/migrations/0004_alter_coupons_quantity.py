@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_coupen', '0003_rename_name_coupons_title'),
+        ("manage_coupen", "0003_rename_name_coupons_title"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='coupons',
-            name='quantity',
+            model_name="coupons",
+            name="quantity",
             field=models.IntegerField(blank=True, null=True),
         ),
     ]

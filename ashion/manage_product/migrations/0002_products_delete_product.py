@@ -5,30 +5,43 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_category', '0002_category_description_alter_category_name'),
-        ('manage_product', '0001_initial'),
+        ("manage_category", "0002_category_description_alter_category_name"),
+        ("manage_product", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='products',
+            name="products",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200)),
-                ('price', models.IntegerField()),
-                ('description', models.TextField()),
-                ('img1', models.ImageField(upload_to='images/')),
-                ('img2', models.ImageField(upload_to='images/')),
-                ('img3', models.ImageField(upload_to='images/')),
-                ('img4', models.ImageField(upload_to='images/')),
-                ('is_listed', models.BooleanField(default=True)),
-                ('original_price', models.IntegerField(null=True)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='manage_category.category')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200)),
+                ("price", models.IntegerField()),
+                ("description", models.TextField()),
+                ("img1", models.ImageField(upload_to="images/")),
+                ("img2", models.ImageField(upload_to="images/")),
+                ("img3", models.ImageField(upload_to="images/")),
+                ("img4", models.ImageField(upload_to="images/")),
+                ("is_listed", models.BooleanField(default=True)),
+                ("original_price", models.IntegerField(null=True)),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="manage_category.category",
+                    ),
+                ),
             ],
         ),
         migrations.DeleteModel(
-            name='Product',
+            name="Product",
         ),
     ]

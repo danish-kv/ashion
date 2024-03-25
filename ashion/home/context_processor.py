@@ -6,39 +6,37 @@ from django.shortcuts import redirect
 
 
 def category_nav(request):
-    category = Category.objects.filter(is_listed = True)
-    return { 'cat' : category}
+    category = Category.objects.filter(is_listed=True)
+    return {"cat": category}
 
 
 def count_of_cart(request):
     cart_count = 0
     try:
-        if 'email' in request.session:
-            email = request.session.get('email')
-            user = Customer.objects.get(email = email)
-            cart_count = Cart.objects.filter(user_id = user).count()
+        if "email" in request.session:
+            email = request.session.get("email")
+            user = Customer.objects.get(email=email)
+            cart_count = Cart.objects.filter(user_id=user).count()
             print(cart_count)
-    except Customer.DoesNotExist :
-        return redirect('login')
+    except Customer.DoesNotExist:
+        return redirect("login")
     except Exception as e:
-        print(f'{e} in context processor')
+        print(f"{e} in context processor")
 
-    return { 'cart_count' : cart_count }
-    
+    return {"cart_count": cart_count}
 
 
 def wishlist_of_cart(request):
     wishlist_count = 0
     try:
-        if 'email' in request.session:
-            email = request.session.get('email')
-            user = Customer.objects.get(email = email)
-            wishlist_count = Wishlist.objects.filter(user_id = user).count()
+        if "email" in request.session:
+            email = request.session.get("email")
+            user = Customer.objects.get(email=email)
+            wishlist_count = Wishlist.objects.filter(user_id=user).count()
 
-    except Customer.DoesNotExist :
-        return redirect('login')
+    except Customer.DoesNotExist:
+        return redirect("login")
     except Exception as e:
-        print(f'{e} in context processor')
-        
-    return { 'wishlist_count' : wishlist_count }
-    
+        print(f"{e} in context processor")
+
+    return {"wishlist_count": wishlist_count}

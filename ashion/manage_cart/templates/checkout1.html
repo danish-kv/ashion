@@ -2,7 +2,6 @@
 {% load static %}
 
 
-
 {% block header %}
 {% include "inc/navbar.html" %}
 {% endblock header %}
@@ -75,7 +74,7 @@
                 <div class="col-lg-12">
                     <div class="breadcrumb__links">
                         <a href="/"><i class="fa fa-home"></i> Home</a>
-                        <a href="/"><i class="fa fa-cart"></i> Shopping cart</a>
+                        <a href="/showcart/"><i class="fa fa-cart"></i> Shopping cart</a>
                         <span>Checkout</span>
                     </div>
                 </div>
@@ -85,34 +84,27 @@
     <!-- Breadcrumb End -->
 
 
+
+  
+  
+
   
     <div class="page-content">
       <div class="cart mb-5">
         <div class="container">
-          <div class="row">
-            
-
+          <div class="row" id="reload">
             <div class="col-md-8 cart-item-box">
-                  
               {% if addresses %}
-              
-                  <a href="/add_address/">
+                  <a href="{% url 'add_address' %}">
                       <div class="d-flex justify-content-end mr-3">
-                          <button type='button' class="btn btn-dark" id="addAddressBtn">Add New Address</button>
+                          <button type="button" class="btn btn-dark" id="addAddressBtn">Add New Address</button>
                       </div>
                   </a>
                   <form method="post" action="{% url "place_order" %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="address-container" >
                         <label for="selected_address">Choose a delivery address:</label>
-                        {% if messages %}
-                    <ul class="messages  " style="list-style: none; color:red">
-                        {% for message in messages %}
-                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-                        <ul style="list-style: none;">
+                          <ul style="list-style: none;">
                           {% for address in addresses %}
                             <li style="border: 1px solid #333; margin: 10px; padding: 20px; color: black;">
                               <input type="radio" name="selected_address" id="address_{{ address.id }}" value="{{ address.id }}" {% if forloop.last %}checked{% endif %} required>
@@ -137,17 +129,12 @@
                         <button type="button" class="btn btn-dark" id="addAddressBtn">Add New Address</button>
                     </a>
                 </div>
-                
               {% endif %}
-          
             </div><!-- End .col-lg-9 -->
               
-
-
-
-<!-- side start--> 
-            <div class="col-lg-4">
-                <div class="coupon" id="reload" >
+            <!-- side start--> 
+            <div class="col-lg-4" >
+                <div class="coupon"  >
                   <span id="Success" class="success"></span>
                   <span id="Error" class="error"></span>
                     <input type="text"  name="coupon-Code" class="form-control m-2" id="couponCode" placeholder="Enter coupon code"   >
@@ -225,17 +212,16 @@
 
                         <div class="payment-options">
                           <div class="col-md-6 mb-3">
-
                             <input type="hidden" name="payment_option" value="cod">
                             <button type="submit" class="btn btn-danger btn-block">COD</button>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                          <button type="button" id="wallet-pay" class="btn btn-danger btn-block wallet">Wallet</button>
-                      </div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <button type="button" id="wallet-pay" class="btn btn-danger btn-block wallet">Wallet</button>
+                          </div>
 
-                      <div class="col-md-6 mb-3">
-                        <button type="button" id="rzp-button1" class="btn btn-danger btn-block razor">Razorpay</button>
-                    </div>
+                          <div class="col-md-6 mb-3">
+                            <button type="button" id="rzp-button1" class="btn btn-danger btn-block razor">Razorpay</button>
+                          </div>
                         </div>
                       </div>
                   </div>
@@ -267,13 +253,8 @@
         e.preventDefault();
         var selectedValue = $('input[name="selected_address"]:checked').val();
         var token = $('input[name=csrfmiddlewaretoken]').val();
-        var totalAmount = $('#total_amount').val();
-
+        var totalAmount = $('#total_amount').val();        
         
-        
-        console.log('Total Amount:', totalAmount); 
-console.log('hi')
-
   var options = {
       "key": "rzp_test_kjPVyHrg75EHqw",
       "amount": "{{ payment.amount }}",
@@ -293,13 +274,27 @@ console.log('hi')
               csrfmiddlewaretoken:token,
               total_amount : totalAmount
                   },
-          success : function (data){
-            if(data.error){
-            errorBlock.innerHTML = data.error;
-            }else{
-              window.location.href = data.redirect_url + data.order_id;   
-              }
-            }
+                  success: function (data) {
+                    var errorBlock = document.getElementById('WalletError');
+                    var successBlock = document.getElementById('Success');
+                
+                    if (data.error !== undefined && data.error !== null && data.error.trim() !== "") {
+                        // Show error message
+                        errorBlock.innerHTML = data.error;
+                        errorBlock.style.display = 'block';
+                        // Hide success message
+                        successBlock.style.display = 'none';
+                    } else {
+                        // Clear error message
+                        errorBlock.innerHTML = '';
+                        errorBlock.style.display = 'none';
+                        // Show success message
+                        successBlock.innerHTML = 'Payment successful! Redirecting...';
+                        successBlock.style.display = 'block';
+                        // Redirect to success page
+                        window.location.href = data.redirect_url + data.order_id;
+                    }
+                },
           });
         }
         else{
@@ -317,26 +312,16 @@ console.log('hi')
       }
   };
   
-  console.log("Script executed" );
   var rzp1 = new Razorpay(options);
+  rzp1.open();
   rzp1.on('payment.success', function (response){
-    console.log("Payment success");
           alert(response.error.reason);
           
   });
-  document.getElementById('rzp-button1').onclick = function(e){
-      rzp1.open();
-      e.preventDefault();
-  }
 
   });
 });
-
-
-  </script>
-
-
-
+</script>
 
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -346,19 +331,9 @@ console.log('hi')
     $(document).ready(function () {
         $('#reload').on('click', '.apply_coupon', function (e) {
             e.preventDefault();
-            console.log('hi')
 
             var coupon_code = $('input[name=coupon-Code]').val()
-            var token = $('input[name=csrfmiddlewaretoken]').val()
-
-            //if (name === ''){
-            //  document.getElementById('Error').innerHTML = "No code";
-            //  return false;
-            //}
-
-            
-            console.log(coupon_code)
-            console.log(token)
+            var token = $('input[name=csrfmiddlewaretoken]').val()    
 
             $.ajax({
                 method: 'POST',
@@ -371,8 +346,8 @@ console.log('hi')
                     if (response.status === 'Coupon applied') {
                       document.getElementById('Success').innerHTML = response.status
                       //alert('success :-'  + response.status);
-                        // Reload only the specific part of the page that needs updating
-                        $('#changed').load('/checkout/ #changed');
+                        //$('#changed').load('/checkout/ #changed');
+                        $('#reload').load('/checkout/ #reload');
                     }
                     else{
                       document.getElementById('Error').innerHTML = response.error
@@ -381,7 +356,6 @@ console.log('hi')
                     }
                 },
                 error: function (error) {
-                    console.log(error)
                 }
             })
         })
@@ -409,9 +383,6 @@ console.log('hi')
       var token = $('input[name=csrfmiddlewaretoken]').val();
       var totalAmount = $('#total_amount').val();
 
-      console.log(selectedAddrress)
-      console.log(token)
-      console.log('Total Amount:', totalAmount);
 
       $.ajax({
         method: 'POST',
@@ -454,19 +425,13 @@ console.log('hi')
 
 {% endblock content %}
 
-
-
-
-
-        
         <!-- Instagram Begin -->
-       {% block instagram %}
-       {% include "inc/instagram.html" %}
-       {% endblock instagram %}
-        <!-- Instagram End -->
-
-        <!-- Footer Section Begin -->
-        {% block footer %}
-        {% include "inc/footer.html" %}
-        {% endblock footer %}
-        <!-- Footer Section End -->
+{% block instagram %}
+{% include "inc/instagram.html" %}
+{% endblock instagram %}
+ <!-- Instagram End 
+ <!-- Footer Section Begin -->
+ {% block footer %}
+ {% include "inc/footer.html" %}
+ {% endblock footer %}
+ <!-- Footer Section End -->

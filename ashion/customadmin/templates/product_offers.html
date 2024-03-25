@@ -1,18 +1,7 @@
-
-
 {% extends 'admin_base.html' %}
 {% load static %}
 
-
-
 {% block content %}
-{% comment %} <style>
-    .table td,{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-</style> {% endcomment %}
 <div>
     <div class="pagetitle">
         <div class="row align-items-center">
@@ -24,20 +13,22 @@
                     <a href="#addProductOffers" class="btn btn-dark mt-2" data-bs-toggle="modal">
                     <span>Add Products Offers</span>
                     </a>
-                </div>
-            </div>
+                    <div class="col-md-6 text-end">
+                        <form class="d-flex justify-content-end" method="GET" action="">
+                            <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" name="search">
+                            <button class="btn btn-outline-primary" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>       
+            </div>            
         </div>
-        </div>
-
-
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">Admin</li>
-                <li class="breadcrumb-item active">Products Offers</li>
-            </ol>
+                <li class="breadcrumb-item active">Products Offers</li>                
+            </ol>            
         </nav>
-
-
+        
     </div>
     <!-- End Page Title -->
 
@@ -55,13 +46,10 @@
                             <th>Offer Percentage</th>
                             <th>Starting date</th>
                             <th>Ending date </th>
-                            {% comment %} <th>Edit</th> {% endcomment %}
-                            <th>Actions</th>
-                            
+                            <th>Actions</th>                            
                         </tr>
                     </thead>
                     <tbody>
-                        
                         {% for i in offers %}
                         <tr >
                             <td>{{i.id}}</td>
@@ -79,10 +67,6 @@
                             <td >{{ i.start_date }}</td>
 
                             <td >{{ i.end_date }}</td>
-                            
-                            {% comment %} <td >
-                                <a href="#editEmployeeModal-{{forloop.counter}}" class="btn btn-primary " data-bs-toggle="modal">Edit</a>
-                            </td>  {% endcomment %}
 
                             <td class="table-actions">
                                 <a href="#editEmployeeModal-{{forloop.counter}}" class="badge btn-warning " data-bs-toggle="modal">Edit</a>
@@ -97,6 +81,55 @@
                         {% endfor %}
                     </tbody>
                 </table>
+
+                
+    <!------------------------------ pagination -------------------------->
+    {% if not disable_pagination %}
+    <div class="pagination justify-content-center mt-3">
+        <ul class="pagination">
+            {% if offers.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo; First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ offers.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo; First</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            {% endif %}
+            
+            <li class="page-item">
+                <span class="page-link">
+                    Page {{ offers.number }} of {{ offers.paginator.num_pages }}
+                </span>
+            </li>
+            
+            {% if offers.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ offers.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ offers.paginator.num_pages }}">Last &raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Last &raquo;</span>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+
+<!------------------------------ end pagination -------------------------->
+
             </div>
         </div>
     </div><!-- End Recent Sales -->
@@ -150,12 +183,7 @@
 </div>
 
 
-
-
-
-
 {% for i in offers %}
-
 <div id="editEmployeeModal-{{forloop.counter}}" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -196,7 +224,4 @@
 
 <!-- Bootstrap JS and jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    
-
 {% endblock content %}

@@ -1,30 +1,27 @@
 {% extends "base.html" %}
 {% load static %}
 
-
 {% block header %}
 {% include "inc/navbar.html" %}
 {% endblock header %}
 
-
-
-
 {% block content %}
 
-
 <link rel="stylesheet" href="{% static "molla/assets/css/bootstrap.min.css" %}">
-
 <link rel="stylesheet" href="{% static "molla/assets/css/style.css" %}">  
-
-
 
     <div class="page-wrapper">
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
         		<div class="container">
         			<h1 class="page-title">My Account<span></span></h1>
-        		</div><!-- End .container -->
-        	</div><!-- End .page-header -->
+        		</div>
+        	</div>
+
+
+            <!------------------------------------ breadcrumb ------------------------------------------>
+
+
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
                 <div class="container">
                     <ol class="breadcrumb">
@@ -33,10 +30,9 @@
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
-
             
+          <!------------------------------------ Side bar ------------------------------------------>
 
-        
 
             <div class="page-content">
                 <div class="dashboard">
@@ -71,8 +67,9 @@
                                     </li>
                                 </ul>
                             </aside><!-- End .col-lg-3 -->
-            
-
+                            
+                            
+                      <!------------------------------------ Profile ------------------------------------------>
 
                             <div class="col-md-8 col-lg-9">
                                 <div class="tab-content">
@@ -108,6 +105,9 @@
                                         {% endfor %}
                                     </ul>
                                 {% endif %}
+
+              <!------------------------------------ All orders ------------------------------------------>
+
                                     <div class="tab-pane fade" id="tab-order" role="tabpanel" aria-labelledby="tab-order-link">
                                         <!-- <div class="row mx-auto"> -->
                                         <div class="card col-md-5 col-10 m-2 shadow-sm" id="allorder"
@@ -123,6 +123,9 @@
                                         </div>
                                         <!-- </div> -->
                                     </div><!-- .End .tab-pane -->
+
+         <!------------------------------------ Wallet ------------------------------------------>
+
                                     <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-order-link">
                                         <!-- <div class="row mx-auto"> -->
                                         <div class="card col-md-5 col-10 m-2 shadow-sm" id="allorder"
@@ -131,24 +134,14 @@
                                                 <div class="card-body">
                                                     <div class="d-flex justify-content-center mt-1 py-4">
                                                         <i class="fa-solid fa-box-open mx-3" style="font-size: 35px;"></i>
-                                                        <h5 class="m-0 align-self-center" style="font-weight: 300;">Wallet</h5>
+                                                        <h5 class="m-0 align-self-center" style="font-weight: 300;">Baance :<b> {{ wallet.balance }}</b><br> Open Wallet</h5>
                                                     </div>
                                                 </div>
                                             </a>
                                         </div>
-                                        <!-- </div> -->
                                     </div><!-- .End .tab-pane -->
 
-
-
-
-
-
-
-
-
-
-
+            <!------------------------------------ Address ------------------------------------------>
 
                                     <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
 								    	<p>The following addresses will be used on the checkout page by default.</p>
@@ -156,19 +149,15 @@
 								    	<div class="row">
                                             {% for address in addresses %}
 								    		<div class="col-lg-6">
-								    			<div class="card card-dashboard">
-                                                    
+								    			<div class="card card-dashboard">                                                    
 								    				<div class="card-body">
-								    					<h3 class="card-title">Address </h3><!-- End .card-title -->
-                                                        
+								    					<h3 class="card-title">Address </h3><!-- End .card-title -->                                                        
 														<p>{{address.name}}<br>
-                                                            {{address.number}}<br>
-														
+                                                            {{address.number}}<br>														
                                                         {{ address.address }},<br>
 														{{ address.city }},<br>
 														{{ address.state }},<br>
                                                         {{ address.pincode }}<br>
-														{% comment %} <a href="#">Edit <i class="icon-edit"></i></a></p> {% endcomment %}
                                                         <div class="d-flex justify-content-end">
                                                             <a href="/edit_address/{{address.id}}">Edit <i class="icon-edit"></i>  </a>
                                                             <a href="/delete_address/{{address.id}}"> &nbsp;&nbsp;Remove <i class="fa-solid fa-trash" style="color: #c96;"></i></a>
@@ -183,46 +172,17 @@
 								    			<div class="card card-dashboard">
 								    				<div class="card-body">
 								    					<h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
-
 														<p>You have not set up this type of address yet.<br>
-														<a href="/add_address/">Add <i class="icon-edit"></i></a></p>
+														<a href="{% url 'add_address' %}">Add <i class="icon-edit"></i></a></p>
 								    				</div><!-- End .card-body -->
 								    			</div><!-- End .card-dashboard -->
-								    		</div><!-- End .col-lg-6 -->
-                                            
+								    		</div><!-- End .col-lg-6 -->                                            
 								    	</div><!-- End .row -->
 								    </div><!-- .End .tab-pane -->
 
-                                    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-            
-            
-                                        <a href="">
+                                    
+            <!------------------------------------ Edit Details ------------------------------------------>
 
-                                            <div class="d-flex justify-content-end mr-3">
-                                                <button class="btn btn-dark" id="addAddressBtn">Add New Address</button>
-                                            </div>
-                                        </a>
-                                        {% for address in addresses %}
-                                        <div class="address-container" style="border: 1px solid #333; margin: 10px; padding: 20px; color: black;">
-                                           
-                                            
-                                            
-                                                <div style="margin-bottom: 10px;">
-                                                    <span style="font-weight: bold;">Address {{ forloop.counter }}:</span>
-                                                    {{address.name}} <br>
-                                                    {{address.number}} <br>
-                                                    {{ address.address }}, {{ address.city }}, {{ address.state }}, {{ address.pincode }}<br>
-                                                </div>
-                                            
-                                            
-                                            <div class="d-flex justify-content-end">
-                                                <a href="/update_address/{{address.id}}" class="btn-primary" id="editAddressBtn1" style="font-size: 12px; width: 65px; margin-right: 10px; text-align: center; display: inline-block; line-height: 1.5;">Edit</a>
-                                                <a href="/remove_address/{{address.id}}" class="btn-danger" id="removeAddressBtn1" style="font-size: 12px; width: 65px; text-align: center; display: inline-block; line-height: 1.5;">Remove</a>
-
-                                            </div>
-                                        </div>
-                                        {% endfor %}
-                                    </div>
                                     <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
                                         <h6 class="text-center fs-1 font-monospace text-decoration-underline">Edit Details</h6>
                                         <form method="post" action="/update_profile/" id="update_form">
@@ -232,8 +192,7 @@
                                                     <label>Full Name</label>
                                                     <input type="text" name="name" class="form-control" value="{{ user.username }}">
                                                     <div class="error-class text-danger small "></div>
-                                                </div>
-                                               
+                                                </div>                                               
                                             </div>
                                             <label>Mobile Number</label>
                                             <input type="text" name="number" class="form-control" value="{{ user.number }}">
@@ -290,17 +249,11 @@
                     </div><!-- End .container -->
                 </div><!-- End .dashboard -->
             </div><!-- End .page-content -->
-            
-        </main><!-- End .main -->
-
-        
+        </main><!-- End .main -->        
     </div><!-- End .page-wrapper -->
+
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
-
-    
-
-    <!-- Sign in / Register Modal -->
-   
+      
     <!-- Plugins JS File -->
     <script src="{% static "/molla/assets/js/jquery.min.js" %}"></script>
     <script src="{% static "/molla/assets/js/bootstrap.bundle.min.js" %}"></script>
@@ -310,11 +263,5 @@
     <script src="{% static "/molla/assets/js/owl.carousel.min.js" %}"></script>
     <!-- Main JS /molla/File -->
     <script src="{% static "/molla/assets/js/main.js" %}"></script>
-                                                                                                        
-
-        
-
-{% comment %} <link rel="stylesheet" href="{% static "molla/assets/css/bootstrap.min.css" %}">
-    <!-- Main CSS File -->
-    <link rel="stylesheet" href="{% static "molla/assets/css/style.css" %}"> {% endcomment %}   
+                                                                                                 
 {% endblock %}

@@ -1,16 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
 
-
 {% block header %}
 {% include "inc/navbar.html" %}
 {% endblock header %}
 
-
-
 {% block content %}
-
-
     <!-- Breadcrumb Begin -->
     <div class="breadcrumb-option">
         <div class="container">
@@ -46,38 +41,31 @@
                     <div class="form-group">
                         <label for="full-name">Full Name</label>
                         <input type="text" name="name" value="{{ edit_address.name }}" class="form-control" required>
-                        <div class="error-message text-danger" id="full-name-error"></div>
                     </div>
                     <div class="form-group">
                         <label for="mobile-number">Mobile Number</label>
                         <input type="number" name="number" value="{{ edit_address.number }}" class="form-control" required>
-                        <div class="error-message text-danger" id="mobile-number-error"></div>
                     </div>
                     <div class="form-group">
                         <label for="address-line-1">Address</label>
                         <textarea name="address" class="form-control" rows="3" required>{{ edit_address.address }}"</textarea>
-                        <div class="error-message text-danger" id="address-line-error"></div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for "state">State</label>
                             <input type="text" name="state" value="{{ edit_address.state }}" class="form-control" required>
-                            <div class="error-message text-danger" id="state-error"></div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="city">District</label>
                             <input type="text" name="district" value="{{ edit_address.district }}" class="form-control" required>
-                            <div class="error-message text-danger" id="city-error"></div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="city">City</label>
                             <input type="text" name="city" value="{{ edit_address.city }}" class="form-control" required>
-                            <div class="error-message text-danger" id="city-error"></div>
                         </div>
                         <div class="form-group  col-md-6">
                             <label for="zip-code">Pin Code</label>
                             <input type="number" name="pincode" value="{{ edit_address.pincode }}" class="form-control" required>
-                            <div class="error-message text-danger" id="pin-code-error"></div>
                         </div>
                         
                     </div>
@@ -85,7 +73,6 @@
                     <div class="form-group">
                         <label for="landmark">Land Mark</label>
                         <input type="text" name="landmark" value="{{ edit_address.landmark }}" class="form-control" required>
-                        <div class="error-message text-danger" id="landmark-error"></div>
                     </div>
                     
                     <div class="form-group">
@@ -96,20 +83,20 @@
             </div>
         </div>
     </div>
-        {% endblock content %}
+
+{% endblock content %}
 
 
         
-        <!-- Instagram Begin -->
-       {% block instagram %}
-       {% include "inc/instagram.html" %}
-       {% endblock instagram %}
-        <!-- Instagram End -->
+<!-- Instagram Begin -->
+{% block instagram %}
+{% include "inc/instagram.html" %}
+{% endblock instagram %}
+<!-- Instagram End -->
 
-        <!-- Footer Section Begin -->
-        {% block footer %}
-        {% include "inc/footer.html" %}
-        {% endblock footer %}
-        <!-- Footer Section End -->
 
-        
+<!-- Footer Section Begin -->
+{% block footer %}
+{% include "inc/footer.html" %}
+{% endblock footer %}
+<!-- Footer Section End -->       

@@ -1,12 +1,7 @@
- 
-
 {% extends 'admin_base.html' %}
 {% load static %}
 
-
-
 {% block content %}
-
 <div>
     <div class="pagetitle">
         <div class="row align-items-center">
@@ -22,8 +17,6 @@
             </div>
         </div>
         </div>
-
-
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">Admin</li>
@@ -105,8 +98,6 @@
                             <!-- Add more options as needed -->
                         </select>
                     </div>
-
-
                     <div class="form-group">
                         <label for="percentage">Percentage</label>
                         <input id="percentage" name="percentage" type="number" class="form-control" required>
@@ -122,13 +113,7 @@
     </div>
 </div>
 
-
-
-
-
-
 {% for i in offers %}
-
 <div id="editEmployeeModal-{{forloop.counter}}" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -156,12 +141,9 @@
         </div>
     </div>
 </div>
-
 {% endfor %}
 
 <!-- Bootstrap JS and jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
 
 {% endblock content %}

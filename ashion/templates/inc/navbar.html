@@ -6,20 +6,20 @@
         <div class="offcanvas__close">+</div>
         <ul class="offcanvas__widget">
             <li><span class="icon_search search-switch"></span></li>
-            <li><a href="#"><span class="icon_heart_alt"></span>
-                <div class="tip">2</div>
+            <li><a href="/wishlist/"><span class="icon_heart_alt"></span>
+                <div class="tip">{{ wishlist_count }}</div>
             </a></li>
-            <li><a href="#"><span class="icon_bag_alt"></span>
-                <div class="tip">2</div>
+            <li><a href="/showcart/"><span class="icon_bag_alt"></span>
+                <div class="tip">{{ cart_count }}</div>
             </a></li>
         </ul>
         <div class="offcanvas__logo">
-            <a href="./index."><img src="img/logo.png" alt=""></a>
+            <a href="/"><img src="{% static "main/img/logo.png" %}" alt=""></a>
         </div>
         <div id="mobile-menu-wrap"></div>
         <div class="offcanvas__auth">
-            <a href="#">Login</a>
-            <a href="#">Register</a>
+            <a href="{% url "login" %}">Login</a>
+            <a href="{% url "signup" %}">Register</a>
         </div>
     </div>
     <!-- Offcanvas Menu End -->
@@ -38,18 +38,11 @@
 
                         <li class="active"><a href="{% url "home" %}">Home</a></li>
                         
-                        {% comment %} <li><a href="/product_list/?data=Women ">Women’s</a></li>
                         <li><a href="/product_list/?data=Men ">Men’s</a></li>
-                        <li><a href="/product_list/?data=Kids">Kids</a></li> {% endcomment %}
+                        <li><a href="/product_list/?data=Women ">Women’s</a></li>
+                        <li><a href="/product_list/?data=Kids">Kids</a></li>
                         
-                        
-                        {% for i in cat %}
-                          <li><a href="/product_list/?data={{ i.name }}">{{ i.name }}</a></li>
-                        {% endfor %} 
-                        
-                        
-                        <li>
-                        <a href="{% url "contact" %}">Contact</a></li>
+                        <li><a href="{% url "contact" %}">Contact</a></li>
                         {% if 'email' in request.session %}
 
                         <li><a href="">Profile</a>
@@ -68,46 +61,7 @@
             </div>
             <div class="col-lg-3">
                 <div class="header__right">
-                    <div class="header__right__auth">
-                        {% if 'email' in request.session %}
-                        
-{% comment %}                         
-                        <li class="nav-item dropdown" style="list-style: none; padding: 0; margin: 0;" data-hover="dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                My Account
-                            </a>
-                        
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/user_dashbord/">Profile</a>
-                                <a class="dropdown-item" href="/wishlist/">Wishlist</a>
-                                <a class="dropdown-item" href="/my_order/">Orders</a>
-                                <a class="dropdown-item" href="/showcart/">Cart</a>
-                                <a class="dropdown-item" href="{% url "logout" %}">Logout</a>
-                            </div>
-                        </li> {% endcomment %}
-
-                        {% else %}
-                        <a href="{% url "login" %}">Login</a>
-                        <a href="{% url "signup" %}">Register</a>
-                        {% endif %}
-                    </div>
-                    {% comment %} <div class="col-sm-6 col-md-6">
-						<div class="search-form-container " style="padding-bottom: 10px;">
-							<form method="POST" action="/search/" class="form-inline search-form my-2 my-lg-0">
-								<input class="form-control" type="search" placeholder="Search" aria-label="Search" name="search" required>
-								{% csrf_token %}
-								<button class="btn btn-primary my-sm-0" type="submit">Search</button>
-							</form>
-						</div>
-					</div> {% endcomment %}
-
-
-
-     
-        
-                   
                     <ul class="header__right__widget">
-                       
                         <li>
                         <div class="header-search">
                             <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
@@ -120,13 +74,19 @@
                             </form>
                         </div><!-- End .header-search -->
                     </li>
-                        <li><a href="/wishlist/"><span class="icon_heart_alt"></span>
-                            <div class="tip">{{ wishlist_count }}</div>
-                        </a></li>
-                        <li><a href="/showcart/"><span class="icon_bag_alt"></span>
-                            <div class="tip">{{ cart_count }}</div>
-                        </a></li>
-                    </ul>
+                    <li><a href="/wishlist/"><span class="icon_heart_alt"></span>
+                        <div class="tip">{{ wishlist_count }}</div>
+                    </a></li>
+                    <li><a href="/showcart/"><span class="icon_bag_alt"></span>
+                        <div class="tip">{{ cart_count }}</div>
+                    </a></li>
+                </ul>
+                <div class="header__right__auth">
+                    {% if not 'email' in request.session %}
+                    <a href="{% url "login" %}">Login</a>
+                    <a href="{% url "signup" %}">Register</a>
+                    {% endif %}
+                </div>  
                 </div>
             </div>
         </div>
@@ -137,11 +97,4 @@
 </header>
 
 
-
-<script>
-    $(document).ready(function() {
-        // Enable Bootstrap's hover dropdown
-        $('[data-hover="dropdown"]').dropdownHover();
-    });
-</script>
 

@@ -63,13 +63,11 @@
 
 <!-- Footer Section Begin -->
 {% block footer %}{% endblock footer %}
-
-{% comment %} {% include "inc/footer.html" %} {% endcomment %}
-
 <!-- Footer Section End -->
 
-<div id="message-container" style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;"></div>
 
+
+<div id="message-container" style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;"></div>
 
 {% if messages %}
     {% for message in messages %}
@@ -88,30 +86,8 @@
 {% endif %}
 
 
-{% comment %} <div class="header-search">
-    <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
-    <form action="#" method="get">
-        <div class="header-search-wrapper">
-            <label for="q" class="sr-only">Search</label>
-            <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
-        </div><!-- End .header-search-wrapper -->
-    </form>
-</div><!-- End .header-search --> {% endcomment %}
 
 
-
-
-{% comment %} <!-- Search Begin -->
-<div class="search-model">
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <div class="search-close-switch">+</div>
-        <form action="{% url "Search_Products" %}" class="search-model-form" method="get" >
-            {% csrf_token %}
-            <input name="query" type="text" id="search-input" placeholder="Search here.....">
-        </form>
-    </div>
-</div>
-<!-- Search End --> {% endcomment %}
 
 <!-- Js Plugins -->
 <script src="{% static "/main/js/jquery-3.3.1.min.js" %}"></script>

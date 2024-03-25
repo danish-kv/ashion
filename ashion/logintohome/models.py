@@ -3,18 +3,19 @@ import pyotp
 from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-import string, random
+import string
+import random
 # Create your models here.
 
 
 # user model
 class Customer(models.Model):
     username = models.CharField(max_length=100)
-    number = models.BigIntegerField(unique = True)
-    email = models.EmailField(max_length=150,unique=True)
+    number = models.BigIntegerField(unique=True)
+    email = models.EmailField(max_length=150, unique=True)
     password = models.CharField(max_length=500)
-    dob =  models.DateField(null = True)
-    gender = models.CharField(max_length=50, null = True)
+    dob = models.DateField(null=True)
+    gender = models.CharField(max_length=50, null=True)
     date_joined = models.DateTimeField()
     otp_field = models.CharField(max_length=10)
     is_verified = models.BooleanField(default=False)
@@ -23,7 +24,7 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.username
-    
+
     def save(self, *args, **kwargs):
         # Generate a referral code if it doesn't exist
         if not self.referral_code:
@@ -38,15 +39,14 @@ class Customer(models.Model):
 
     def generate_referral_code(self):
         # Generate a random 5-character alphanumeric code
-        return ''.join(random.choices(string.ascii_letters + string.digits, k=5))
-    
+        return "".join(random.choices(string.ascii_letters + string.digits, k=5))
 
 
-#generating otp
+# generating otp
 def generate_otp(user):
     totp = pyotp.TOTP(pyotp.random_base32())
     otp = totp.now()
-    user1 = Customer.objects.get(id = user.id)
+    user1 = Customer.objects.get(id=user.id)
     user1.otp_field = otp
     user1.save()
     return otp

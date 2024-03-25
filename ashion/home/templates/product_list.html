@@ -78,33 +78,36 @@
                             </div>
                             <a href="#">Filter</a>
                         </div>
-                        <div class="sidebar__sizes">
+                        {% comment %} <div class="sidebar__sizes">
                             <div class="section-title">
                                 <h4>Shop by size</h4>
                             </div>
                             <div class="size__list">
-                                
-                                <label for="s">
-                                    s
-                                    <input type="checkbox" id="s">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label for="m">
-                                    m
-                                    <input type="checkbox" id="m">
-                                    <span class="checkmark"></span>
-                                </label>
-                                
-                                <label for="l">
-                                    l
-                                    <input type="checkbox" id="l">
-                                    <span class="checkmark"></span>
-                                </label>
+                                <form method="GET" action="">
+                                    <label for="s">
+                                        s
+                                        <input type="checkbox" name="size" value="s" id="s">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <label for="m">
+                                        m
+                                        <input type="checkbox" name="size" value="m" id="m">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <label for="l">
+                                        l
+                                        <input type="checkbox" name="size" value="l" id="l">
+                                        <span class="checkmark"></span> 
+                                    </label>
+                                    <button type="submit">Apply</button>
+                                    
+                                </form>
                             </div>
-                        </div>
-                        
+                        </div> {% endcomment %}
                     </div>
                 </div>
+
+                
                
                 <div class="col-lg-9 col-md-9">
                     {% if product %}
@@ -114,12 +117,10 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="product__item">
                                 {% if p.img1 %}
-                                <div class="product__item__pic set-bg" alt='ima' data-setbg="{% static p.img1.url %}" >
+                                <div class="product__item__pic set-bg" alt='ima' data-setbg="{{ p.img1.url }}" >
                                  <a href="/product_details/{{p.id}}"><img href="#" src="{{p.img1.url}}" alt="jhasdkfl"></a>
-                                    {% comment %} <div class="label new">New</div> {% endcomment %}
                                     <ul class="product__hover">
                                         <li><a href="{{ p.img1.url }}" class="image-popup"><span class="arrow_expand"></span></a></li>
-<!-- Product List template -->
                                         <li><a href="{% url 'add_to_wishlist' id=p.id from_page='product_list' %}?data={{ request.GET.data }}"><span class="icon_heart_alt"></span></a></li>
                                         <li><a href="#"><span class="icon_bag_alt"></span></a></li>
                                     </ul>
@@ -178,27 +179,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
-    {% comment %} <script>
-      function sortProducts(criteria) {
-        // Add logic to sort and update product listings based on the selected criteria
-        console.log(`Sorting by: ${criteria}`);
-        // Update product listings here
-      }
-    </script> {% endcomment %}
-    
-{% comment %} <script>
-    function finalUrl() {
-        // Construct the final URL based on the selected sorting option
-        var selectedOption = document.getElementById("sortby");
-        var selectedValue = selectedOption.options[selectedOption.selectedIndex].value;
-        
-        // Assuming you want to redirect to the current URL with the selected sorting option
-        var currentUrl = window.location.href;
-        var finalUrl = currentUrl + "?sortby=" + selectedValue;
-
-        return finalUrl;
-    }
-</script> {% endcomment %}
 
     <!-- Shop Section End -->
     {% endblock content %}

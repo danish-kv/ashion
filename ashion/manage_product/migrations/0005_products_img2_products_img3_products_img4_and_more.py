@@ -5,34 +5,36 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_category', '0004_subcategory'),
-        ('manage_product', '0004_products_gender_products_sub_category'),
+        ("manage_category", "0004_subcategory"),
+        ("manage_product", "0004_products_gender_products_sub_category"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='products',
-            name='img2',
-            field=models.ImageField(default=11, upload_to='media/'),
+            model_name="products",
+            name="img2",
+            field=models.ImageField(default=11, upload_to="media/"),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='products',
-            name='img3',
-            field=models.ImageField(default=23, upload_to='media/'),
+            model_name="products",
+            name="img3",
+            field=models.ImageField(default=23, upload_to="media/"),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='products',
-            name='img4',
-            field=models.ImageField(default=1, upload_to='media/'),
+            model_name="products",
+            name="img4",
+            field=models.ImageField(default=1, upload_to="media/"),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='products',
-            name='sub_category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='manage_category.subcategory'),
+            model_name="products",
+            name="sub_category",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="manage_category.subcategory",
+            ),
         ),
     ]

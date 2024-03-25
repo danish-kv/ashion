@@ -4,23 +4,25 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_product', '0015_alter_variant_unique_together_products_stock_and_more'),
+        (
+            "manage_product",
+            "0015_alter_variant_unique_together_products_stock_and_more",
+        ),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='products',
-            name='stock',
+            model_name="products",
+            name="stock",
         ),
         migrations.RemoveField(
-            model_name='variant',
-            name='color',
+            model_name="variant",
+            name="color",
         ),
         migrations.AddField(
-            model_name='variant',
-            name='stock',
+            model_name="variant",
+            name="stock",
             field=models.PositiveIntegerField(blank=True, default=0, null=True),
         ),
     ]

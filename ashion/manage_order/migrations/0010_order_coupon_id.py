@@ -5,16 +5,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_coupen', '0003_rename_name_coupons_title'),
-        ('manage_order', '0009_rename_returns_orderreturns_and_more'),
+        ("manage_coupen", "0003_rename_name_coupons_title"),
+        ("manage_order", "0009_rename_returns_orderreturns_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='order',
-            name='coupon_id',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='manage_coupen.coupons'),
+            model_name="order",
+            name="coupon_id",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="manage_coupen.coupons",
+            ),
         ),
     ]

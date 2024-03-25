@@ -31,13 +31,6 @@
                         <input type="number" placeholder="Enter OTP" class="form-control" name="otp" id="otp" required>
                     </div>
                     <button type="submit" class="btn btn-login btn-block">Verify OTP</button>
-
-                    {% if messages %}
-                    <ul class="messages  " style="list-style: none; color:red">
-                        {% for message in messages %}
-                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
                 {% endif %}
                 </form>
             </div>

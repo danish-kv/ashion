@@ -11,22 +11,20 @@
 </head>
 <body>
 
-
-
 <div class="container mt-4" >
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8" id="id="hidediv"">
             <h2 class="mb-3">Sales Report</h2>
+        </div>
+        <div class="col-md-8">
+            <a href="/adminhome/" class="btn btn-primary">Home</a>
         </div>
         <div class="col-md-4 text-right" id="hidediv">
             <button id="downloadBtn" onclick="downloadInvoice()" class="btn btn-danger">Download</button>
             <button id="downloadExcel"  class="btn btn-danger">Excel</button>
             <p> {{ date_of_download }}</p>
-            
-            
         </div>
     </div>
-
     <table class="table" >
         <thead>
             <tr>
@@ -55,15 +53,12 @@
                     <td>{{ order.user.username }}</td>
                     <td>{{ order.address.address }}</td>
                     <td>{{ order.total_amount|div:order.quantity }}</td>
-
                     <td>{{ order.quantity }}</td>
-
                     {% if order.order_id.coupon_id %}
                         <td>{{ order.order_id.coupon_id.discount_amount }}</td>
                     {% else %}
                         <td>Not Applied</td>
                     {% endif %}
-                    
                     <td>{{ order.total_amount }}</td>
                     <td>{{ order.size }}</td>
                     <td>{{ order.order_id.payment_method }}</td>
@@ -78,15 +73,10 @@
 
 <!-- Include Bootstrap JS and jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-``
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-
-
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 <script src="https://kit.fontawesome.com/412a20d28b.js" crossorigin="anonymous"></script>
-
-
 
 <script>
     function downloadInvoice() 
@@ -101,8 +91,7 @@
           if (downloadButton) {
               downloadButton.style.display = 'none';
           }
-      }
-  
+      }  
       function showDownloadButton() {
           const downloadButton = document.getElementById('hidediv');
 
@@ -111,15 +100,13 @@
           }
       }
     }
-
     function downloadExcel() {
         var salesReportData = [
           {% for order in orders %}
           {
             "order id":" {{order.id}}",
             "product name": "{{ order.product.product_id.name }} {{ order.product.product_id.name }}",
-            "User": "{{ order.user.username }}",
-            
+            "User": "{{ order.user.username }}",            
             "address": "{{ order.address.address }}",
             "price": "{{ order.product.product_id.selling_price }} ",
             " quantity": " {{ order.quantity }}",
@@ -134,8 +121,7 @@
             "payment method": "{{ order.order_id.payment_method }}",
             "order date": "{{ order.order_id.order_date }}",
             "delivery date": "{{ order.delivery_date }}",
-            "status": "{{ order.status }}",
-            
+            "status": "{{ order.status }}",            
           }
           {% if not forloop.last %},{% endif %}
           {% endfor %}
@@ -148,18 +134,7 @@
         XLSX.writeFile(wb, "sales_report.xlsx");
       }
       
-      document.getElementById("downloadExcel").addEventListener("click", downloadExcel);
-
-
-
-
-
-
-
-    
+      document.getElementById("downloadExcel").addEventListener("click", downloadExcel);    
 </script>
-
-
-
 </body>
 </html>

@@ -1,92 +1,84 @@
 from django.shortcuts import render, redirect
-from .models import Brand, Category
+from .models import Category
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 
 
-
-
-
-@login_required(login_url='adminlogin')
+@login_required(login_url="adminlogin")
 def category_view(request):
-    if 'email' in request.session:
-        return redirect('error_page')
+    if "email" in request.session:
+        return redirect("error_page")
 
     categories = Category.objects.all()
-    context = {'category' : categories}
-    return render(request, 'category.html',context)
-    
+    context = {"category": categories}
+    return render(request, "category.html", context)
 
 
-
-
-@login_required(login_url='adminlogin')
+@login_required(login_url="adminlogin")
 def add_category_view(request):
-    if 'email' in request.session:
-        return redirect('error_page')
-
+    if "email" in request.session:
+        return redirect("error_page")
 
     if request.method == "POST":
-        category_name = request.POST.get('category_name')
-        is_listed = request.POST.get('is_listed') == 'on'
+        category_name = request.POST.get("category_name")
+        is_listed = request.POST.get("is_listed") == "on"
 
         if category_name.strip() == "":
-            messages.error(request,'Please enter Category Name')
+            messages.error(request, "Please enter Category Name")
             return redirect(add_category_view)
-        
+
         if Category.objects.filter(name__contains=category_name).exists():
-            messages.error(request, f'Category with name "{category_name}" already exists!')
-            return redirect('addcategory')
-        
-        Subdata  = Category(name = category_name, is_listed=is_listed)
+            messages.error(
+                request, f'Category with name "{category_name}" already exists!'
+            )
+            return redirect("addcategory")
+
+        Subdata = Category(name=category_name, is_listed=is_listed)
         Subdata.save()
-        messages.success(request,f'{category_name} added ')
-        return redirect('category')
-    
-    return render(request, 'add_category.html')
+        messages.success(request, f"{category_name} added ")
+        return redirect("category")
+
+    return render(request, "add_category.html")
 
 
-@login_required(login_url='adminlogin')
-def edit_category_view(request,id):
-    if 'email' in request.session:
-        return redirect('error_page')
+@login_required(login_url="adminlogin")
+def edit_category_view(request, id):
+    if "email" in request.session:
+        return redirect("error_page")
 
-    if request.method == 'POST':
-        name = request.POST.get('category_name')
-        is_listed = request.POST.get('is_listed') == 'on'
+    if request.method == "POST":
+        name = request.POST.get("category_name")
+        is_listed = request.POST.get("is_listed") == "on"
 
         if name.strip() == "":
-            messages.error(request,'Please enter Category Name')
-            return redirect(edit_category_view,id)
+            messages.error(request, "Please enter Category Name")
+            return redirect(edit_category_view, id)
 
-        obj = Category.objects.get(id = id)
+        obj = Category.objects.get(id=id)
         obj.name = name
         obj.is_listed = is_listed
         obj.save()
-        messages.success(request,f'{name} edited')
-        return redirect('category')
-    obj1 = Category.objects.get(id = id)
-    context = {'category' : obj1 }
-    return render(request, 'edit_category.html',context)  
-    
+        messages.success(request, f"{name} edited")
+        return redirect("category")
+    obj1 = Category.objects.get(id=id)
+    context = {"category": obj1}
+    return render(request, "edit_category.html", context)
 
 
-@login_required(login_url='adminlogin')
+@login_required(login_url="adminlogin")
 @never_cache
-def list_category(request,id):
-    obj = Category.objects.get(id = id)
+def list_category(request, id):
+    obj = Category.objects.get(id=id)
     obj.is_listed = True
     obj.save()
-    return redirect('category')
+    return redirect("category")
 
 
-@login_required(login_url='adminlogin')
+@login_required(login_url="adminlogin")
 @never_cache
-def unlist_category(request,id):
-
-    obj = Category.objects.get(id = id)
+def unlist_category(request, id):
+    obj = Category.objects.get(id=id)
     obj.is_listed = False
     obj.save()
-    return redirect('category')
-    
+    return redirect("category")

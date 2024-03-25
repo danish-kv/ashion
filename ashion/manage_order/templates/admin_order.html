@@ -16,11 +16,12 @@
             <div class="col-md-6">
                 <h1>Orders</h1>
             </div>
-            {% comment %} <div class="col-md-6 text-end">
-                <div class="addproductbutton">
-                    <a href="/cancel_request/" class="btn btn-danger mt-2">Cancel Requests</a>
-                </div>
-            </div> {% endcomment %}
+            <div class="col-md-6 text-end">
+                <form class="d-flex justify-content-end" method="GET" action="">
+                    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" name="search">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </form>
+            </div>
         </div>
         <nav>
             <ol class="breadcrumb">
@@ -36,7 +37,7 @@
         <div class="card recent-sales overflow-auto">
             <div class="card-body">
                 <table class="table table-border datatable  mt-3">
-                    <thead>
+                    <thead>                        
                         <tr>
                             <th>Order ID</th>
                             <th>Order Date</th>
@@ -44,7 +45,6 @@
                             <th>Amount</th>
                             <th>Order Status</th>
                             <th>Details</th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -74,6 +74,55 @@
                         <!-- Repeat this block for additional dummy content -->
                     </tbody>
                 </table>
+
+<!------------------------------ pagination -------------------------->
+        {% if order.paginator.num_pages > 1 %}
+            {% if not disable_pagination %}
+                <div class="pagination justify-content-center">
+                    <ul class="pagination">
+                        {% if order.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">&laquo; First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ order.previous_page_number }}">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo; First</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                        {% endif %}
+                        
+                        <li class="page-item">
+                            <span class="page-link">
+                                Page {{ order.number }} of {{ order.paginator.num_pages }}
+                            </span>
+                        </li>
+                        
+                        {% if order.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ order.next_page_number }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ order.paginator.num_pages }}">Last &raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">Last &raquo;</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+            {% endif %}
+        <!------------------------------ end pagination -------------------------->
+
             </div>
         </div>
     </div><!-- End Recent Sales -->

@@ -73,7 +73,6 @@
                                         <th scope="col">Quantity</th>
                                         <th scope="col">Total Price</th>
                                         <th scope="col">Status</th>                                        
-                                        {% comment %} <th scope="col">Action</th> {% endcomment %}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -89,8 +88,6 @@
                                         <td class="align-middle">{{ord.quantity}}</td>
                                         <td class="align-middle">{{ ord.total_amount }}</td>
                                         <td class="align-middle">{{ ord.status }}</td>
-
-                                       
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -110,6 +107,9 @@
                                 {{ addr.address.city }}, {{ addr.address.pincode }}<br>
                             </label>
                             <h5>Payment Method : <strong>{{ addr.payment_method  }}</strong></h5>
+                            {% if offer  %}
+                                <h5>Coupon : <strong>{{ offer.discount_amount }}</strong></h5> 
+                            {% endif %}
                             <h5>Total Amount : <strong> {{ addr.total_amount}} </strong> </h5>
                             {% for i in orders|slice:1 %}
                             <h5>Delivery Date: <strong>{{ i.delivery_date }} </strong></h5></h5>
@@ -119,10 +119,8 @@
                 </div>
                 <div class="text-center mt-4">
                     <a href="/my_order/" class="btn btn-dark continue-btn mb-4"><i class="bi bi-house-door"></i> Go Back</a>
-                    
-                    <a href="/invoice/" class="btn btn-primary continue-btn mb-4" target="_blank">
-                        <i class="bi bi-house-door"></i>
-                       Download Invoice
+                    <a href="/show_invoice/{{ addr.id }}" class="btn btn-primary continue-btn mb-4" target="_blank" >
+                        Show Invoice
                     </a>
                 </div>
                 <div class="text-center mt-4">

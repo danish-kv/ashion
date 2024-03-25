@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class ManageProductConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'manage_product'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "manage_product"

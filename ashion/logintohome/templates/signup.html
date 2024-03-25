@@ -57,13 +57,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-signup btn-block">Sign Up</button>
-                    {% if messages %}
-                    <ul class="messages  " style="list-style: none; color:red">
-                        {% for message in messages %}
-                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
+                
                 <a href="{% url 'login' %}" >i have already account</a>
             </form>
             </div>

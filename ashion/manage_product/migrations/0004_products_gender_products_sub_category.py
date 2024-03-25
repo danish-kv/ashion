@@ -4,21 +4,39 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_product', '0003_remove_products_img2_remove_products_img3_and_more'),
+        ("manage_product", "0003_remove_products_img2_remove_products_img3_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='products',
-            name='gender',
-            field=models.CharField(choices=[('Men', 'men'), ('Women', 'women'), ('Kids', 'kids')], default='all', max_length=10),
+            model_name="products",
+            name="gender",
+            field=models.CharField(
+                choices=[("Men", "men"), ("Women", "women"), ("Kids", "kids")],
+                default="all",
+                max_length=10,
+            ),
         ),
         migrations.AddField(
-            model_name='products',
-            name='sub_category',
-            field=models.CharField(choices=[('Shirt', 'shirt'), ('Pant', 'pant'), ('T-Shirt', 't-shirt'), ('Churidar', 'churidar'), ('Salwar', 'salwar'), ('Sarees', 'sarees'), ('Skirts', 'skirts'), ('Frock', ' frock'), ('Kids-Tshirt', 'kids-tshirt'), ('Kids-Pant', 'kids-pant')], default=0, max_length=20),
+            model_name="products",
+            name="sub_category",
+            field=models.CharField(
+                choices=[
+                    ("Shirt", "shirt"),
+                    ("Pant", "pant"),
+                    ("T-Shirt", "t-shirt"),
+                    ("Churidar", "churidar"),
+                    ("Salwar", "salwar"),
+                    ("Sarees", "sarees"),
+                    ("Skirts", "skirts"),
+                    ("Frock", " frock"),
+                    ("Kids-Tshirt", "kids-tshirt"),
+                    ("Kids-Pant", "kids-pant"),
+                ],
+                default=0,
+                max_length=20,
+            ),
             preserve_default=False,
         ),
     ]

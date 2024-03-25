@@ -2,18 +2,24 @@
 
 {% extends 'admin_base.html' %}
 {% load static %}
-{% comment %} {% block title %} Add Product{% endblock title %}
-{% block products %}{% endblock products %} {% endcomment %}
-
 
 {% block content %}
-{% comment %} <style>
-    .table td,{
-        display: flex;
-        align-items: center;
-        justify-content: center;
+
+<style>
+    .pagination .page-link {
+        color: #007bff; /* Blue color for links */
     }
-</style> {% endcomment %}
+
+    .pagination .page-item.active .page-link {
+        background-color: #007bff; /* Blue background color for active page */
+        border-color: #007bff; /* Blue border color for active page */
+    }
+
+    .pagination .page-link:hover {
+        color: #0056b3; /* Darker blue color on hover */
+    }
+</style>
+
 <div>
     <div class="pagetitle">
         <div class="row align-items-center">
@@ -21,6 +27,12 @@
                 <h1>Products</h1>
             </div>
             <div class="col-md-6 text-end">
+                <form class="d-flex justify-content-end" method="GET" action="">
+                    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" name="search">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="col-md-12 text-end">
                 <div class="addproductbutton">
                     <a href="/addproduct/" class="btn btn-dark mt-2">Add Products</a>
                 </div>
@@ -30,10 +42,9 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">Admin</li>
                 <li class="breadcrumb-item active">Products</li>
+                
             </ol>
         </nav>
-
-
     </div>
     <!-- End Page Title -->
 
@@ -47,12 +58,10 @@
                             <th>ID</th>
                             <th>Product Image</th>
                             <th>Product Name</th>
-                            {% comment %} <th>Offer</th> {% endcomment %}
                             <th>Variant Details</th>
                             <th>Category</th>
                             <th>Price</th>
-                            <th>Actions</th>
-                            
+                            <th>Actions</th>                           
                         </tr>
                     </thead>
                     <tbody>
@@ -67,13 +76,6 @@
                             <td class="align-middle">
                                 {{i.name}}
                             </td>
-                            {% comment %} <td class="align-middle">
-                                {% if i.variant_set.all %}
-                                <a href='/variant/{{i.id}}' type="button" class="btn btn-sm btn-primary ">Show offer</a>
-                                {% else %}
-                                <a href='/add_variant/{{i.id}}' type="button" class="btn btn-sm btn-danger ">Add Offer</a>
-                                {% endif %}
-                            </td>  {% endcomment %}
                              
                             <td class="align-middle">
                                 {% if i.variant_set.all %}
@@ -101,53 +103,65 @@
                             </td> 
                         </tr>
                         {% endfor %}
+                        
                     </tbody>
                 </table>
+
+<!------------------------------ pagination -------------------------->
+        {% if product.paginator.num_pages > 1 %}
+             {% if not disable_pagination %}
+                <div class="pagination justify-content-center">
+                    <ul class="pagination">
+                        {% if product.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">&laquo; First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ product.previous_page_number }}">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo; First</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                        {% endif %}
+                        
+                        <li class="page-item">
+                            <span class="page-link">
+                                Page {{ product.number }} of {{ product.paginator.num_pages }}
+                            </span>
+                        </li>
+                        
+                        {% if product.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ product.next_page_number }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ product.paginator.num_pages }}">Last &raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">Last &raquo;</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                 {% endif %}
+                {% endif %} 
+<!------------------------------ pagination end -------------------------------->
+                
             </div>
         </div>
     </div><!-- End Recent Sales -->
 <div>
 
 
-{% comment %} <script>
-    function handleImageUpload(files) {
-        let imagesError = document.getElementById("images-error");
-        imagesError.textContent = "";
-
-        if (files.length === 0) {
-            imagesError.textContent = "Please select at least one image";
-        }
-    }
-
-    document.getElementById("add-product-form").addEventListener("submit", function (event) {
-        let name = document.getElementById("id_name").value;
-        let description = document.getElementById("id_description").value;
-        let images = document.getElementById("id_images").files;
-
-        let nameError = document.getElementById("name-error");
-        let descriptionError = document.getElementById("description-error");
-        let imagesError = document.getElementById("images-error");
-
-        nameError.textContent = "";
-        descriptionError.textContent = "";
-        imagesError.textContent = "";
-
-        if (name.trim() === "") {
-            nameError.textContent = "Product name is required";
-            event.preventDefault();
-        }
-
-        if (description.trim() === "") {
-            descriptionError.textContent = "Description is required";
-            event.preventDefault();
-        }
-
-        if (images.length === 0) {
-            imagesError.textContent = "Please select at least one image";
-            event.preventDefault();
-        }
-    });
-</script> {% endcomment %}
 <!-- Add these lines in the <head> section of your HTML template -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>

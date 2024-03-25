@@ -27,14 +27,12 @@
                     <label for="id_product" class="col-sm-2 col-form-label">Product Name</label>
                     <div class="col-sm-10">
                         <input type="text" name="name" id="id_name" class="form-control" value="{{variant.product_id}} "readonly >
-                        <div class="text-danger error-message" id="name-error"></div>
                     </div>
                 </div> 
                 <div class="row mb-3">
                     <label for="id_size" class="col-sm-2 col-form-label">Variant size</label>
                     <div class="col-sm-10 col-md-4">
                         <input type="text" name="size" id="id_size" class="form-control" value="{{variant.size}} "readonly >
-                        <div class="text-danger error-message" id="name-error"></div>
                     </div>
                 </div> 
                                                
@@ -42,14 +40,8 @@
                     <label for="id_stock" class="col-sm-2 col-form-label">Update Quantity</label>
                     <div class="col-sm-10 col-md-4">
                         <input type="number" name="stock" value="{{variant.stock}}" class="form-control" id="stock">
-                        <div class="text-danger error-message" id="stock-error"></div>
                     </div>
                 </div>
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="text-danger">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
             
                 <div class="row mb-3">
                     <div class="col-sm-2"></div>
@@ -65,46 +57,6 @@
 <!-- Add these lines in the <head> section of your HTML template -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    
-{% comment %} <script>
-    document.getElementById("add-product-form").addEventListener("submit", function (event) {
-        let size = document.getElementById("size").value;
-        let quantity = document.getElementById("quantity").value;
-        let price = document.getElementById("price").value;
-        let discountPercent = document.getElementById("discount-percent").value;
-
-        let sizeError = document.getElementById("size-error");
-        let quantityError = document.getElementById("quantity-error");
-        let priceError = document.getElementById("price-error");
-        let discountPercentError = document.getElementById("discount-percent-error");
-
-        sizeError.textContent = "";
-        quantityError.textContent = "";
-        priceError.textContent = "";
-        discountPercentError.textContent = "";
-
-        if (size.trim() === "") {
-            sizeError.textContent = "Size is required";
-            event.preventDefault();
-        }
-
-        if (isNaN(quantity) || quantity <= 0) {
-            quantityError.textContent = "Quantity must be a positive number";
-            event.preventDefault();
-        }
-
-        if (isNaN(price) || price <= 0) {
-            priceError.textContent = "Price must be a positive number";
-            event.preventDefault();
-        }
-
-        if (isNaN(discountPercent) || discountPercent < 0 || discountPercent > 100) {
-            discountPercentError.textContent = "Discount percent must be between 0 and 100";
-            event.preventDefault();
-        }
-    });
-    </script> {% endcomment %}
-    
 
 {% endblock content %}
 

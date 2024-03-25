@@ -5,26 +5,33 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('logintohome', '0001_initial'),
-        ('manage_order', '0006_cancelledorder'),
+        ("logintohome", "0001_initial"),
+        ("manage_order", "0006_cancelledorder"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cancelledorder',
-            name='user_id',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='logintohome.customer'),
+            model_name="cancelledorder",
+            name="user_id",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="logintohome.customer",
+            ),
         ),
         migrations.AlterField(
-            model_name='cancelledorder',
-            name='cancel_reason',
+            model_name="cancelledorder",
+            name="cancel_reason",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='cancelledorder',
-            name='order_id',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='manage_order.orderedproducts'),
+            model_name="cancelledorder",
+            name="order_id",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="manage_order.orderedproducts",
+            ),
         ),
     ]

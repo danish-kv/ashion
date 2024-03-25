@@ -4,25 +4,39 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Coupons',
+            name="Coupons",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=50, null=True)),
-                ('code', models.CharField(blank=True, max_length=50, null=True, unique=True)),
-                ('discount_amount', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
-                ('start_date', models.DateField(blank=True, null=True)),
-                ('end_date', models.DateField(blank=True, null=True)),
-                ('limit', models.PositiveBigIntegerField(blank=True, null=True)),
-                ('active', models.BooleanField(default=True)),
-                ('created', models.DateField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=50, null=True)),
+                (
+                    "code",
+                    models.CharField(blank=True, max_length=50, null=True, unique=True),
+                ),
+                (
+                    "discount_amount",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, max_digits=10, null=True
+                    ),
+                ),
+                ("start_date", models.DateField(blank=True, null=True)),
+                ("end_date", models.DateField(blank=True, null=True)),
+                ("limit", models.PositiveBigIntegerField(blank=True, null=True)),
+                ("active", models.BooleanField(default=True)),
+                ("created", models.DateField(auto_now_add=True)),
             ],
         ),
     ]

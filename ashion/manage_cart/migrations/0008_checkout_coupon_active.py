@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_cart', '0007_checkout_coupon'),
+        ("manage_cart", "0007_checkout_coupon"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='checkout',
-            name='coupon_active',
+            model_name="checkout",
+            name="coupon_active",
             field=models.BooleanField(default=False, null=True),
         ),
     ]

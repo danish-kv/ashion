@@ -4,20 +4,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('logintohome', '0001_initial'),
-        ('manage_order', '0008_alter_orderedproducts_status'),
+        ("logintohome", "0001_initial"),
+        ("manage_order", "0008_alter_orderedproducts_status"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='Returns',
-            new_name='OrderReturns',
+            old_name="Returns",
+            new_name="OrderReturns",
         ),
         migrations.AlterField(
-            model_name='orderedproducts',
-            name='status',
-            field=models.CharField(choices=[('Order confirmed', 'Order confirmed'), ('Shipped', 'Shipped'), ('Out for delivery', 'Out for delivery'), ('Delivered', 'Delivered'), ('Cancelled', 'Cancelled'), ('Returned', 'Returned')]),
+            model_name="orderedproducts",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("Order confirmed", "Order confirmed"),
+                    ("Shipped", "Shipped"),
+                    ("Out for delivery", "Out for delivery"),
+                    ("Delivered", "Delivered"),
+                    ("Cancelled", "Cancelled"),
+                    ("Returned", "Returned"),
+                ]
+            ),
         ),
     ]

@@ -4,18 +4,17 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_product', '0013_alter_variant_unique_together'),
+        ("manage_product", "0013_alter_variant_unique_together"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='products',
-            name='brand',
+            model_name="products",
+            name="brand",
         ),
         migrations.RemoveField(
-            model_name='products',
-            name='gender',
+            model_name="products",
+            name="gender",
         ),
     ]

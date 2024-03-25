@@ -2,15 +2,9 @@
 {% load static %}
 
 
-
-
 {% block header %}
 {% include "inc/navbar.html" %}
 {% endblock header %}
-
-
-
-
 
 {% block content %}
 
@@ -56,35 +50,6 @@
         </div>       
     </div>
 </section>
-{% comment %} 
-<!-- Modal -->
-<div class="modal" id="cancelModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content mar">
-            <div class="modal-header">
-                <h5 class="modal-title">Reason for Cancellation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <!-- Include the order ID in the modal form -->
-                    <input type="hidden" id="cancelOrderID" name="orderid">
-                    <label for="cancelReason">Please provide a reason:</label>
-                    <textarea id="cancelReason" class="form-control" rows="4" cols="50"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger" onclick="submitCancelation()">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> {% endcomment %}
-
-
 
 {% for i in order %}
 <div class="modal fade" id="ReturnModal-{{forloop.counter}}" tabindex="-1" role="dialog">
@@ -134,42 +99,6 @@
     </div>
 </div>
 {% endfor %}
-
-
-
-{% comment %} 
-  <div class="modal" id="cancelModal" tabindex="-1" role="dialog">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content mar">
-					<div class="modal-header">
-						<h5 class="modal-title">Reason for Cancellation</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-                    
-					<form method="post" action="/cancel_reason/{{i.id}}">
-						{% csrf_token %}
-						<div class="modal-body">
-							<!-- Include the order ID in the modal form -->
-							<input type="hidden" id="cancelOrderID" name="orderid">
-							<label for="cancelReason">Please provide a reason:</label>
-							<textarea id="cancelReason" required class="form-control" name="reason" rows="4" cols="50"></textarea>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-							<button type="submit" class="btn btn-danger" >Submit</button>
-						</div>
-					</form>
-                    
-				</div>
-			</div>
-		</div>
- {% endcomment %}
-
-
-
-
 
 {% endblock content %}
 

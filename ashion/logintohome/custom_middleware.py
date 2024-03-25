@@ -1,8 +1,4 @@
-from django.urls import reverse
-from django.contrib import messages
-from django.shortcuts import redirect
-from .models import Customer  
-from django.contrib.auth import logout
+from .models import Customer
 
 
 class BlockMiddleware:
@@ -10,12 +6,14 @@ class BlockMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if 'email' in request.session and Customer.objects.filter(email=request.session['email']).exists():
-            user = Customer.objects.get(email=request.session['email'])
+        if (
+            "email" in request.session
+            and Customer.objects.filter(email=request.session["email"]).exists()
+        ):
+            user = Customer.objects.get(email=request.session["email"])
             if user.is_blocked:
-                del request.session['email']
+                del request.session["email"]
                 # messages.error(request, "Admin blocked from accessing this page.")
                 # return redirect('login')
 
         return self.get_response(request)
-        

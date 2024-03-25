@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('logintohome', '0003_alter_customer_username'),
+        ("logintohome", "0003_alter_customer_username"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='customer',
-            name='password',
+            model_name="customer",
+            name="password",
             field=models.CharField(max_length=500),
         ),
     ]

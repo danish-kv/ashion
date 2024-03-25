@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_product', '0016_remove_products_stock_remove_variant_color_and_more'),
+        ("manage_product", "0016_remove_products_stock_remove_variant_color_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='variant',
-            name='active',
+            model_name="variant",
+            name="active",
             field=models.BooleanField(default=True),
         ),
     ]

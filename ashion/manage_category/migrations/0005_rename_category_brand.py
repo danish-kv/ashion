@@ -4,15 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_category', '0004_subcategory'),
-        ('manage_product', '0006_rename_orginal_price_products_original_price'),
+        ("manage_category", "0004_subcategory"),
+        ("manage_product", "0006_rename_orginal_price_products_original_price"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='Category',
-            new_name='Brand',
+            old_name="Category",
+            new_name="Brand",
         ),
     ]

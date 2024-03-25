@@ -38,7 +38,7 @@
 
       img {
         width: calc(#{$sidebar-width-lg} - 120px );
-        max-width: 100%;
+        max-width: 39% !important;
         height: 28px;
         margin: auto;
         vertical-align: middle;
@@ -47,7 +47,7 @@
         display: none;
         img {
           width: calc(#{$sidebar-width-icon} - 50px );
-          max-width: 100%;
+          max-width: 39%;
           height: 28px;
           margin: auto;
         }

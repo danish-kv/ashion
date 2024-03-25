@@ -5,19 +5,37 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('logintohome', '0001_initial'),
-        ('manage_cart', '0004_remove_cart_product_id'),
+        ("logintohome", "0001_initial"),
+        ("manage_cart", "0004_remove_cart_product_id"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Checkout',
+            name="Checkout",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sub_total', models.DecimalField(decimal_places=2, default=0.0, max_digits=10, null=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='logintohome.customer')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sub_total",
+                    models.DecimalField(
+                        decimal_places=2, default=0.0, max_digits=10, null=True
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="logintohome.customer",
+                    ),
+                ),
             ],
         ),
     ]

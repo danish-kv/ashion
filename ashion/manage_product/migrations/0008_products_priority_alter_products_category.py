@@ -5,21 +5,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_category', '0006_rename_subcategory_category'),
-        ('manage_product', '0007_remove_products_sub_category_products_brand'),
+        ("manage_category", "0006_rename_subcategory_category"),
+        ("manage_product", "0007_remove_products_sub_category_products_brand"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='products',
-            name='priority',
+            model_name="products",
+            name="priority",
             field=models.IntegerField(default=1),
         ),
         migrations.AlterField(
-            model_name='products',
-            name='category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='manage_category.category'),
+            model_name="products",
+            name="category",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="manage_category.category",
+            ),
         ),
     ]

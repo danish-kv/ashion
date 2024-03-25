@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('customadmin', '0003_alter_category_offer_percentage_and_more'),
+        ("customadmin", "0003_alter_category_offer_percentage_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='category_offer',
-            name='percentage',
+            model_name="category_offer",
+            name="percentage",
             field=models.FloatField(blank=True, default=0, null=True),
         ),
         migrations.AlterField(
-            model_name='product_offer',
-            name='percentage',
+            model_name="product_offer",
+            name="percentage",
             field=models.FloatField(blank=True, default=0, null=True),
         ),
     ]

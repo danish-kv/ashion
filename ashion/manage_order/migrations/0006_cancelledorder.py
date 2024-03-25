@@ -5,19 +5,32 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('manage_order', '0005_returns'),
+        ("manage_order", "0005_returns"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CancelledOrder',
+            name="CancelledOrder",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cancel_reason', models.TextField()),
-                ('cancel_date', models.DateTimeField(auto_now_add=True)),
-                ('order_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='manage_order.orderedproducts')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("cancel_reason", models.TextField()),
+                ("cancel_date", models.DateTimeField(auto_now_add=True)),
+                (
+                    "order_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="manage_order.orderedproducts",
+                    ),
+                ),
             ],
         ),
     ]

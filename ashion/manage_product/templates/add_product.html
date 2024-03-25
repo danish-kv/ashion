@@ -1,8 +1,5 @@
 {% extends 'admin_base.html' %}
 {% load static %}
-{% comment %} {% block title %} Add Product{% endblock title %}
-{% block products %}{% endblock products %} {% endcomment %}
-
 
 {% block content %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -20,39 +17,21 @@
     </div><!-- End Page Title -->
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Add a new Product to the database</h5>
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="text-danger">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            
+            <h5 class="card-title">Add a new Product to the database</h5>            
             <form method="post" enctype="multipart/form-data" id="add-product-form">
                 {% csrf_token %}
                 <div class="row mb-3">
                     <label for="id_name" class="col-sm-2 col-form-label">Product Name</label>
                     <div class="col-sm-10">
                         <input type="text" name="name" id="id_name" class="form-control" required>
-                        <div class="text-danger error-message" id="name-error"></div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="id_description" class="col-sm-2 col-form-label">Description</label>
                     <div class="col-sm-10">
                         <textarea name="description" id="id_description" class="form-control" required></textarea>
-                        <div class="text-danger error-message" id="description-error"></div>
                     </div>
                 </div>
-                {% comment %} <div class="row mb-3">
-                    <label for="id_gender" class="col-sm-2 col-form-label">Gender Category</label>
-                    <div class="col-sm-10">
-                        <select name="gender" id="id_gender" class="form-select" required>
-                            <option value="Men">Men</option>
-                             <option value="Women">Women</option>
-                            <option value="Kids">Kids</option> 
-                        </select>
-                    </div>
-                </div> {% endcomment %}
                 <div class="row mb-3">
                     <label for="id_category" class="col-sm-2 col-form-label">Category</label>
                     <div class="col-sm-10">
@@ -63,55 +42,46 @@
                         </select>
                     </div>
                 </div>
-                
-                
                 <div class="row mb-3">
                     <label for="id_original_price" class="col-sm-2 col-form-label">Original Price:</label>
                     <div class="col-sm-10">
                         <input type="number" name="original_price" id="id_original_price" class="form-control" required>
-                        <div class="text-danger error-message" id="name-error"></div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="id_selling_price" class="col-sm-2 col-form-label">Selling Price:</label>
                     <div class="col-sm-10">
                         <input type="number" name="selling_price" id="id_selling_price" class="form-control" required>
-                        <div class="text-danger error-message" id="name-error"></div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="id_priority" class="col-sm-2 col-form-label">Priority</label>
                     <div class="col-sm-10">
                         <input type="number" name="priority" id="id_priority" class="form-control" required>
-                        <div class="text-danger error-message" id="name-error"></div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="id_img1" class="col-sm-2 col-form-label">Img1</label>
                     <div class="col-sm-10">
                         <input type="file" name="img1" id="id_img1" class="form-control" multiple required onchange="handleImageUpload(this.files)">
-                        <div class="error-message" id="images-error"></div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="id_img2" class="col-sm-2 col-form-label">Img2</label>
                     <div class="col-sm-10">
                         <input type="file" name="img2" id="id_img2" class="form-control" multiple required onchange="handleImageUpload(this.files)">
-                        <div class="error-message" id="images-error"></div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="id_img3" class="col-sm-2 col-form-label">Img3</label>
                     <div class="col-sm-10">
                         <input type="file" name="img3" id="id_img3" class="form-control" multiple required onchange="handleImageUpload(this.files)">
-                        <div class="error-message" id="images-error"></div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="id_img4" class="col-sm-2 col-form-label">Img4</label>
                     <div class="col-sm-10">
                         <input type="file" name="img4" id="id_img4" class="form-control" multiple required onchange="handleImageUpload(this.files)">
-                        <div class="error-message" id="images-error"></div>
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -121,7 +91,6 @@
                     </div>
                 </div>
             </form>
- 
         </div>
     </div>
 </main>

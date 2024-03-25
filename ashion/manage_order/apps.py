@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class ManageOrderConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'manage_order'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "manage_order"

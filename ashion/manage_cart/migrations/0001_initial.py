@@ -5,35 +5,85 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('logintohome', '0001_initial'),
-        ('manage_product', '0016_remove_products_stock_remove_variant_color_and_more'),
+        ("logintohome", "0001_initial"),
+        ("manage_product", "0016_remove_products_stock_remove_variant_color_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Cart',
+            name="Cart",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.IntegerField(default=1)),
-                ('sub_total', models.DecimalField(decimal_places=2, default=0.0, max_digits=10)),
-                ('delete_status', models.IntegerField(choices=[(1, 'Live'), (0, 'Delete')], default=1)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('size_variant', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='manage_product.variant')),
-                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='logintohome.customer')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.IntegerField(default=1)),
+                (
+                    "sub_total",
+                    models.DecimalField(decimal_places=2, default=0.0, max_digits=10),
+                ),
+                (
+                    "delete_status",
+                    models.IntegerField(
+                        choices=[(1, "Live"), (0, "Delete")], default=1
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "size_variant",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="manage_product.variant",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="logintohome.customer",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Wishlist',
+            name="Wishlist",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField(auto_now_add=True)),
-                ('product_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='manage_product.variant')),
-                ('user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='logintohome.customer')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField(auto_now_add=True)),
+                (
+                    "product_id",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="manage_product.variant",
+                    ),
+                ),
+                (
+                    "user_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="logintohome.customer",
+                    ),
+                ),
             ],
         ),
     ]

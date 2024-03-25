@@ -4,16 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('user_profile', '0006_wallet_user_balance'),
+        ("user_profile", "0006_wallet_user_balance"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='wallet_user',
-            name='transaction_type',
-            field=models.CharField(default='Credit', max_length=50),
+            model_name="wallet_user",
+            name="transaction_type",
+            field=models.CharField(default="Credit", max_length=50),
             preserve_default=False,
         ),
     ]

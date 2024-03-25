@@ -117,11 +117,9 @@
         </div>
         <div class="text-center mt-4">
           <a href="/my_order/" class="btn btn-dark  mb-4"><i class="bi bi-house-door"></i> Go Back</a>
-          {% for i in orders|slice:1 %}
-          <a href="/show_invoice/{{ i.order_id.id }}" class="btn btn-primary continue-btn mb-4" target="_blank" >
+          <a href="/show_invoice/{{ addr.id }}" class="btn btn-primary continue-btn mb-4" target="_blank" >
             Show Invoice
           </a>
-          {% endfor %}
         </div>
         <div class="text-center mt-4"></div>
       </div>
@@ -140,8 +138,6 @@
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-              {% comment %} <label for="cancelReason">Are you sure to Cancel:- <br /><strong>{{ i.product.product_id.name }}</strong></label> {% endcomment %}
-              {% comment %} <input type="hidden" id="cancelOrderID" name="orderid" /> {% endcomment %}
               <label for="cancelReason">Please provide a reason:</label>
               <textarea required name="reason" id="cancelReason" class="form-control" rows="4" cols="50"></textarea>
             </div>
@@ -193,15 +189,14 @@
 
 
 
-  
-  </script>
-{% endblock %}
+  {% endblock %}
 
 <!-- Instagram Begin -->
 {% block instagram %}
   {% include 'inc/instagram.html' %}
 {% endblock %}
 <!-- Instagram End -->
+
 
 <!-- Footer Section Begin -->
 {% block footer %}

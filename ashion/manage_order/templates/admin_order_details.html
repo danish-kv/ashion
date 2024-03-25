@@ -77,22 +77,16 @@
                       {% endif %};">
                       {{ obj.status }}
                     </p>
-                    {% comment %} <h4 style="color: {% if obj.payment_status == 'success' %}green{% else %}red{% endif %}">
-                      Payment Status: {{ obj.payment_status }}
-
-                  </h4>                        {% endcomment %}
                    <h6> Expected Delivery {{obj.delivery_date}}</h6>
                     </div>
                   </div>
                   <hr class="m-0 mb-1">
                   <div>
-                    <!-- <h6 class="mx-5 mb-2">Delivery Expect on : <b>date</b></h6> -->
                   </div>
                   <div class="card-body row col-12 d-flex">
                     <div class="col-md-4 col-12 mx-auto">
                       <img class="mt-4" src="{{ obj.product.product_id.img1.url }}" style="height: 400px; border-radius: 7px;" alt="">
                       <p class="card-text"></p>
-                      <!-- <a href="#" class="btn btn-dark">Go somewhere</a> -->
                     </div>
                     <div class="col-md-7 col-12">
                       <h4 class="card-title">{{ obj.product.product_id.name }}</h4>
@@ -101,24 +95,20 @@
                         <p>Order ID: <b>{{ obj.order_id.id|upper }}</b></p>
                         <p>Quantity: <b>{{ obj.quantity }}</b></p>
                         <p>Order Date: <b>{{ obj.order_id.order_date }}</b></p>
-                        
-
-                        Payment Method: {{ obj.order_id.payment_method }}
+                        Payment Method: <b>{{ obj.order_id.payment_method }}</b>
                       </p>
                       <h5 class="card-title mb-2">RS: {{ obj.total_amount }}</h5>
                       <hr class="bg-secondary">
                       <h5 class="card-title" style="font-size: 15px;">Shipping Address</h5>
+                      <p>{{ obj.address.address }}</p>
+                      
                       <h6 class="card-title" style="font-size: 15px;"> FULL NAME : {{ obj.address.name }}</h6>
                       <p class="card-text"><b>Location:</b><br>
-                          {{ obj.address.address }},<br>
-                          {{ obj.address.city }},<br>
-                          {{obj.address.state}},<br>
-                          {{obj.address.landmark}},<br>
+                          {{ obj.address.city }}
+                          {{obj.address.state}}
+                          {{obj.address.landmark}}
                           {{obj.address.pincode}}
-
-                      <p class="card-text"><b>{{ obj.address.number }}</b></p>   
-                      
-                      
+                      <p class="card-text"><b>{{ obj.address.number }}</b></p>
                       <hr>
                       <h5 class="card-title" style="font-size: 20px;">Change Order Status</h5>
                     <h6><b>Current Status: </b> 
@@ -130,7 +120,6 @@
                       {% elif obj.status == 'Cancelled' %}red
                       {% endif %};">
                       {{ obj.status }}
-
 
                       </span><br><br><br>
 
@@ -149,9 +138,6 @@
 
                               <input type="radio" name="statusRadio" id="statusRadio4" value="Delivered" {% if obj.status == "Delivered" %}checked{% endif %} {% if obj.status == "Cancelled" %}disabled{% endif %}>
                               <label for="statusRadio4">Delivered</label>
-
-                              {% comment %} <input type="radio" name="statusRadio" id="statusRadio5" value="Returned" {% if obj.status == "Returned" %}checked{% endif %}>
-                              <label for="statusRadio5">Returned</label> {% endcomment %}
 
                               <input type="radio" name="statusRadio" id="statusRadio6" value="Cancelled" {% if obj.status == "Cancelled" %}checked{% endif %}>
                               <label for="statusRadio6">Cancel</label>
@@ -174,9 +160,7 @@
                   </div>
                 </div>
               </div>
-              
             </div>
-              
           </div>
       </div>
   </div>

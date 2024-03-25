@@ -19,13 +19,14 @@
     <div class="pagetitle">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <h1>Cancel Requests</h1>
+                <h1>Cancelled Produts</h1>
             </div>
-            {% comment %} <div class="col-md-6 text-end">
-                <div class="addproductbutton">
-                    <a href="{% url "add_products" %}" class="btn btn-dark mt-2">Add Products</a>
-                </div>
-            </div> {% endcomment %}
+            <div class="col-md-6 text-end">
+                <form class="d-flex justify-content-end" method="GET" action="">
+                    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" name="search">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </form>
+            </div>
         </div>
         <nav>
             <ol class="breadcrumb">
@@ -51,7 +52,6 @@
                             <th>Product Name</th>
                             <th>Reason</th>
                             <th>Payment Method</th>
-                            {% comment %} <th>Actions</th> {% endcomment %}
                         </tr>
                     </thead>
                     <tbody>
@@ -75,17 +75,62 @@
                             </td> 
                             <td class="align-middle">
                                 {{ i.order_id.order_id.payment_method }}    
-                            </td>
-                            {% comment %} <td class="align-middle">
-                                <a class="btn btn-outline-success" href="cancell_product/{{i.id}}">
-                                    Approve
-                                </a>
-                            </td> {% endcomment %}
+                            </td>                           
                         </tr>
                         {% endfor %}
-                    </tbody>
-                    
+                    </tbody>                    
                 </table>
+
+
+                    <!------------------------------ pagination -------------------------->
+            {% if data.paginator.num_pages > 1 %}
+                {% if not disable_pagination %}
+                <div class="pagination justify-content-center mt-3">
+                    <ul class="pagination">
+                        {% if data.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">&laquo; First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ data.previous_page_number }}">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo; First</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                        {% endif %}
+                        
+                        <li class="page-item">
+                            <span class="page-link">
+                                Page {{ data.number }} of {{ data.paginator.num_pages }}
+                            </span>
+                        </li>
+                        
+                        {% if data.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ data.next_page_number }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ data.paginator.num_pages }}">Last &raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">Last &raquo;</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+            {% endif %}
+            <!------------------------------ end pagination -------------------------->
+
+
             </div>
         </div>
     </div><!-- End Recent Sales -->
