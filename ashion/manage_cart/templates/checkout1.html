@@ -10,7 +10,6 @@
 {% block content %}
 <style>
 
-/* CSS */
 .button-31 {
   background-color: #222;
   border-style: none;
@@ -81,7 +80,6 @@
             </div>
         </div>
     </div>
-    <!-- Breadcrumb End -->
 
 
 
@@ -364,13 +362,6 @@
 
 
 
-
-
-
-
-
-
-
 <!-------------------------- wallet pay  starts ------------------------------>
 
 
@@ -382,7 +373,6 @@
       var selectedAddrress = $('input[name="selected_address"]:checked').val();
       var token = $('input[name=csrfmiddlewaretoken]').val();
       var totalAmount = $('#total_amount').val();
-
 
       $.ajax({
         method: 'POST',
@@ -397,24 +387,22 @@
           var successBlock = document.getElementById('Success');
       
           if (data.error !== undefined && data.error !== null && data.error.trim() !== "") {
-              // Show error message
-              errorBlock.innerHTML = data.error;
+
+            errorBlock.innerHTML = data.error;
               errorBlock.style.display = 'block';
-              // Hide success message
+
               successBlock.style.display = 'none';
           } else {
-              // Clear error message
+
               errorBlock.innerHTML = '';
               errorBlock.style.display = 'none';
-              // Show success message
+
               successBlock.innerHTML = 'Payment successful! Redirecting...';
               successBlock.style.display = 'block';
-              // Redirect to success page
+
               window.location.href = data.redirect_url + data.order_id;
           }
-      },
-      
-        
+      },    
       });
     });
   });
@@ -425,11 +413,12 @@
 
 {% endblock content %}
 
-        <!-- Instagram Begin -->
+  <!-- Instagram Begin -->
 {% block instagram %}
 {% include "inc/instagram.html" %}
 {% endblock instagram %}
- <!-- Instagram End 
+ <!-- Instagram End -->
+
  <!-- Footer Section Begin -->
  {% block footer %}
  {% include "inc/footer.html" %}
