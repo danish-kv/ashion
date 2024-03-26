@@ -28,12 +28,15 @@ def add_coupon(request):
     if request.method == "POST":
         title = request.POST.get("title")
         code = request.POST.get("code")
-        start_date = request.POST.get("start_date")
-        end_date = request.POST.get("end_date")
+        start_date_str = request.POST.get("start_date")
+        end_date_str = request.POST.get("end_date")
         quantity = request.POST.get("quantity")
         min_amount = request.POST.get("min_amount")
         discount_amount = request.POST.get("discount_amount")
         active_check = request.POST.get("active")
+
+        start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+        end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
 
         if active_check == "1":
             active = True
@@ -53,9 +56,7 @@ def add_coupon(request):
             return redirect(add_coupon)
 
         if now_date > end_date:
-            messages.error(
-                request, "The end date for the coupon cannot be in the past."
-            )
+            messages.error(request, "The end date for the coupon cannot be in the past.")
             return redirect(add_coupon)
 
         if quantity.strip() == "":
