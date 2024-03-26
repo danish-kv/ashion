@@ -26,13 +26,18 @@ SECRET_KEY = "django-insecure-@f6l3_%=oz$smyy*r%zalk#8-$%nmulgq3^&8%ekfhytue*!#_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['43.205.199.25', '0.0.0.0']
+ALLOWED_HOSTS = ['43.205.199.25', 'localhost', '127.0.0.1']
 
-CSRF_TRUSTED_ORIGINS=['http://43.205.199.25',
-'https://43.205.199.25',
-'http://0.0.0.0',
-'https://0.0.0.0',
-'http://0.0.0.0:9090']
+CSRF_TRUSTED_ORIGINS = [
+    'http://43.205.199.25',
+    'https://43.205.199.25',
+    'http://localhost',
+    'https://localhost',
+    'http://127.0.0.1',
+    'https://127.0.0.1',
+    'http://127.0.0.1:9090',
+    'https://127.0.0.1:9090'
+]
 
 # Application definition
 
@@ -68,27 +73,34 @@ MIDDLEWARE = [
 ROOT_URLCONF = "ashion.urls"
 
 
+
 CORS_ALLOWED_ORIGINS = [
-"http://43.205.199.25",
-"http://43.205.199.25",
-"http://0.0.0.0",
-"https://0.0.0.0",
-"http://0.0.0.0:9090"]
+    "http://43.205.199.25",
+    "https://43.205.199.25",
+    "http://localhost",
+    "https://localhost",
+    "http://127.0.0.1",
+    "https://127.0.0.1",
+    "http://127.0.0.1:9090",
+    "https://127.0.0.1:9090"
+]
 
 CORS_ALLOW_HEADERS = [
-                 'access-control-allow-headers',
-                   'access-control-allow-methods',
-                  'access-control-allow-origin',
-                    'content-type',
-                     'x-csrftoken']
+    'access-control-allow-headers',
+    'access-control-allow-methods',
+    'access-control-allow-origin',
+    'content-type',
+    'x-csrftoken'
+]
 
 CORS_ALLOW_METHODS = [
-               'DELETE',
-               'GET',
-               'OPTIONS',
-               'PATCH',
-               'POST',
-               'PUT']
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT'
+]
 
 
 TEMPLATES = [
