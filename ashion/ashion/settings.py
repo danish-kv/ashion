@@ -26,14 +26,13 @@ SECRET_KEY = "django-insecure-@f6l3_%=oz$smyy*r%zalk#8-$%nmulgq3^&8%ekfhytue*!#_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['43.204.115.200', '0.0.0.0']
+ALLOWED_HOSTS = ['65.2.38.172', '0.0.0.0']
 
-CSRF_TRUSTED_ORIGINS=['http://43.204.115.200',
-'https://43.204.115.200',
+CSRF_TRUSTED_ORIGINS=['http://65.2.38.172',
+'https://65.2.38.172',
 'http://0.0.0.0',
 'https://0.0.0.0',
 'http://0.0.0.0:9090']
-
 
 # Application definition
 
@@ -70,8 +69,8 @@ ROOT_URLCONF = "ashion.urls"
 
 
 CORS_ALLOWED_ORIGINS = [
-"http://43.204.115.200",
-"http://43.204.115.200",
+"http://65.2.38.172",
+"http://65.2.38.172",
 "http://0.0.0.0",
 "https://0.0.0.0",
 "http://0.0.0.0:9090"]
@@ -131,7 +130,7 @@ WSGI_APPLICATION = "ashion.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "new_ashion",
+        "NAME": "ashion_new",
         "USER": "danish",
         "PASSWORD": "pass1234",
         "HOST": "localhost",  # or your database host
