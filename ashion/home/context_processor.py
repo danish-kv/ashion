@@ -17,11 +17,9 @@ def count_of_cart(request):
             email = request.session.get("email")
             user = Customer.objects.get(email=email)
             cart_count = Cart.objects.filter(user_id=user).count()
-            print(cart_count)
+
     except Customer.DoesNotExist:
-        return redirect("login")
-    except Exception as e:
-        print(f"{e} in context processor")
+        return redirect("login")     
 
     return {"cart_count": cart_count}
 
@@ -36,7 +34,5 @@ def wishlist_of_cart(request):
 
     except Customer.DoesNotExist:
         return redirect("login")
-    except Exception as e:
-        print(f"{e} in context processor")
 
     return {"wishlist_count": wishlist_count}
