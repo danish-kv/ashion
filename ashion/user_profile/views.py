@@ -12,8 +12,6 @@ def user_profile(request):
         use = user
         address = Address.objects.filter(user=use, is_available=True)
         wallet = Wallet_User.objects.filter(user_id = use).last()
-        print(wallet.balance)
-
 
         context = {"user": user,
                    "addresses": address,

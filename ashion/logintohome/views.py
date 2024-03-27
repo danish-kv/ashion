@@ -141,6 +141,8 @@ def signup(request):
             messages.error(request, "Email is already taken")
             return redirect("signup")
 
+        
+
         user = Customer(
             username=username,
             number=number,
@@ -148,41 +150,45 @@ def signup(request):
             password=password1,
             date_joined=date_joined,
         )
-        user.save()
-
-        # new_user_wallet = Wallet_User(user_id =user.id)
+        
 
         if referral_code:
-            reffered_get_amount = 271
-            new_user_get_amount = 101
-            reffered_user = Customer.objects.get(referral_code=referral_code)
+            if  Customer.objects.filter(referral_code=referral_code).exists():
+                reffered_get_amount = 271
+                new_user_get_amount = 101
+                reffered_user = Customer.objects.get(referral_code=referral_code)
 
-            reffered_wallet = (
-                Wallet_User.objects.filter(user_id=reffered_user.id)
-                .order_by("-id")
-                .first()
-            )
+                reffered_wallet = (
+                    Wallet_User.objects.filter(user_id=reffered_user.id)
+                    .order_by("-id")
+                    .first()
+                )
 
-            if reffered_wallet:
-                new_balance = reffered_wallet.balance + reffered_get_amount
+                if reffered_wallet:
+                    new_balance = reffered_wallet.balance + reffered_get_amount
+                else:
+                    new_balance = reffered_get_amount
+
+                # reffered user
+                Wallet_User.objects.create(
+                    user_id=reffered_user,
+                    transaction_type="Refferel Bonus",
+                    amount=float(reffered_get_amount),
+                    balance=float(new_balance),
+                )
+
+                # new user
+                Wallet_User.objects.create(
+                    user_id=user,
+                    transaction_type="Signup Refferal Bonus",
+                    amount=new_user_get_amount,
+                    balance=new_user_get_amount,
+                )
             else:
-                new_balance = reffered_get_amount
+                messages.error(request,'Wrong Refferal code')
+                return redirect('singup')
 
-            # reffered user
-            Wallet_User.objects.create(
-                user_id=reffered_user,
-                transaction_type="Refferel Bonus",
-                amount=float(reffered_get_amount),
-                balance=float(new_balance),
-            )
-
-            # new user
-            Wallet_User.objects.create(
-                user_id=user,
-                transaction_type="Signup Refferal Bonus",
-                amount=new_user_get_amount,
-                balance=new_user_get_amount,
-            )
+        user.save()
 
 
         return redirect("otpverify", id=user.id)
