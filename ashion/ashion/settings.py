@@ -26,17 +26,12 @@ SECRET_KEY = "django-insecure-@f6l3_%=oz$smyy*r%zalk#8-$%nmulgq3^&8%ekfhytue*!#_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['43.205.199.25', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['13.201.57.165', '0.0.0.0', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://43.205.199.25',
-    'https://43.205.199.25',
-    'http://localhost',
-    'https://localhost',
-    'http://127.0.0.1',
-    'https://127.0.0.1',
-    'http://127.0.0.1:9090',
-    'https://127.0.0.1:9090'
+    'https://13.201.57.165',
+    'https://ashion.muhammeddanish.site',
+    'https://www.ashion.muhammeddanish.site'
 ]
 
 # Application definition
@@ -75,14 +70,9 @@ ROOT_URLCONF = "ashion.urls"
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://43.205.199.25",
-    "https://43.205.199.25",
-    "http://localhost",
-    "https://localhost",
-    "http://127.0.0.1",
-    "https://127.0.0.1",
-    "http://127.0.0.1:9090",
-    "https://127.0.0.1:9090"
+    'https://13.201.57.165',
+    'https://ashion.muhammeddanish.site',
+    'https://www.ashion.muhammeddanish.site'
 ]
 
 CORS_ALLOW_HEADERS = [
