@@ -69,8 +69,12 @@ def change_order_status(request, id):
         except:
             order_status = None
 
+        if not order_status == "Delivered" or order_status == "Cancelled":
+            obj.save()
+
         if order_status == "Delivered":
             obj.delivery_date = timezone.now().date()
+            obj.save()
 
         if order_status == "Cancelled":
             if obj.order_id.payment_method == "cod":
@@ -114,13 +118,13 @@ def change_order_status(request, id):
                     product_id=obj.product.product_id, id=obj.product.id
                 )
                 pro.stock = pro.stock + obj.quantity
-                obj.save()
                 pro.save()
                 obj.status = "Cancelled"
                 obj.save()
                 CancelledOrder.objects.create(
                     order_id=obj, user_id=obj.user, cancel_reason="Admin Cancelled"
                 )
+            
 
         messages.success(request, f"Order status changed to {order_status}")
         return redirect("order_deatils_view", id)

@@ -29,7 +29,59 @@
 
 
 {% block content %}
+<style>
 
+    .sidebar__filter {
+        margin-bottom: 20px;
+    }
+    
+    .section-title h4 {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+    }
+    
+    .filter-range-wrap {
+        margin-top: 10px;
+    }
+    
+    .range-select {
+        margin-bottom: 10px;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+    }
+    
+    .custom-select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+    
+    .filter-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .filter-btn:hover {
+        background-color: #cd1425;
+    }
+
+    
+</style>
 
 
     <!-- Shop Section Begin -->
@@ -39,7 +91,7 @@
                 <div class="col-lg-3 col-md-3">
                     <div class="shop__sidebar">
                         <!-- Sorting functionality-->
-                        <div class="toolbox-sort pb-5 pt-3">
+                            <div class="toolbox-sort pb-5 pt-3">
                             <form action="{% url "productlist" %}" id="sortForm" >
                             <label for="sortby">Sort by:</label>
                             <div class="select-custom">
@@ -58,52 +110,42 @@
                             <input type="hidden" name="data" value="{{ data }}">
                         </form>
                         <a href="?page={{ data }}{% if data %}&data={{ data }}{% endif %}"></a>
-
-                        </div><!-- End .toolbox-sort -->
-                         
+                    </div><!-- End .toolbox-sort -->
+{% comment %}                          
                         <div class="sidebar__filter">
-                            <div class="section-title">
-                                <h4>Shop by price</h4>
-                            </div>
-                            <div class="filter-range-wrap">
-                                <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
-                                data-min="33" data-max="99"></div>
-                                <div class="range-slider">
-                                    <div class="price-input">
-                                        <p>Price:</p>
-                                        <input type="text" id="minamount">
-                                        <input type="text" id="maxamount">
+                            <form id="priceFilterForm" method="GET" action="{% url "productlist" %}">
+                                <div class="section-title">
+                                    <h4>Shop by price</h4>
+                                </div>
+                                <div class="filter-range-wrap">
+                                    <div class="range-select">
+                                        <label for="minamount">Min Price:</label>
+                                        <select id="minamount" name="minprice" class="custom-select">
+                                            <option value="0">0</option>
+                                            <option value="500">500</option>
+                                            <option value="1000">1000</option>
+                                            <option value="1500">1500</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                    </div>
+                                    <div class="range-select">
+                                        <label for="maxamount">Max Price:</label>
+                                        <select id="maxamount" name="maxprice" class="custom-select">
+                                            <option value="500">500</option>
+                                            <option value="1000">1000</option>
+                                            <option value="1500">1500</option>
+                                            <option value="2000">2000</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
-                            <a href="#">Filter</a>
-                        </div>
-                        {% comment %} <div class="sidebar__sizes">
-                            <div class="section-title">
-                                <h4>Shop by size</h4>
-                            </div>
-                            <div class="size__list">
-                                <form method="GET" action="">
-                                    <label for="s">
-                                        s
-                                        <input type="checkbox" name="size" value="s" id="s">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                    <label for="m">
-                                        m
-                                        <input type="checkbox" name="size" value="m" id="m">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                    <label for="l">
-                                        l
-                                        <input type="checkbox" name="size" value="l" id="l">
-                                        <span class="checkmark"></span> 
-                                    </label>
-                                    <button type="submit">Apply</button>
-                                    
-                                </form>
-                            </div>
+                                <input type="hidden" name="data" value="{{ data }}">
+                                <button type="submit" class="filter-btn">Filter</button>
+                            </form>
                         </div> {% endcomment %}
+                        
+                        
+                        
                     </div>
                 </div>
 
