@@ -18,7 +18,7 @@ def product(request):
     if "email" in request.session:
         return redirect("error_page")
     
-    product = products.objects.all()
+    product = products.objects.all().order_by('-id')
 
     search = request.GET.get('search')
 
@@ -65,8 +65,12 @@ def addproduct(request):
         img3 = request.FILES.get("img3")
         img4 = request.FILES.get("img4")
 
+        if name.isdigit():
+            messages.error(request,'Please enter a valid product name (should not be a number)')
+            return redirect(addproduct)
+        
         if name.strip() == "":
-            messages.error(request, "Please enter Product name")
+            messages.error(request, "Please enter valid product name")
             return redirect(addproduct)
 
         if description.strip() == "":
@@ -85,9 +89,9 @@ def addproduct(request):
             messages.error(request, "Not a Valid Amount")
             return redirect(addproduct)
 
-        if products.objects.filter(name__contains=name).exists():
+        if products.objects.filter(name__iexact=name).exists() :
             messages.error(request, f'Product with name "{name}" already exists!')
-            return render(request, "add_product.html")
+            return redirect(addproduct)
 
         def is_image(file):
             try:
@@ -134,10 +138,12 @@ def editproduct(request, id):
         name = request.POST.get("name")
         desc = request.POST.get("description")
         category_name = request.POST.get("category")
+
         try:
             cat = Category.objects.get(name=category_name)
         except:
             cat = None
+
         original_price = request.POST.get("original_price")
         selling_price = request.POST.get("selling_price")
         priority = request.POST.get("priority")
@@ -146,29 +152,37 @@ def editproduct(request, id):
         img3 = request.FILES.get("img3")
         img4 = request.FILES.get("img4")
 
+        if name.isdigit():
+            messages.error(request,'Please enter a valid product name (should not be a number)')
+            return redirect(editproduct,id)
+        
         if name.strip() == "":
-            messages.error(request, "Please enter Product name")
-            return redirect(addproduct)
+            messages.error(request, "Please enter valid product name")
+            return redirect(editproduct,id)
 
         if desc.strip() == "":
             messages.error(request, "Please enter Product description")
-            return redirect(addproduct)
+            return redirect(editproduct,id)
 
         if category_name.strip() == "":
             messages.error(request, "Please Select Category for product")
-            return redirect(addproduct)
+            return redirect(editproduct,id)
 
         if float(original_price) < 0:
             messages.error(request, "Not a Valid Amount")
-            return redirect(addproduct)
+            return redirect(editproduct,id)
 
         if float(selling_price) < 0:
             messages.error(request, "Not a Valid Amount")
-            return redirect(addproduct)
+            return redirect(editproduct,id)
+        
+        if float(original_price) < float(selling_price):
+            messages.error(request,'Selling price should less than Original Price')
+            return redirect(editproduct,id)
 
-        if products.objects.filter(name=name).exclude(id=id).exists():
+        if products.objects.filter(name__iexact=name).exclude(id=id).exists():
             messages.error(request, f'Product with name "{name}" already exists!')
-            return render(request, "edit_product.html", context)
+            return redirect(editproduct,id)
 
         def is_image(file):
             try:

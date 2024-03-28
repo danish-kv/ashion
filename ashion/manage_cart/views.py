@@ -323,9 +323,17 @@ def place_order(request):
 
         if request.method == "POST":
             address_id = request.POST.get("selected_address")
-            address = Address.objects.get(id=address_id)
+            try:
+                address = Address.objects.get(id=address_id)
+            except:
+                address = None
+
             payment_method = request.POST.get("payment_option")
             total_amount = request.POST.get("sub_total")
+
+            if not address:
+                messages.error(request, "Please select an address")
+                return redirect("checkout")
 
             if payment_method == "cod" and float(total_amount) > 1000:
                 messages.error(request, "COD is not available for orders over 1000")
@@ -396,9 +404,17 @@ def razorpay_payment(request):
 
         if request.method == "POST":
             address_id = request.POST.get("address")
-            address = Address.objects.get(id=address_id)
+
+            try:
+                address = Address.objects.get(id=address_id)          
+            except:
+                address = None
+
             total_amount = request.POST.get("total_amount")
             payment_method = "Razor pay"
+
+            if not address:
+                return JsonResponse({"error": f"Please select address"})
 
             order_id = Order.objects.create(
                 user=user,
@@ -462,24 +478,32 @@ def wallet_payment(request):
 
         if request.method == "POST":
             address_id = request.POST.get("address")
-            address = Address.objects.get(id=address_id)
+            try:
+                address = Address.objects.get(id=address_id)          
+            except:
+                address = None
+
             total_amount = float(request.POST.get("total_amount"))
             payment_method = "Wallet"
 
-            if total_amount > int(wallet_user.balance):
-                return JsonResponse(
-                    {
-                        "error": f"Insufficient balance in your wallet. Current wallet balance: {int(wallet_user.balance)}"
-                    }
-                )
+            if not address:
+                return JsonResponse({"error": f"Please select address"})
+            
+            if wallet_user:
+                if total_amount > int(wallet_user.balance):
+                    return JsonResponse(
+                        {
+                            "error": f"Insufficient balance in your wallet. Current wallet balance: {int(wallet_user.balance)}"
+                        }
+                    )
 
-            new_balance = wallet_user.balance - int(total_amount)
-            Wallet_User.objects.create(
-                user_id=user,
-                transaction_type="Debit",
-                amount=total_amount,
-                balance=new_balance,
-            )
+                new_balance = wallet_user.balance - int(total_amount)
+                Wallet_User.objects.create(
+                    user_id=user,
+                    transaction_type="Debit",
+                    amount=total_amount,
+                    balance=new_balance,
+                )
 
             order_id = Order.objects.create(
                 user=user,

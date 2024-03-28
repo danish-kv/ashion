@@ -92,13 +92,13 @@
         <div class="container">
           <div class="row" id="reload">
             <div class="col-md-8 cart-item-box">
+              <form method="post" action="{% url "place_order" %}" enctype="multipart/form-data">
               {% if addresses %}
                   <a href="{% url 'add_address' %}">
                       <div class="d-flex justify-content-end mr-3">
                           <button type="button" class="btn btn-dark" id="addAddressBtn">Add New Address</button>
                       </div>
                   </a>
-                  <form method="post" action="{% url "place_order" %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="address-container" >
                         <label for="selected_address">Choose a delivery address:</label>
@@ -121,7 +121,6 @@
 
                   <!-- Display add address button with an image when there are no addresses -->
                   <div class="text-center">
-                    <img src="{% static 'main/shirt2.3.jpg' %}" alt="No Address Image" style="height: 35rem; display: block; margin: 0 auto;display: flex; justify-content: end; align-items: center;">
                     <p>No addresses available. Add a new address.</p>
                     <a href="/add_address/">
                         <button type="button" class="btn btn-dark" id="addAddressBtn">Add New Address</button>
@@ -204,10 +203,11 @@
                     </div>
                 
                     <span id="WalletError" class="error-message inner-error"></span>
+                    {% if addresses %}
                     <div class="checkout__order__widget">
                         <label for="payment-option" >Choose a payment option:</label>
                         <input type="hidden" id="total_amount" name="sub_total" value="{{ final_amount }}">
-
+                      
                         <div class="payment-options">
                           <div class="col-md-6 mb-3">
                             <input type="hidden" name="payment_option" value="cod">
@@ -220,6 +220,9 @@
                           <div class="col-md-6 mb-3">
                             <button type="button" id="rzp-button1" class="btn btn-danger btn-block razor">Razorpay</button>
                           </div>
+                          {% else %}
+                          <p style="color: #d9534f;" ><b>Please add address for payment option</b></p>
+                          {% endif %}
                         </div>
                       </div>
                   </div>
@@ -345,7 +348,7 @@
                       document.getElementById('Success').innerHTML = response.status
                       //alert('success :-'  + response.status);
                         //$('#changed').load('/checkout/ #changed');
-                        $('#reload').load('/checkout/ #reload');
+                        $('#changed').load('/checkout/ #changed');
                     }
                     else{
                       document.getElementById('Error').innerHTML = response.error

@@ -333,7 +333,6 @@ def category_offers(request):
     category = Category.objects.all()
 
     context = {"offers": offers, "categories": category}
-
     return render(request, "category_offers.html", context)
 
 
@@ -350,12 +349,12 @@ def add_category_offers(request):
             category = Category.objects.get(id=cat_id)
 
             if Category_Offer.objects.filter(category_id=category).exists():
-                messages.error(request, f'Offer already Exists with "{cat_id}"')
+                messages.error(request, f'Offer already Exists with "{category}"')
                 return redirect("category_offers")
 
             if not 0 <= float(percentage) <= 100:
                 messages.error(request, "Percentage must be between 0 and 100.")
-                return redirect("product_offers")
+                return redirect("category_offers")
 
             percentage = float(percentage)
 

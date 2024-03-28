@@ -13,7 +13,7 @@ def show_coupon(request):
     if "email" in request.session:
         return redirect("error_page")
 
-    data = Coupons.objects.all()
+    data = Coupons.objects.all().order_by('-id')
     context = {"coupons": data}
     return render(request, "coupon.html", context)
 
@@ -43,6 +43,10 @@ def add_coupon(request):
         else:
             active = False
 
+        if title.isdigit():
+            messages.error(request, "Title should not be numbers only")
+            return redirect(add_coupon)
+
         if title.strip() == "":
             messages.error(request, "Please enter Your Coupon title")
             return redirect(add_coupon)
@@ -70,11 +74,23 @@ def add_coupon(request):
         if discount_amount.strip() == "":
             messages.error(request, "Please enter your Discount Amount")
             return redirect(add_coupon)
-
-        if now_date > end_date:
-            messages.error(request, "select a proper ending date")
+        
+        if float(quantity) < 1:
+            messages.error(request,'Quantity should be  minimum 1')
+            return redirect(add_coupon)
+        
+        if float(min_amount) < 1:
+            messages.error(request,'Not Valid Minimum amount ')
             return redirect(add_coupon)
 
+        if float(discount_amount) < 1:
+            messages.error(request,'Not Valid Minimum Discount amount')
+            return redirect(add_coupon)
+        
+        if Coupons.objects.filter(code=code).exists():
+            messages.error(request,f'Coupon code "{code}" is already exists!')
+            return redirect(add_coupon)
+        
         obj = Coupons(
             title=title,
             code=code,
@@ -113,6 +129,10 @@ def edit_coupon(request, id):
         start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
         end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
 
+        if title.isdigit():
+            messages.error(request, "Title should not be numbers only")
+            return redirect(edit_coupon,id)
+        
         if title.strip() == "":
             messages.error(request, "Please enter a title for your coupon.")
             return redirect(edit_coupon, id)
@@ -144,6 +164,23 @@ def edit_coupon(request, id):
         if discount_amount.strip() == "":
             messages.error(request, "Please enter the discount amount for this coupon.")
             return redirect(edit_coupon, id)
+        
+        if float(quantity) < 1:
+            messages.error(request,'Quantity should be  minimum 1')
+            return redirect(edit_coupon,id)
+        
+        if float(min_amount) < 1:
+            messages.error(request,'Not Valid Minimum amount ')
+            return redirect(edit_coupon,id)
+
+        if float(discount_amount) < 1:
+            messages.error(request,'Not Valid Minimum Discount amount')
+            return redirect(edit_coupon,id) 
+        
+        if Coupons.objects.filter(code=code).exclude(id=id).exists():
+            messages.error(request,f'Coupon code "{code}" is already exists!')
+            return redirect(edit_coupon,id)
+        
 
         if active_check == "1":
             active = True

@@ -150,6 +150,7 @@ def signup(request):
             password=password1,
             date_joined=date_joined,
         )
+        user.save()
         
 
         if referral_code:
@@ -186,9 +187,17 @@ def signup(request):
                 )
             else:
                 messages.error(request,'Wrong Refferal code')
-                return redirect('singup')
+                return redirect('signup')
+            
+        else:
+            Wallet_User.objects.create(
+                    user_id=user,
+                    transaction_type="Wallet created",
+                    amount=0,
+                    balance=0,
+                )
 
-        user.save()
+        
 
 
         return redirect("otpverify", id=user.id)

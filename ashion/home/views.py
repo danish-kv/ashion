@@ -39,6 +39,11 @@ def product_list(request):
         product_list = product_list.filter(name__istartswith=search_query)
         context["product"] = product_list
 
+    # filter_by = request.GET.get('filter')
+
+    # if filter_by:
+
+
     sort_by = request.GET.get("sortby")
 
     if sort_by:
