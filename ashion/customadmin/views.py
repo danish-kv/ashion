@@ -275,7 +275,7 @@ def edit_product_offers(request, id):
 
         try:
             offer = Product_Offer.objects.get(id=id)
-            if not 0 <= float(percentage) <= 100:
+            if not 0 <= float(percentage) < 100:
                 messages.error(request, "Percentage must be between 0 and 100.")
                 return redirect("product_offers")
 
@@ -352,7 +352,7 @@ def add_category_offers(request):
                 messages.error(request, f'Offer already Exists with "{category}"')
                 return redirect("category_offers")
 
-            if not 0 <= float(percentage) <= 100:
+            if not 0 <= float(percentage) < 100:
                 messages.error(request, "Percentage must be between 0 and 100.")
                 return redirect("category_offers")
 
@@ -378,7 +378,7 @@ def edit_category_offers(request, id):
     if request.method == "POST":
         percentage = request.POST.get("percentage")
 
-        if not 0 <= float(percentage) <= 100:
+        if not 0 <= float(percentage) < 100:
             messages.error(request, "Percentage must be between 0 and 100.")
             return redirect("category_offers")
 
