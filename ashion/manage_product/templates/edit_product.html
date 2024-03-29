@@ -18,7 +18,7 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Edit Product</h5>
-            <form method="post" action="/editproduct/{{product.id}}" >
+            <form method="post" action="/editproduct/{{product.id}}" enctype="multipart/form-data" >
                 {% csrf_token %}
                 <div class="row mb-3">
                     <label for="id_name" class="col-sm-2 col-form-label">Product Name</label>
