@@ -212,6 +212,30 @@ def checkout_add_address(request):
             pincode = request.POST.get("pincode")
             landmark = request.POST.get("landmark")
 
+            if name.strip() == "":
+                messages.error(request,'Please enter valid product name')
+                return redirect('add_address')
+            
+            if name.isdigit():
+                messages.error(request,'Please enter a valid product name (should not be a number)')
+                return redirect('add_address')
+            
+            if state.strip() == "":
+                messages.error(request, "State field is Empty")
+                return redirect("user_profile")
+
+            if district.strip() == "":
+                messages.error(request, "District field is Empty")
+                return redirect("user_profile")
+
+            if city.strip() == "":
+                messages.error(request, "City field is Empty")
+                return redirect("user_profile")
+
+            if landmark.strip() == "":
+                messages.error(request, "Landmark field is Empty")
+                return redirect("user_profile")
+
             if number < 10 and number > 10:
                 messages.error(request, "Phone Number should be 10 digits")
                 return redirect("add_address")

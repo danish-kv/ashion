@@ -122,6 +122,11 @@ def edit_address(request, id):
         pincode = request.POST.get("pincode")
         landmark = request.POST.get("landmark")
 
+            
+        if name.isdigit():
+            messages.error(request,'Please enter a valid product name (should not be a number)')
+            return redirect('add_address')
+
         if name.strip() == "":
             messages.error(request, "Name field is Empty")
             return redirect("user_profile")
