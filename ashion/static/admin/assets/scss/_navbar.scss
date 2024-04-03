@@ -46,9 +46,9 @@
       &.brand-logo-mini {
         display: none;
         img {
-          width: calc(#{$sidebar-width-icon} - 50px );
-          max-width: 39%;
-          height: 28px;
+          width: calc(80px - 18px);
+          max-width: 78%;
+          height: 20px;
           margin: auto;
         }
       }

@@ -111,7 +111,7 @@
                         </form>
                         <a href="?page={{ data }}{% if data %}&data={{ data }}{% endif %}"></a>
                     </div><!-- End .toolbox-sort -->
-{% comment %}                          
+                         
                         <div class="sidebar__filter">
                             <form id="priceFilterForm" method="GET" action="{% url "productlist" %}">
                                 <div class="section-title">
@@ -142,14 +142,10 @@
                                 <input type="hidden" name="data" value="{{ data }}">
                                 <button type="submit" class="filter-btn">Filter</button>
                             </form>
-                        </div> {% endcomment %}
-                        
-                        
-                        
+                        </div>
                     </div>
                 </div>
-
-                
+               
                
                 <div class="col-lg-9 col-md-9">
                     {% if product %}

@@ -39,12 +39,12 @@ def product_list(request):
         product_list = product_list.filter(name__istartswith=search_query)
         context["product"] = product_list
 
-    # minprice = request.GET.get('minprice')
-    # maxprice = request.GET.get('maxprice')
-    # if minprice and maxprice:
-    #     product_list = product_list.filter(selling_price__gte=minprice, selling_price__lte=maxprice)
-    #     context["minprice"] = minprice
-    #     context["maxprice"] = maxprice
+    minprice = request.GET.get('minprice')
+    maxprice = request.GET.get('maxprice')
+    if minprice and maxprice:
+        product_list = product_list.filter(selling_price__gte=minprice, selling_price__lte=maxprice)
+        context["minprice"] = minprice
+        context["maxprice"] = maxprice
 
 
     sort_by = request.GET.get("sortby")
