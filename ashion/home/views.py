@@ -95,7 +95,7 @@ def add_to_wishlist(request, id, from_page):
             user_id = Customer.objects.get(email=email_id)
             product_id = products.objects.get(id=id)
 
-            if Wishlist.objects.filter(product_id=product_id).exists():
+            if Wishlist.objects.filter(user_id = user_id, product_id=product_id).exists():
                 messages.warning(request, "Product is already in your wishlist")
             else:
                 Wishlist.objects.create(
