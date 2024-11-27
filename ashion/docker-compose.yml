@@ -1,0 +1,34 @@
+services:
+  ashion-web:
+    build: .
+    command: ["gunicorn", "--bind", ":8000", "ashion.wsgi:application"]
+    volumes:
+      - .:/app
+      - ashion-media_volume:/app/media/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ashion-db
+    env_file:
+      - .env
+    networks:
+      - ashion-network
+
+  ashion-db:
+    image: postgres
+    volumes:
+      - ashion-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - ashion-network
+
+volumes:
+  ashion-db-data:
+  ashion-media_volume:
+
+networks:
+  ashion-network:
+    driver: bridge

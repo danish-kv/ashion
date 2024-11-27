@@ -12,27 +12,20 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@f6l3_%=oz$smyy*r%zalk#8-$%nmulgq3^&8%ekfhytue*!#_"
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['16.16.183.6', '0.0.0.0', '16.16.183.6']
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://16.16.183.6',
-    'https://ashion.muhammeddanish.site',
-    'https://www.ashion.muhammeddanish.site'
-]
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+
 
 # Application definition
 
@@ -69,11 +62,7 @@ ROOT_URLCONF = "ashion.urls"
 
 
 
-CORS_ALLOWED_ORIGINS = [
-    'https://16.16.183.6',
-    'https://ashion.muhammeddanish.site',
-    'https://www.ashion.muhammeddanish.site'
-]
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', "").split(',')
 
 CORS_ALLOW_HEADERS = [
     'access-control-allow-headers',
@@ -132,11 +121,11 @@ WSGI_APPLICATION = "ashion.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ashion_db",
-        "USER": "danish",
-        "PASSWORD": "pass1234",
-        "HOST": "localhost",  # or your database host
-        "PORT": "5432",  # By default, PostgreSQL uses port 5432
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"), 
+        "PORT": os.getenv("DB_PORT"), 
     }
 }
 # Password validation
@@ -174,7 +163,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # For custom static files
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")   # Use for production
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
@@ -186,20 +176,17 @@ MEDIA_URL = "/media/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "muhammeddanishkv05@gmail.com"
-EMAIL_HOST_PASSWORD = "rpni cdzt cabp mdvc"
-EMAIL_USE_TLS = True  # Set it to False if your email server doesn't support TLS
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 
-# key_id,key_secret
-# rzp_test_knlgt6hZbKsPvf,jKVbQLxIqFkMCJsnShuPX37R
 
-
-RAZORPAY_API_KEY = "rzp_test_kjPVyHrg75EHqw"
-RAZORPAY_API_SECRET = "8ooNg13rAFQWYiCVWR0tYuBm"
+RAZORPAY_API_KEY = os.getenv("RAZORPAY_API_KEY")
+RAZORPAY_API_SECRET = os.getenv("RAZORPAY_API_SECRET")
 
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
